@@ -1,0 +1,43 @@
+body{
+  padding: 50px;
+}
+td{
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 5px;
+  height: 50px;
+  width: 50px;
+  padding: 10px;
+}
+.seat {
+  background-color: #fff;
+  border-radius: 3px;
+}
+.seat:hover{
+  background-color: #bbb;
+}
+.wheel{
+  background-color: blue;
+  color: white;
+  font-size: 20px;
+}
+table{
+  background-color: black;
+  border-collapse: separate;
+  border-spacing: 15px;
+}
+.seat-controls{
+  position: absolute;
+  font-size: 16px;
+  color: black;
+  bottom: 70%;
+  left: 50%;
+  z-index: 10;
+  width: 80px;
+  visibility: hidden;
+  background-color: #fff;
+}
+td:hover .seat-controls{
+  visibility: visible;
+}

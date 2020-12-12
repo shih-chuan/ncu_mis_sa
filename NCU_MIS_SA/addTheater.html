@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>訂單列表 ｜ NCU MIS SA</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+  <link href="statics/css/all.min.css" rel="stylesheet">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+  <link href="statics/css/addTheater.css" rel="stylesheet">
+  <link href="statics/css/jquery-confirm.css" rel="stylesheet">
+
+  <script src="statics/js/jquery-3.4.1.min.js"></script>
+  <script src="statics/js/jquery-confirm.js"></script>
+  <script src="statics/js/big.min.js"></script>
+</head>
+<body>
+	<div class="container">
+	  <label for="name">影廳名稱:</label>
+	  <input id="name" name="name" type="text"/><br>
+	  <label for="height">影廳長:</label>
+	  <input type="number" id="height" name="height" min="1" max="20"><br>
+	  <label for="width">影廳寬:</label>
+	  <input type="number" id="width" name="width" min="1" max="20"><br>
+	  <button type="button" id="graph-btn" class="btn btn-primary">確認</button>
+	  <table class="seat-table">
+	  </table>
+	  <button type="button" id="submit-btn" class="btn btn-primary">Save</button>
+	</div>
+	<script>
+		let data = {
+		  width: 6,
+		  height: 2,
+		  name: null,
+		  seats: [
+		    [2, 1, 0, 1, 1, 2],
+		    [0, 1, 1, 1, 0, 1]
+		  ],
+		  seatsData: []
+		}
+	
+		const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+	
+		let draw = () => {
+		    var graph = ""
+		    var rowCount = 0, colCount = 0;
+		    data.seatsData = [];
+		    for(var row = 0; row < data.seats.length; row++){
+		      colCount = 0;
+		      if(!rowIsEmpty(row)){
+		          console.log("rowIsNotEmpty")
+		          rowCount++
+		      }
+		      graph += `<tr>`
+		      for(var col = 0; col < data.seats[row].length; col++){
+		        if(!colIsEmpty(col))
+		            colCount++
+		        switch(data.seats[row][col]){
+		          case 0:
+		            graph += `<td row=${row} col=${col}>
+		                        <div class="seat-controls">
+		                          <div class="fill">填入座位</div>
+		                        </div>
+		                      </td>`
+		            break;
+		          case 1:
+		            graph += `<td class="seat" row=${row} col=${col}>
+		                        ${alphabet[rowCount-1]}${colCount}
+		                        <div class="seat-controls">
+		                          <div class="del">清除座位</div>
+		                          <div class="toWheel">無障礙座位</div>
+		                        </div>
+		                      </td>`
+                    data.seatsData.push({
+	                     seatCode: `${alphabet[rowCount-1]}${colCount}`,
+	                     rowNum: row,
+	                     colNum: col,
+	                     type: 1
+                    })
+		            break;
+		          case 2:
+		            graph += `<td class="wheel" row=${row} col=${col}>
+		                        <i class="fas fa-wheelchair"></i>
+		                        <div class="seat-controls">
+		                          <div class="del">清除座位</div>
+		                          <div class="fill">一般座位</div>
+		                        </div>
+		                      </td>`
+                    data.seatsData.push({
+	                      seatCode: `${alphabet[rowCount-1]}${colCount}`,
+	                      rowNum: row,
+	                      colNum: col,
+	                      type: 2
+                    })
+		            break;
+		        }
+		      }
+		      graph += `</tr>`
+		    }
+		    $(".seat-table").html(graph)
+		    $("td").click(function(event){
+		      var row = parseInt($(this).attr("row"))
+		      var col = parseInt($(this).attr("col"))
+		      var ctrlClicked = event.target.className
+		      console.log(ctrlClicked)
+		      switch(ctrlClicked){
+		        case "del":
+		          data.seats[row][col] = 0;
+		          break;
+		        case "fill":
+		          data.seats[row][col] = 1;
+		          break;
+		        case "toWheel":
+		          data.seats[row][col] = 2;
+		          break;
+		      }
+		      draw();
+		    })
+		}
+	
+		let rowIsEmpty = (rowNum) => {
+		  for(var col = 0; col < data.width; col++){
+		    if(data.seats[rowNum][col] != 0){
+		      return false;
+		    }
+		  }
+		  return true;
+		}
+	
+		let colIsEmpty = (colNum) => {
+		  for(var row = 0; row < data.height; row++){
+		    if(data.seats[row][colNum] != 0){
+		      return false;
+		    }
+		  }
+		  return true;
+		}
+	
+		let deleteSeat = (x, y) => {
+		  data.seats[x][y] = 0;
+		}
+	
+		$(function(){
+		  draw()
+		  $("input#width").on("change", function(){
+		    data.width = parseInt($("input#width").val())
+		  })
+		  $("input#height").on("change", function(){
+		    data.height = parseInt($("input#height").val())
+		  })
+		  $("input#name").on("change", function(){
+		    data.name = $("input#name").val()
+		  })
+		  $("#graph-btn").click(function(){
+			var seats = []; 
+			var row = [];
+			for(var i = 0; i < data.height; i++){
+			  row = [];
+			  for(var j = 0; j < data.width; j++){
+			    row.push(1);
+			  }
+			  seats.push(row);
+			}
+			data.seats = seats;
+			draw();
+		  })
+		  $("#submit-btn").click(function(){
+			  console.log(data);
+			  $.ajax({
+	                    type: "POST",
+	                    url: "api/theater.do",
+	                    crossDomain: true,
+	                    cache: false,
+	                    data: JSON.stringify(data),
+	                    dataType: 'json',
+	                    timeout: 5000,
+	                    success: function (response) {
+	                        console.log(response);
+	                    },
+	                    error: function () {
+	                        alert("無法連線到伺服器！");
+	                    }
+	                });
+		  })
+		})
+	</script>
+</body>
+</html>
