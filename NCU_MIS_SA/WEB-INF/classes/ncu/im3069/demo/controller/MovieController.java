@@ -2,7 +2,8 @@ package ncu.im3069.demo.controller;
 
 import java.io.*;
 import java.util.Date;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
@@ -51,13 +52,23 @@ public class MovieController extends HttpServlet {
         String content = jso.getString("content");
         int running_time = jso.getInt("running_time");
         String genre = jso.getString("genre");
-        Date release_date = jso.getDate("release_date");       
+        
+        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd ");
+        String date = jso.getString("release_date");
+   
+        Date release_date = null;
+        try {
+        	release_date = sdf.parse(date);
+        } catch (ParseException e) {
+         e.printStackTrace();
+        }
+        
         /** 建立一個新的會員物件 */
         Movie m = new Movie(movie_id, movie_name, cover, content, running_time, genre, release_date);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
         if(movie_name.isEmpty() || cover.isEmpty() || content.isEmpty() 
-        		|| running_time==0 || genre.isEmpty() || release_date.isEmpty()) {
+        		|| running_time==0 || genre.isEmpty() || date.isEmpty()) {
             /** 以字串組出JSON格式之資料 */
             String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
             /** 透過JsonReader物件回傳到前端（以字串方式） */
@@ -116,16 +127,16 @@ public class MovieController extends HttpServlet {
         }
         else {
             /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
-            JSONObject query = moh.getByID(id);
+         /*   JSONObject query = moh.getById(id);
             
-            /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+            /** 新建一個JSONObject用於將回傳之資料進行封裝 
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
             resp.put("message", "電影資料取得成功");
             resp.put("response", query);
     
-            /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            jsr.response(resp, response);
+            /** 透過JsonReader物件回傳到前端（以JSONObject方式） 
+            jsr.response(resp, response);*/
         }
     }
 
@@ -180,7 +191,16 @@ public class MovieController extends HttpServlet {
         String content = jso.getString("content");
         int running_time = jso.getInt("running_time");
         String genre = jso.getString("genre");
-        Date release_date = jso.getDate("release_date");   
+        
+        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd ");
+        String date = jso.getString("release_date");
+   
+        Date release_date = null;
+        try {
+        	release_date = sdf.parse(date);
+        } catch (ParseException e) {
+         e.printStackTrace();
+        } 
         /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
         Movie m = new Movie(movie_id, movie_name, cover, content, running_time, genre, release_date);
         
