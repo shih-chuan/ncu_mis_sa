@@ -12,6 +12,7 @@
   <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
   <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
   <link href="statics/css/addTheater.css" rel="stylesheet">
+  <link href="statics/css/layout.css" rel="stylesheet">
   <link href="statics/css/jquery-confirm.css" rel="stylesheet">
 
   <script src="statics/js/jquery-3.4.1.min.js"></script>
@@ -19,7 +20,17 @@
   <script src="statics/js/big.min.js"></script>
 </head>
 <body>
-	<div class="container">
+	<div class="side-nav">
+		<ul class="nav-list">
+			<li>影廳管理</li>
+			<li>套餐管理</li>
+			<li>電影管理</li>
+			<li>場次管理</li>
+			<li>票種管理</li>
+			<li>使用者管理</li>
+		</ul>
+	</div>
+	<div class="content container">
 	  <label for="name">影廳名稱:</label>
 	  <input id="name" name="name" type="text"/><br>
 	  <label for="height">影廳長:</label>
@@ -46,16 +57,37 @@
 		const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 	
 		let draw = () => {
-		    var graph = ""
+		    var graph = `<tr><th class="col-head"></th>`
 		    var rowCount = 0, colCount = 0;
 		    data.seatsData = [];
+		    for(var col = 0; col < data.width; col++){
+		        if(!colIsEmpty(col)){
+		          graph += `<th class="col-head" col=${col}>
+		                      ${colCount+1}
+		                      <div class="seat-controls">
+		                        <div class="del-col">清除整行</div>
+		                      </div>
+		                    </th>`
+		          colCount++
+		        }else{
+		          graph += `<th class="col-head"></th>`
+		        }
+		    }
+		    graph += `</tr>`
 		    for(var row = 0; row < data.seats.length; row++){
 		      colCount = 0;
-		      if(!rowIsEmpty(row)){
-		          console.log("rowIsNotEmpty")
-		          rowCount++
-		      }
 		      graph += `<tr>`
+	          if(!rowIsEmpty(row)){
+	              graph += `<th class="row-head" row=${row}>
+	                          ${alphabet[rowCount]}
+	                          <div class="seat-controls">
+	                            <div class="del-row">清除整列</div>
+	                          </div>
+	                        </th>`
+	              rowCount++
+	          }else{
+	              graph += `<th class="row-head"></th>`
+	          }
 		      for(var col = 0; col < data.seats[row].length; col++){
 		        if(!colIsEmpty(col))
 		            colCount++
@@ -102,21 +134,31 @@
 		      graph += `</tr>`
 		    }
 		    $(".seat-table").html(graph)
-		    $("td").click(function(event){
+		    $("td, th").click(function(event){
 		      var row = parseInt($(this).attr("row"))
 		      var col = parseInt($(this).attr("col"))
 		      var ctrlClicked = event.target.className
 		      console.log(ctrlClicked)
 		      switch(ctrlClicked){
 		        case "del":
-		          data.seats[row][col] = 0;
-		          break;
+		            data.seats[row][col] = 0;
+		            break;
+		        case "del-row":
+		            for(var col = 0; col < data.width; col++){
+		              data.seats[row][col] = 0;
+		            }
+		            break;
+		        case "del-col":
+		            for(var row = 0; row < data.height; row++){
+		              data.seats[row][col] = 0;
+		            }
+		            break;
 		        case "fill":
-		          data.seats[row][col] = 1;
-		          break;
+		            data.seats[row][col] = 1;
+		            break;
 		        case "toWheel":
-		          data.seats[row][col] = 2;
-		          break;
+		            data.seats[row][col] = 2;
+		            break;
 		      }
 		      draw();
 		    })
