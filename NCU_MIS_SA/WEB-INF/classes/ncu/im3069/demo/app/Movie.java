@@ -26,6 +26,9 @@ public class Movie {
     /** release_date，電影上映日期 */
 	private Date release_date;
 	
+    /** mh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
+    private MovieHelper moh =  MovieHelper.getHelper();
+    
 
     /**
      * 實例化（Instantiates）一個新的（new）Product 物件<br>
@@ -151,5 +154,23 @@ public class Movie {
         jso.put("release_date", getRelease_date());
         
         return jso;
+    }
+	
+    /**
+     * 更新會員資料
+     *
+     * @return the JSON object 回傳SQL更新之結果與相關封裝之資料
+     */
+    public JSONObject update() {
+        /** 新建一個JSONObject用以儲存更新後之資料 */
+        JSONObject data = new JSONObject();
+        
+        /** 檢查該名會員是否已經在資料庫 */
+        if(this.id != 0) {
+            /** 透過MemberHelper物件，更新目前之會員資料置資料庫中 */
+            data = moh.update(this);
+        }
+        
+        return data;
     }
 }
