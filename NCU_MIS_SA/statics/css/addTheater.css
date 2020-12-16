@@ -1,6 +1,3 @@
-body{
-  padding: 50px;
-}
 td{
   position: relative;
   cursor: pointer;
@@ -9,6 +6,12 @@ td{
   height: 50px;
   width: 50px;
   padding: 10px;
+}
+th{
+  position: relative;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
 }
 .seat {
   background-color: #fff;
@@ -30,6 +33,8 @@ table{
 .seat-controls{
   position: absolute;
   font-size: 16px;
+  font-weight: normal;
+  text-align: left;
   color: black;
   bottom: 70%;
   left: 50%;
@@ -39,5 +44,8 @@ table{
   background-color: #fff;
 }
 td:hover .seat-controls{
+  visibility: visible;
+}
+th:hover .seat-controls{
   visibility: visible;
 }
