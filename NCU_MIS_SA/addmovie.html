@@ -28,14 +28,17 @@
                 <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
                 <div class="input text required">
                     <label for="movie_name">電影名稱:</label>
-                    <input name="movie_name" maxlength="30" type="text" id="movie_name" required="required">
+                    <input name="movie_name" maxlength="25" type="text" id="movie_name" required="required">
                 
                     <label for="movie_content">電影內容:</label>
                     <input name="movie_content" maxlength="200" type="text" id="movie_content" required="required">
+                     
+                    <label for="running_time">電影片長:</label>
+                    <input type="text" id="running_time" name="running_time" required="required" >
                 </div>
-        <div class="select movielevel required">
-        <label for="movie_level">電影分級:</label>
-        <select name="movie_level" id="movie_level">
+        <div class="select genre required">
+        <label for="genre">電影分級:</label>
+        <select name="genre" id="genre">
         <option value="1">普遍級</option>
         <option value="2">輔導級</option>
         <option value="3">保護級</option>
@@ -50,9 +53,9 @@
         <div class="input file required">
             <label for="movie_cover">電影圖片:</label>
             <input type="file" accept="image/*" id="movie_cover" name="movie_cover" >
-        </div>       
-                
-     <div class="submit"><input type="button" value="新增" id="submit"></div>
+        </div>  
+             
+           <div class="submit"><input type="button" value="新增" id="submit"></div>
             </form>
             
             <script type="text/javascript">
@@ -66,18 +69,19 @@
                     function submit() {
                         var movie_name = $('#movie_name').val();
                         var movie_content= $('#movie_content').val();
-                        var movie_level = $('#movie_level').val();
+                        var genre = $('#genre').val();
                         var release_date = $('#release_date').val();
                         var movie_cover = $('#movie_cover').val();
+                        var running_time = $('#running_time').val(); 
                         
                             // 將資料組成JSON格式
                             var data_object = {
                                 "movie_name": movie_name,
                                 "movie_content": movie_content,
-                                "movie_level": movie_level,
+                                "genre": genre,
                                 "release_date": release_date,
                                 "movie_cover": movie_cover,
-                                
+                                "running_time": running_time,
                                 
                             };
 
