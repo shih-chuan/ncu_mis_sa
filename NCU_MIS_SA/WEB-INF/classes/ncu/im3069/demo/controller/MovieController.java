@@ -5,6 +5,7 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import org.json.*;
 import ncu.im3069.demo.app.Movie;
@@ -22,7 +23,7 @@ import ncu.im3069.tools.JsonReader;
  * @version 1.0.0
  * @since 1.0.0
  */
-
+@WebServlet("/api/movie.do")
 public class MovieController extends HttpServlet {
     
     /** The Constant serialVersionUID. */
@@ -46,10 +47,10 @@ public class MovieController extends HttpServlet {
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
-        int movie_id = jso.getInt("id");
-        String movie_name = jso.getString("name");
-        String cover = jso.getString("cover");
-        String content = jso.getString("content");
+        int movie_id = jso.getInt("movie_id");
+        String movie_name = jso.getString("movie_name");
+        String cover = jso.getString("movie_cover");
+        String content = jso.getString("movie_content");
         int running_time = jso.getInt("running_time");
         String genre = jso.getString("genre");
         
@@ -127,7 +128,7 @@ public class MovieController extends HttpServlet {
         }
         else {
             /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
-         /*   JSONObject query = moh.getById(id);
+           /* JSONObject query = moh.getById(id);
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 
             JSONObject resp = new JSONObject();
@@ -185,10 +186,10 @@ public class MovieController extends HttpServlet {
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
-        int movie_id = jso.getInt("id");
-        String movie_name = jso.getString("name");
-        String cover = jso.getString("cover");
-        String content = jso.getString("content");
+        int movie_id = jso.getInt("movie_id");
+        String movie_name = jso.getString("movie_name");
+        String cover = jso.getString("movie_cover");
+        String content = jso.getString("movie_content");
         int running_time = jso.getInt("running_time");
         String genre = jso.getString("genre");
         

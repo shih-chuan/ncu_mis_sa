@@ -3,6 +3,8 @@ package ncu.im3069.demo.app;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.json.*;
 
@@ -43,7 +45,7 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`movies`";
+            String sql = "SELECT * FROM `missa`.`movie`";
             
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
@@ -59,10 +61,10 @@ public class MovieHelper {
                 /** 每執行一次迴圈表示有一筆資料 */
                 row += 1;
                 /** 將 ResultSet 之資料取出 */
-                int movie_id = rs.getInt("id");
-                String movie_name = rs.getString("name");
-                String cover = rs.getString("cover");
-                String content = rs.getString("content");
+                int movie_id = rs.getInt("movie_id");
+                String movie_name = rs.getString("movie_name");
+                String cover = rs.getString("movie_cover");
+                String content = rs.getString("movie_content");
                 int running_time = rs.getInt("running_time");
                 String genre = rs.getString("genre");
                 Date release_date = rs.getDate("release_date");
@@ -118,7 +120,7 @@ public class MovieHelper {
           conn = DBMgr.getConnection();
           String[] in_para = DBMgr.stringToArray(data, ",");
           /** SQL指令 */
-          String sql = "SELECT * FROM `missa`.`movies` WHERE `movies`.`movie_id`";
+          String sql = "SELECT * FROM `missa`.`movie` WHERE `movie`.`movie_id`";
           for (int i=0 ; i < in_para.length ; i++) {
               sql += (i == 0) ? "in (?" : ", ?";
               sql += (i == in_para.length-1) ? ")" : "";
@@ -142,10 +144,10 @@ public class MovieHelper {
               row += 1;
               
               /** 將 ResultSet 之資料取出 */
-              int movie_id = rs.getInt("id");
-              String movie_name = rs.getString("name");
-              String cover = rs.getString("cover");
-              String content = rs.getString("content");
+              int movie_id = rs.getInt("movie_id");
+              String movie_name = rs.getString("movie_name");
+              String cover = rs.getString("movie_cover");
+              String content = rs.getString("movie_content");
               int running_time = rs.getInt("running_time");
               String genre = rs.getString("genre");
               Date release_date = rs.getDate("release_date");
@@ -194,7 +196,7 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`movies` WHERE `movie_id` = ? LIMIT 1";
+            String sql = "SELECT * FROM `missa`.`movie` WHERE `movie_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
@@ -209,10 +211,10 @@ public class MovieHelper {
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
             while(rs.next()) {
                 /** 將 ResultSet 之資料取出 */
-            	int movie_id = rs.getInt("id");
-                String movie_name = rs.getString("name");
-                String cover = rs.getString("cover");
-                String content = rs.getString("content");
+            	int movie_id = rs.getInt("movie_id");
+                String movie_name = rs.getString("movie_name");
+                String cover = rs.getString("movie_cover");
+                String content = rs.getString("movie_content");
                 int running_time = rs.getInt("running_time");
                 String genre = rs.getString("genre");
                 Date release_date = rs.getDate("release_date");
@@ -253,7 +255,7 @@ public class MovieHelper {
             conn = DBMgr.getConnection();
             
             /** SQL指令 */
-            String sql = "DELETE FROM `missa`.`movies` WHERE `id` = ? LIMIT 1";
+            String sql = "DELETE FROM `missa`.`movie` WHERE `movie_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -310,8 +312,8 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `missa`.`movies` SET `movie_name` = ? ,`cover` = ? , "
-            		+ "`content` = ? , `running_time` = ? , `genre` = ? , `release_date` = ? WHERE `movie_id` = ?";
+            String sql = "Update `missa`.`movie` SET `movie_name` = ? ,`movie_cover` = ? , "
+            		+ "`movie_content` = ? , `running_time` = ? , `genre` = ? , `release_date` = ? WHERE `movie_id` = ?";
             /** 取得所需之參數 */
             int movie_id = m.getID();
             String movie_name = m.getName();
@@ -320,6 +322,8 @@ public class MovieHelper {
             int running_time = m.getRunning_time();
             String genre = m.getGenre();
             Date release_date = m.getRelease_date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String str = format.format(release_date);
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -328,7 +332,7 @@ public class MovieHelper {
             pres.setString(3, content);
             pres.setInt(4, running_time);
             pres.setString(5, genre);
-            pres.setDate(6, release_date);
+            pres.setString(6, str);
             pres.setInt(7, movie_id);
             /** 執行更新之SQL指令並記錄影響之行數 */
             row = pres.executeUpdate();
@@ -375,8 +379,8 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `missa`.`movies` SET `movie_name` = ? ,`cover` = ? , "
-            		+ "`content` = ? , `running_time` = ? , `genre` = ? , `release_date` = ? WHERE `movie_id` = ?";
+            String sql = "Update `missa`.`movie` SET `movie_name` = ? ,`movie_cover` = ? , "
+            		+ "`movie_content` = ? , `running_time` = ? , `genre` = ? , `release_date` = ? WHERE `movie_id` = ?";
             /** 取得所需之參數 */
             int movie_id = m.getID();
             String movie_name = m.getName();
@@ -385,6 +389,8 @@ public class MovieHelper {
             int running_time = m.getRunning_time();
             String genre = m.getGenre();
             Date release_date = m.getRelease_date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String str = format.format(release_date);
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -393,7 +399,7 @@ public class MovieHelper {
             pres.setString(3, content);
             pres.setInt(4, running_time);
             pres.setString(5, genre);
-            pres.setDate(6, release_date);
+            pres.setString(6, str);
             pres.setInt(7, movie_id);
             /** 執行更新之SQL指令並記錄影響之行數 */
             row = pres.executeUpdate();
