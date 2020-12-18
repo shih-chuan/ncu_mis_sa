@@ -1,3 +1,14 @@
+# 專案設定檔
+在本地使用專案之前，請先在WEB-INF/classes底下之`conf.properties.example`複製，並更名為`conf.properties`。並將內部之檔案上傳位置設定，更改為自己的專案位置
+```
+DB_USERNAME=root
+DB_PASSWORD=123456
+PROJECT_PATH=C:/Users/Wisdo/git/ncu_mis_sa/NCU_MIS_SA/statics/img/meal/
+```
+
+若使用eclipse做開發，記得將Workspace的Refresh選項打勾，才會即時更新專案資料夾。
+
+![](https://www.viralpatel.net/app/uploads/2012/06/eclipse-workspace-refresh-automatically.png)
 # 中央大學資管系—系統分析與設計範例專案
 
 - Version : 1.0.0

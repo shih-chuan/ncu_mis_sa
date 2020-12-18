@@ -104,7 +104,7 @@ public class SeatHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`seat` WHERE `seat`.`theater_id` = ?";
+            String sql = "SELECT * FROM `missa`.`seats` WHERE `seats`.`theater_id` = ?";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -122,12 +122,12 @@ public class SeatHelper {
                 
                 /** 將 ResultSet 之資料取出 */
                 String seatCode = rs.getString("seat_code");
-                int type = rs.getInt("type");
+                int type = rs.getInt("seat_type");
                 int rowNum = rs.getInt("row_num");
                 int colNum = rs.getInt("col_num");
                 
                 /** 將每一筆會員資料產生一名新Member物件 */
-                seat = new Seat(seatCode, theater_id, type, rowNum, colNum);
+                seat = new Seat(seatCode, type, rowNum, colNum);
                 /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
                 result.add(seat);
             }

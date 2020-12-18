@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>訂單列表 ｜ NCU MIS SA</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+  <link href="statics/css/all.min.css" rel="stylesheet">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+  <link href="statics/css/layout.css" rel="stylesheet">
+  <link href="statics/css/jquery-confirm.css" rel="stylesheet">
+
+  <script src="statics/js/jquery-3.4.1.min.js"></script>
+  <script src="statics/js/jquery-confirm.js"></script>
+  <script src="statics/js/big.min.js"></script>
+</head>
+<body>
+	<div class="side-nav">
+		<div class="nav-list">
+			<a href="" class="nav-link">影廳管理</a>
+			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
+			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
+			<a href="" class="nav-link">場次管理</a>
+			<a href="" class="nav-link">票種管理</a>
+			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
+		</div>
+	</div>
+	
+	<div class="content">
+		<h1>影廳管理</h1>
+		<table id="table" class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">影廳名稱</th>
+		      <th scope="col">座位數</th>
+		      <th scope="col">無障礙座位數</th>
+		      <th scope="col">功能</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		      <th scope="row">1</th>
+		      <td>Mark</td>
+		      <td>Otto</td>
+		      <td>@mdo</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">2</th>
+		      <td>Jacob</td>
+		      <td>Thornton</td>
+		      <td>@fat</td>
+		    </tr>
+		    <tr>
+		      <th scope="row">3</th>
+		      <td colspan="2">Larry the Bird</td>
+		      <td>@twitter</td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
+	<script>
+	function getAllMember() {
+        // 發出POST的GET請求取得所有會員列表
+        $.ajax({
+                type: "GET",
+                url: "api/theater.do",
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if(response.status == 200){
+                        updateTable(response.response.data);
+                    }
+                    console.log(response);
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+        });
+    }
+	// 更新會員列表表格
+    function updateTable(data) {
+        $("#table > tbody").empty();
+        var table_html = '';
+        var i = 1;
+        $.each(data, function(index, value) {
+        	console.log(value);
+            table_html += '<tr><th scope="row">' + i + '</th>';
+            table_html += '<td>' + value.theater_info['name'] + '</td>';
+            table_html += '<td>' + countNormalSeats(value.seats_info) + '</td>';
+            table_html += '<td>' + countWheelSeats(value.seats_info) + '</td>';
+            table_html += '<td>' + '<a href="edit.html?id=' + i + '">編輯</a> | ';
+            table_html += '<a href="javascript: deleteMember(' + i + ');">刪除</a></td></tr>';
+            i++;
+        })
+
+        $("#table > tbody").append(table_html);
+    }
+	function countNormalSeats(seatsInfo) {
+		var regular = seatsInfo.filter((seat) => {
+			return seat.type == 1;
+		});
+		return regular.length;
+	}
+	function countWheelSeats(seatsInfo) {
+		var regular = seatsInfo.filter((seat) => {
+			return seat.type == 2;
+		});
+		return regular.length;
+	}
+	$(function(){
+		getAllMember();
+	})
+	</script>
+</body>
+</html>

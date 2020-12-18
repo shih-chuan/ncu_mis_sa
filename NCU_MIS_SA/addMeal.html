@@ -4,20 +4,26 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>CakePHP: the rapid development php framework: Members</title>
+  	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-    <link rel="stylesheet" type="text/css" href="statics/css/cake.generic.css">
+  	<link href="statics/css/layout.css" rel="stylesheet">
 
     <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div id="container">
-        <div id="header">
-            <h1><a href="http://cakephp.org/">CakePHP: the rapid development php framework</a></h1>
-        </div>
-        
-        <div id="content">
+	<div class="side-nav">
+		<div class="nav-list">
+			<a href="/NCU_MIS_SA/addTheater.html" class="nav-link">影廳管理</a>
+			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
+			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
+			<a href="" class="nav-link">場次管理</a>
+			<a href="" class="nav-link">票種管理</a>
+			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
+		</div>
+	</div>
+    <div class="container content">
             <h2>新增套餐資料</h2>
             <a href="Meal.html">套餐清單</a>
             <a href="product.html">購物車模組</a>
@@ -56,8 +62,50 @@
                     function submit() {
                         var name = $('#meal_name').val();
                         var price = $('#meal_price').val();
-                        var image = $('#meal_image').val();
+                        //var image = $('#meal_image').val();
+                        var image = $("#meal_image")[0].files[0];
                         var describe = $('#meal_content').val();
+                        
+                        var imgUpload = new FormData();	
+                        if (image) {
+                          imgUpload.append("image", image);
+                          console.log("in")
+                          $.ajax({
+	                            url: "api/imgupload",
+	                            type: "POST",
+	                            data: imgUpload,
+	                            processData: false,
+	                            contentType: false,
+                                dataType: "json",
+	                            success:function(res){
+		                           	var data_object = {
+		                                "meal_name": name,
+		                                "meal_price": price,
+		                                "meal_image" : res.imgSrc,
+		                                "meal_content": describe
+		                            };
+		                           	console.log(res.imgSrc);
+		                            // 將JSON格式轉換成字串
+		                            var data_string = JSON.stringify(data_object);
+		                            $.ajax({
+		                                url: "api/meal.do",
+		                                type: "POST",
+		                                data: data_string,
+		                                dataType: "json",
+	                                    timeout: 5000,
+		                                success: function (res) {
+			                                console.log("success");
+			                                alert("新增成功");
+		                                },
+		                                error: function () {
+		                                	console.log("failed");
+		                                }
+		                            })
+                            	},
+                          		error: function(err){
+                          			alert("image upload failed!");
+                          		}
+                          });
 
  //                       var email_rule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
  //                       var password_rule = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -70,7 +118,7 @@
                         }
                         else {
  */                           // 將資料組成JSON格式
-                            var data_object = {
+                          /*  var data_object = {
                                 "meal_name": name,
                                 "meal_price": price,
                                 "meal_image": image,
@@ -99,7 +147,7 @@
                                     error: function () {
                                         alert("無法連線到伺服器！");
                                     }
-                            });
+                            });*/
  //                       }
                     }
 
@@ -119,32 +167,27 @@
                         $("#sql_log > tbody").append(table_html);
                         $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
                     }
-                });
+                };
+               })
             </script>
-
-        </div>
         
-        <div id="footer">
-            <a href="http://www.cakephp.org/" target="_blank" id="cake-powered"><img src="statics/img/cake.power.gif" alt="CakePHP: the rapid development php framework" border="0"></a>
-            <p>CakePHP 2.6.10</p>
-        </div>
+		    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
+		        <caption id="sql_summary">(default) 0 queries took 0 ms</caption>
+		        <thead>
+		            <tr>
+		                <th>Nr</th>
+		                <th>Query</th>
+		                <th>Error</th>
+		                <th>Affected</th>
+		                <th>Num. rows</th>
+		                <th>Took (ms)</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		        </tbody>
+		    </table>
     </div>
 
-    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-        <caption id="sql_summary">(default) 0 queries took 0 ms</caption>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Query</th>
-                <th>Error</th>
-                <th>Affected</th>
-                <th>Num. rows</th>
-                <th>Took (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
 
 </body>
 
