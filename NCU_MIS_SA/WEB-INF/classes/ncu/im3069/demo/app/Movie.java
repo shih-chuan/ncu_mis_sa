@@ -48,12 +48,17 @@ public class Movie {
      * @param price 產品價格
      * @param image 產品圖片
      */
-	/*public Movie(String name, double price, String image) {
+	public Movie( String name, String cover, String content, 
+			int running_time, String genre, Date release_date) {
 		this.name = name;
-		this.price = price;
-		this.image = image;
+		this.cover = cover;
+		this.content = content;
+		this.running_time = running_time;
+		this.genre = genre;
+		this.release_date = release_date;
+		update();
 	}
-	*/
+	
     /**
      * 實例化（Instantiates）一個新的（new）Product 物件<br>
      * 採用多載（overload）方法進行，此建構子用於修改產品時
