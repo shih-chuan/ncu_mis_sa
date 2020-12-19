@@ -22,7 +22,7 @@
 <body>
 	<div class="side-nav">
 		<div class="nav-list">
-			<a href="" class="nav-link">影廳管理</a>
+			<a href="/NCU_MIS_SA/theater.html" class="nav-link">影廳管理</a>
 			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
 			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
 			<a href="" class="nav-link">場次管理</a>
@@ -30,28 +30,41 @@
 			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
 		</div>
 	</div>
-	<div class="content container">
-	  <label for="name">影廳名稱:</label>
-	  <input id="name" name="name" type="text"/><br>
-	  <label for="height">影廳長:</label>
-	  <input type="number" id="height" name="height" min="1" max="20"><br>
-	  <label for="width">影廳寬:</label>
-	  <input type="number" id="width" name="width" min="1" max="20"><br>
-	  <button type="button" id="graph-btn" class="btn btn-primary">確認</button>
-	  <table class="seat-table">
-	  </table>
-	  <button type="button" id="submit-btn" class="btn btn-primary">Save</button>
+	<div class="content">
+		<h1>新增影廳</h1>
+		<div class="row" style="flex-wrap: nowrap;">
+		  	<div class="input-form">
+		  		<form>
+				    <label for="name">影廳名稱:</label>
+				    <input id="name" name="name" type="text"/  required="required"><br>
+				    <label for="height">影廳長度:</label>
+				    <input type="number" id="height" name="height" min="1" max="20"  required="required"><br>
+				    <label for="width">影廳寬度:</label>
+				    <input type="number" id="width" name="width" min="1" max="20" required="required"><br>
+				    <button type="button" id="graph-btn" class="btn btn-primary">確認</button>
+		  		</form>
+			  	<div class="info-summary show-after">
+			  		<div>一般座位個數: <span id="normalSeatCount">0</span></div>
+			  		<div>無障礙座位個數: <span id="wheelSeatCount">0</span></div>
+		    	</div>
+		  	</div>
+		  	<div class="graph-area">
+			    <table class="seat-table">
+			    </table>
+		  	</div>
+	    </div>
+	    <div class="controls">
+   			<a href="/NCU_MIS_SA/theater.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
+   			<button type="button" id="submit-btn" class="btn btn-primary show-after">Save</button>
+	    </div>
 	</div>
 	<script>
 		let data = {
-		  width: 6,
-		  height: 2,
-		  name: null,
-		  seats: [
-		    [2, 1, 0, 1, 1, 2],
-		    [0, 1, 1, 1, 0, 1]
-		  ],
-		  seatsData: []
+		    width: 0,
+		    height: 0,
+		    name: null,
+		    seats: [],
+		    seatsData: []
 		}
 	
 		const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
@@ -133,34 +146,35 @@
 		      }
 		      graph += `</tr>`
 		    }
+		    $("#wheelSeatCount").html(countWheelSeats(data.seatsData));
+		    $("#normalSeatCount").html(countNormalSeats(data.seatsData));
 		    $(".seat-table").html(graph)
 		    $("td, th").click(function(event){
-		      var row = parseInt($(this).attr("row"))
-		      var col = parseInt($(this).attr("col"))
-		      var ctrlClicked = event.target.className
-		      console.log(ctrlClicked)
-		      switch(ctrlClicked){
-		        case "del":
-		            data.seats[row][col] = 0;
-		            break;
-		        case "del-row":
-		            for(var col = 0; col < data.width; col++){
-		              data.seats[row][col] = 0;
-		            }
-		            break;
-		        case "del-col":
-		            for(var row = 0; row < data.height; row++){
-		              data.seats[row][col] = 0;
-		            }
-		            break;
-		        case "fill":
-		            data.seats[row][col] = 1;
-		            break;
-		        case "toWheel":
-		            data.seats[row][col] = 2;
-		            break;
-		      }
-		      draw();
+		        var row = parseInt($(this).attr("row"))
+		        var col = parseInt($(this).attr("col"))
+		        var ctrlClicked = event.target.className
+		        switch(ctrlClicked){
+		            case "del":
+			            data.seats[row][col] = 0;
+			            break;
+		            case "del-row":
+			            for(var col = 0; col < data.width; col++){
+			              data.seats[row][col] = 0;
+			            }
+			            break;
+		            case "del-col":
+			            for(var row = 0; row < data.height; row++){
+			              data.seats[row][col] = 0;
+			            }
+			            break;
+		            case "fill":
+			            data.seats[row][col] = 1;
+			            break;
+		            case "toWheel":
+			            data.seats[row][col] = 2;
+			            break;
+		        }
+		        draw();
 		    })
 		}
 	
@@ -185,48 +199,76 @@
 		let deleteSeat = (x, y) => {
 		  data.seats[x][y] = 0;
 		}
+		
+		function countNormalSeats(seatsInfo) {
+			var regular = seatsInfo.filter((seat) => {
+				return seat.type == 1;
+			});
+			return regular.length;
+		}
+		function countWheelSeats(seatsInfo) {
+			var regular = seatsInfo.filter((seat) => {
+				return seat.type == 2;
+			});
+			return regular.length;
+		}
 	
 		$(function(){
-		  draw()
-		  $("input#width").on("change", function(){
-		    data.width = parseInt($("input#width").val())
-		  })
-		  $("input#height").on("change", function(){
-		    data.height = parseInt($("input#height").val())
-		  })
+		  $(".show-after").hide()
 		  $("input#name").on("change", function(){
 		    data.name = $("input#name").val()
 		  })
 		  $("#graph-btn").click(function(){
 			var seats = []; 
 			var row = [];
-			for(var i = 0; i < data.height; i++){
-			  row = [];
-			  for(var j = 0; j < data.width; j++){
-			    row.push(1);
-			  }
-			  seats.push(row);
+			
+			/*將欄位轉換為數字*/
+			var width = Number($("input#width").val());
+			var height = Number($("input#height").val());
+			
+			/*檢查數字是否為整數且>=1*/
+			if(Number.isInteger(width) && Number.isInteger(height) && width >= 1 && height >= 1){
+			    data.height = height;
+			    data.width = width;
+				for(var i = 0; i < data.height; i++){
+				  row = [];
+				  for(var j = 0; j < data.width; j++){
+				    row.push(1);
+				  }
+				  seats.push(row);
+				}
+				data.seats = seats;
+			    $(".show-after").show()
+				draw();
+			}else{
+				alert("請輸入大於1的整數")
 			}
-			data.seats = seats;
-			draw();
 		  })
+		  
 		  $("#submit-btn").click(function(){
-			  console.log(data);
-			  $.ajax({
-	                    type: "POST",
-	                    url: "api/theater.do",
-	                    crossDomain: true,
-	                    cache: false,
-	                    data: JSON.stringify(data),
-	                    dataType: 'json',
-	                    timeout: 5000,
-	                    success: function (response) {
-	                        console.log(response);
-	                    },
-	                    error: function () {
-	                        alert("無法連線到伺服器！");
-	                    }
-	                });
+              if (!data.name || !data.width || !data.height) {
+                  alert("請填寫所有欄位");
+              }
+              else if(!(Number.isInteger(data.width) && Number.isInteger(data.height) && data.width >= 1 && data.height >= 1)) {
+                  alert("請輸入大於1的整數！");
+              }
+              else {
+				  $.ajax({
+	                   type: "POST",
+	                   url: "api/theater.do",
+	                   crossDomain: true,
+	                   cache: false,
+	                   data: JSON.stringify(data),
+	                   dataType: 'json',
+	                   timeout: 5000,
+	                   success: function (response) {
+	                       console.log(response);
+	                   },
+	                   error: function () {
+	                       alert("無法連線到伺服器！");
+	                   }
+	              });
+             }
 		  })
 		})
 	</script>

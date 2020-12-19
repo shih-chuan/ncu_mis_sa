@@ -4,7 +4,7 @@ td{
   text-align: center;
   border-radius: 5px;
   height: 50px;
-  width: 50px;
+  min-width: 50px;
   padding: 10px;
 }
 th{
@@ -25,10 +25,24 @@ th{
   color: white;
   font-size: 20px;
 }
+.graph-area{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 6;
+	flex-shrink: 0;
+}
+.input-form{
+	flex: 270px;
+	flex-shrink: 0;
+}
 table{
   background-color: black;
   border-collapse: separate;
   border-spacing: 15px;
+}
+.info-summary{
+	padding: 20px 0;
 }
 .seat-controls{
   position: absolute;
@@ -48,4 +62,12 @@ td:hover .seat-controls{
 }
 th:hover .seat-controls{
   visibility: visible;
+}
+.controls{
+	display: flex;
+	justify-content: flex-end;
+	margin: 20px 0;
+}
+.controls button{
+	margin-left: 10px;
 }

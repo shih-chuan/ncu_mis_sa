@@ -26,3 +26,6 @@ body{
 	height: 100vh;
 	overflow: auto;
 }
+.row{
+	margin: 0;
+}
