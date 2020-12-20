@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>訂單列表 ｜ NCU MIS SA</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+  <link href="statics/css/all.min.css" rel="stylesheet">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+  <link href="statics/css/bookSeat.css" rel="stylesheet">
+  <link href="statics/css/jquery-confirm.css" rel="stylesheet">
+
+  <script src="statics/js/jquery-3.4.1.min.js"></script>
+  <script src="statics/js/jquery-confirm.js"></script>
+  <script src="statics/js/big.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">OO影廳</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="content container"> 
+  <table class="seat-table"></table>
+  <div class="ticket-info">
+    <ul class="list-group">
+      <li class="list-group-item active" aria-current="true">
+        <i class="far fa-clock"></i>
+        <span id="remain-time">時間剩餘 10:00</span>
+       </li>
+    </ul>
+    <ul class="list-group">
+      <li class="list-group-item active" aria-current="true">訂票資訊</li>
+      <li class="list-group-item">
+        <i class="far fa-clock"></i>
+        <span id="session-datetime">2020-12-25 12:00</span>
+      </li>
+      <li class="list-group-item">
+        <i class="fas fa-video"></i>
+        <span id="theater-name">第8廳</span>
+      </li>
+      <li class="list-group-item">
+        <i class="fas fa-film"></i>
+        <span id="movie-name">Pacific Rim</span>
+      </li>
+    </ul>
+	  <div class="controls">
+   			<a href="/NCU_MIS_SA/theater.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
+   			<button type="button" id="submit-btn" class="btn btn-primary show-after">Save</button>
+	  </div>
+    
+  </div>
+</div>
+<script>
+//取得網址參數
+var url_string = window.location.href;
+var url = new URL(url_string);
+var session_id = url.searchParams.get("session");
+let data = {
+    width: 0,
+    height: 0,
+    seats: [],
+    seatsData: []
+}
+
+function getSession() {
+    $.ajax({
+        type: "GET",
+        url: "/NCU_MIS_SA/api/session.do",
+        crossDomain: true,
+        data: "id=" + session_id,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (res) {
+        	console.log(res);
+            if(res.status == 200){
+            	data.width = res.response.theater_info.theater_info.width;
+            	data.height = res.response.theater_info.theater_info.height;
+            	data.seatsData = [...res.response.theater_info.seats_info];
+            	console.log(data.seatsData);
+            	data.seatsData.sort((a,b) => {
+            		return a.rowNum - b.rowNum || a.colNum - b.colNum;
+            	})
+            	var seatsRow = new Array();
+            	var currentSeat = 0;
+            	for(var i = 0; i < data.height; i++){
+            		seatsRow = []
+            		for(var j = 0; j < data.width; j++){
+            			if(i == data.seatsData[currentSeat].rowNum && j == data.seatsData[currentSeat].colNum){
+            				switch(data.seatsData[currentSeat].type){
+            					case 1:
+            						seatsRow.push(1);
+            						break;
+            					case 2:
+            						seatsRow.push(2);
+            						break;
+            				}
+            				currentSeat++;
+            			}else{
+            				seatsRow.push(0);
+            			}
+            		}
+            		data.seats.push(seatsRow);
+            	}
+            }
+            $("#movie-name").html(res.response.movie_info.name);
+            $("#theater-name").html(res.response.theater_info.theater_info.name);
+            $("#session-datetime").html(res.response.session_info.session_date + " " + res.response.session_info.session_time);
+            draw();
+        },
+        error: function () {
+            alert("無法連線到伺服器！");
+        }
+    });
+}
+
+function getBookedTicket() {
+    $.ajax({
+        type: "GET",
+        url: "/NCU_MIS_SA/api/ticket.do",
+        crossDomain: true,
+        data: "session=" + session_id,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (res) {
+        	console.log(res);
+            if(res.status == 200){
+            	res.response.data.map(function(ticket){
+            		console.log(ticket.seat_info.colNum + ", " + ticket.seat_info.rowNum)
+            		data.seats[parseInt(ticket.seat_info.rowNum)][parseInt(ticket.seat_info.colNum)] = 3;
+            	})
+            }
+            draw();
+        },
+        error: function () {
+            alert("無法連線到伺服器！");
+        }
+    });
+}
+const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+let draw = () => {
+    var graph = `<tr><th class="col-head"></th>`
+    var rowCount = 0, colCount = 0;
+    for(var col = 0; col < data.width; col++){
+        if(!colIsEmpty(col)){
+          graph += `<th class="col-head" col=${col}>
+                      ${colCount+1}
+                    </th>`
+          colCount++
+        }else{
+          graph += `<th class="col-head"></th>`
+        }
+    }
+    graph += `</tr>`
+    for(var row = 0; row < data.seats.length; row++){
+      colCount = 0;
+      graph += `<tr>`
+      if(!rowIsEmpty(row)){
+          graph += `<th class="row-head" row=${row}>
+                      ${alphabet[rowCount]}
+                    </th>`
+          rowCount++
+      }else{
+          graph += `<th class="row-head"></th>`
+      }
+      for(var col = 0; col < data.seats[row].length; col++){
+        if(!colIsEmpty(col))
+            colCount++
+        switch(data.seats[row][col]){
+          case 0:
+            graph += `<td row=${row} col=${col}>
+                      </td>`
+            break;
+          case 1:
+            graph += `<td class="seat" row=${row} col=${col}>
+                        ${alphabet[rowCount-1]}${colCount}
+                      </td>`
+            break;
+          case 2:
+            graph += `<td class="wheel" row=${row} col=${col}>
+                        <i class="fas fa-wheelchair"></i>
+                      </td>`
+            break;
+           case 3:
+               graph += `<td class="booked" row=${row} col=${col}>
+                   			${alphabet[rowCount-1]}${colCount}
+		                 </td>`
+            break;
+        }
+      }
+      graph += `</tr>`
+    }
+    $(".seat-table").html(graph)
+}
+
+let rowIsEmpty = (rowNum) => {
+  for(var col = 0; col < data.width; col++){
+    if(data.seats[rowNum][col] != 0){
+      return false;
+    }
+  }
+  return true;
+}
+
+let colIsEmpty = (colNum) => {
+  for(var row = 0; row < data.height; row++){
+    if(data.seats[row][colNum] != 0){
+      return false;
+    }
+  }
+  return true;
+}
+
+$(function(){
+	getSession();
+	getBookedTicket()
+})
+</script>
+</body>
+</html>

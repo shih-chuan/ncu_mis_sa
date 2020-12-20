@@ -209,10 +209,10 @@ public class MovieHelper {
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
             while(rs.next()) {
                 /** 將 ResultSet 之資料取出 */
-            	int movie_id = rs.getInt("id");
-                String movie_name = rs.getString("name");
-                String cover = rs.getString("cover");
-                String content = rs.getString("content");
+            	int movie_id = rs.getInt("movie_id");
+                String movie_name = rs.getString("movie_name");
+                String cover = rs.getString("movie_cover");
+                String content = rs.getString("movie_content");
                 int running_time = rs.getInt("running_time");
                 String genre = rs.getString("genre");
                 Date release_date = rs.getDate("release_date");

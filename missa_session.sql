@@ -16,30 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `theater`
+-- Table structure for table `session`
 --
 
-DROP TABLE IF EXISTS `theater`;
+DROP TABLE IF EXISTS `session`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `theater` (
-  `theater_id` int(11) NOT NULL AUTO_INCREMENT,
-  `theater_name` varchar(45) NOT NULL,
-  `width` int(11) NOT NULL,
-  `height` int(11) NOT NULL,
-  PRIMARY KEY (`theater_id`),
-  UNIQUE KEY `theater_id_UNIQUE` (`theater_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+CREATE TABLE `session` (
+  `session_id` int(11) NOT NULL AUTO_INCREMENT,
+  `movie_id` int(11) NOT NULL,
+  `theater_id` int(11) NOT NULL,
+  `session_date` date NOT NULL,
+  `session_time` time NOT NULL,
+  PRIMARY KEY (`session_id`),
+  KEY `session_theater_id_fk_idx` (`theater_id`),
+  KEY `session_movie_id_fk_idx` (`movie_id`),
+  CONSTRAINT `session_movie_id_fk` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `session_theater_id_fk` FOREIGN KEY (`theater_id`) REFERENCES `theater` (`theater_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `theater`
+-- Dumping data for table `session`
 --
 
-LOCK TABLES `theater` WRITE;
-/*!40000 ALTER TABLE `theater` DISABLE KEYS */;
-INSERT INTO `theater` VALUES (6,'影廳1',3,3),(7,'影廳2',2,4),(8,'影廳3',2,2),(9,'影廳4',5,5),(10,'影廳5',10,9),(11,'皇家聽',5,3),(12,'影廳6',2,2),(13,'test',7,7),(14,'影廳8',18,8);
-/*!40000 ALTER TABLE `theater` ENABLE KEYS */;
+LOCK TABLES `session` WRITE;
+/*!40000 ALTER TABLE `session` DISABLE KEYS */;
+INSERT INTO `session` VALUES (1,1,14,'2020-12-25','12:00:00'),(2,1,13,'2020-12-15','15:00:00');
+/*!40000 ALTER TABLE `session` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-21  0:42:28
+-- Dump completed on 2020-12-21  0:40:19

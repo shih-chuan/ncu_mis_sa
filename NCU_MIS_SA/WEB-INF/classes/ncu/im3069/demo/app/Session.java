@@ -5,17 +5,17 @@ import java.util.*;
 public class Session{
 
     /** session_id，場次編號 */
-    private int session_id;
+    private int id;
     
     private Movie movie;
     
     private Theater theater;
     
     /** session_time，場次時間 */
-	private Date session_time;	
+	private String session_time;	
 	
     /** session_date，場次日期 */
-	private Date session_date;
+	private String session_date;
 	
     /** th，ProductHelper 之物件與 OrderItem 相關之資料庫方法（Sigleton） */
     private TheaterHelper th =  TheaterHelper.getHelper();
@@ -30,7 +30,7 @@ public class Session{
      * @param id 產品編號
      */
 	public Session(int session_id) {
-		this.session_id = session_id;
+		this.id = session_id;
 	}
 
     /**
@@ -41,8 +41,8 @@ public class Session{
      * @param price 產品價格
      * @param image 產品圖片
      */
-	public Session(int session_id, Date session_time, Date session_date) {
-		this.session_id = session_id;
+	public Session(int session_id, String session_time, String session_date) {
+		this.id = session_id;
 		this.session_time = session_time;
 		this.session_date = session_date;
 	}
@@ -57,9 +57,8 @@ public class Session{
      * @param image 產品圖片
      * @param describe 產品敘述
      */
-	public Session(int session_id, int movie_id, int theater_id, Date session_time
-			, Date session_date) {
-		this.session_id = session_id;
+	public Session(int session_id, int movie_id, int theater_id, String session_date, String session_time) {
+		this.id = session_id;
 		getTheaterFromDB(theater_id);
 		getMovieFromDB(movie_id);
 		this.session_time = session_time;
@@ -71,8 +70,8 @@ public class Session{
      *
      * @return int 回傳場次編號
      */
-	public int getSession_id() {
-		return this.session_id;
+	public int getId() {
+		return this.id;
 	}
 
 	public Theater getTheater() {
@@ -88,7 +87,7 @@ public class Session{
      *
      * @return String 回傳場次時間
      */
-	public Date getSession_time() {
+	public String getSession_time() {
 		return this.session_time;
 	}
 
@@ -97,7 +96,7 @@ public class Session{
      *
      * @return  回傳場次日期
      */
-	public Date getSession_date() {
+	public String getSession_date() {
 		return this.session_date;
 	}
 
@@ -106,16 +105,42 @@ public class Session{
      */
     private void getTheaterFromDB(int theater_id) {
         String tid = String.valueOf(theater_id);
-        this.theater = th.getById(tid);
+        this.theater = th.getTheaterById(tid);
     }
-    
+    /**
+     * 取得影廳資料
+    *
+    * @return JSONObject 取得影廳資料
+    */
+   public JSONObject getTheaterData() {
+	   JSONObject result = new JSONObject();
+
+       result = this.theater.getTheaterAllInfo();
+
+       return result;
+   }
 	/**
      * 從 DB 中取得影廳
      */
     private void getMovieFromDB(int movie_id) {
+    	System.out.println("in getMovieFromDB");
         String mid = String.valueOf(movie_id);
         this.movie = mh.getById(mid);
+    	System.out.println(this.movie.getGenre());
     }
+    
+    /**
+     * 取得電影資料
+    *
+    * @return JSONObject 取得電影資料
+    */
+   public JSONObject getMovieData() {
+	   JSONObject result = new JSONObject();
+
+       result = this.movie.getData();
+
+       return result;
+   }
         
     /**
      * 取得產品資訊
@@ -125,11 +150,24 @@ public class Session{
 	public JSONObject getData() {
         /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
         JSONObject jso = new JSONObject();
-        jso.put("session_id", getSession_id());
+        jso.put("session_id", getId());
         jso.put("session_time", getSession_time());
         jso.put("session_date", getSession_date());
         
         return jso;
     }
+	
+	/**
+     * 取得訂單所有資訊
+    *
+    * @return JSONObject 取得訂單所有資訊
+    */
+   public JSONObject getSessionAllInfo() {
+       JSONObject jso = new JSONObject();
+       jso.put("session_info", getData());
+       jso.put("theater_info", getTheaterData());
+       jso.put("movie_info", getMovieData());
+       return jso;
+   }
 }
 

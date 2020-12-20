@@ -63,7 +63,7 @@ public class Seat {
      */
     private void getTheaterFromDB(int theater_id) {
         String id = String.valueOf(theater_id);
-        this.theater = th.getById(id);
+        this.theater = th.getTheaterById(id);
     }
 	/**
      * 取得座位細項資料
@@ -72,10 +72,10 @@ public class Seat {
      */
     public JSONObject getData() {
         JSONObject data = new JSONObject();
-        data.put("code", getCode());
+        data.put("seatCode", getCode());
         data.put("type", getType());
-        data.put("row_num", getRowNum());
-        data.put("col_num", getColNum());
+        data.put("rowNum", getRowNum());
+        data.put("colNum", getColNum());
 
         return data;
     }

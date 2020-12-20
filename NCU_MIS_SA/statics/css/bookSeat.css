@@ -1,0 +1,64 @@
+td{
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 5px;
+  height: 50px;
+  min-width: 50px;
+  padding: 10px;
+}
+th{
+  position: relative;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+}
+.seat {
+  background-color: #fff;
+  border-radius: 3px;
+}
+.seat:hover{
+  background-color: #bbb;
+}
+.wheel{
+  background-color: blue;
+  color: white;
+  font-size: 20px;
+}
+.selected{
+  background-color: lime;
+}
+.booked{
+  background-color: red;
+}
+table{
+  background-color: black;
+  border-collapse: separate;
+  border-spacing: 15px;
+}
+.content{
+  display: flex;
+  padding: 40px;
+  justify-content: center;
+}
+.seat-table{
+  margin-right: 20px;
+  flex: 8;
+}
+.ticket-info{
+  flex: 4;
+}
+.ticket-info .list-group{
+  margin-bottom: 20px;
+}
+.list-group-item.active{
+  font-size: 18px;
+  font-weight: bold;
+}
+.controls{
+  display: flex;
+  justify-content: flex-end;
+}
+.controls button{
+  margin-left: 10px;
+}

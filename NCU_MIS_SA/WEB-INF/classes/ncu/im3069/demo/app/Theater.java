@@ -89,6 +89,7 @@ public class Theater {
 	
 	public JSONObject getTheaterData() {
         JSONObject jso = new JSONObject();
+        jso.put("id", getId());
         jso.put("name", getName());
         jso.put("width", getWidth());
         jso.put("height", getHeight());

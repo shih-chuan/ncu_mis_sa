@@ -81,8 +81,8 @@
             table_html += '<td>' + value.theater_info['name'] + '</td>';
             table_html += '<td>' + countNormalSeats(value.seats_info) + '</td>';
             table_html += '<td>' + countWheelSeats(value.seats_info) + '</td>';
-            table_html += '<td>' + '<a href="edit.html?id=' + i + '">編輯</a> | ';
-            table_html += '<a href="javascript: deleteMember(' + i + ');">刪除</a></td></tr>';
+            table_html += '<td>' + '<a href="/NCU_MIS_SA/theater/edit.html?id=' + value.theater_info['id'] + '">編輯</a> | ';
+            table_html += '<a href="javascript: deleteMember(' + value.theater_info['id'] + ');">刪除</a></td></tr>';
             i++;
         })
 
