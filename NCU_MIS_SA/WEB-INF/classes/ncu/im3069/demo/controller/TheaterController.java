@@ -109,5 +109,6 @@ public class TheaterController extends HttpServlet {
         /** 透過 JsonReader 物件回傳到前端（以 JSONObject 方式） */
         jsr.response(resp, response);
 	}
-
+	public void doDelete(HttpServletRequest request, HttpServletResponse response) {}
+	public void doPut(HttpServletRequest request, HttpServletResponse response) {}
 }

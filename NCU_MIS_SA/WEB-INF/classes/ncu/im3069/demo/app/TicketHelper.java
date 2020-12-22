@@ -12,7 +12,7 @@ public class TicketHelper {
     private static TicketHelper th;
     private Connection conn = null;
     private PreparedStatement pres = null;
-    private SeatHelper sh =  SeatHelper.getHelper();
+    private SessionHelper sh =  SessionHelper.getHelper();
     
     private TicketHelper() {
     }
@@ -24,21 +24,19 @@ public class TicketHelper {
     }
     
     
-    public JSONObject create(Ticket ticket) {
+    public long create(Ticket ticket) {
 
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
-        /** 紀錄程式開始執行時間 */
-        long start_time = System.nanoTime();
-        /** 紀錄SQL總行數 */
-        int row = 0;
+        /**新增後回傳之ID*/
+        long id = -1;
         
         try {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
             String sql = "INSERT INTO `missa`.`ticket`(`session_id`, `member_id`, `theater_id`, `seat_code`)"
-                    + " VALUES(?, ?, ?)";
+                    + " VALUES(?, ?, ?, ?)";
             
             /** 取得所需之參數 */
             int session_id = ticket.getSession().getId();
@@ -60,7 +58,11 @@ public class TicketHelper {
             exexcute_sql = pres.toString();
             System.out.println(exexcute_sql);
             
+            ResultSet rs = pres.getGeneratedKeys();
 
+            if (rs.next()) {
+                id = rs.getLong(1);
+            }
         } catch (SQLException e) {
             /** 印出JDBC SQL指令錯誤 **/
             System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
@@ -72,17 +74,7 @@ public class TicketHelper {
             DBMgr.close(pres, conn);
         }
 
-        /** 紀錄程式結束執行時間 */
-        long end_time = System.nanoTime();
-        /** 紀錄程式執行時間 */
-        long duration = (end_time - start_time);
-
-        /** 將SQL指令、花費時間與影響行數，封裝成JSONObject回傳 */
-        JSONObject response = new JSONObject();
-        response.put("sql", exexcute_sql);
-        response.put("time", duration);
-        response.put("row", row);
-        return response;
+        return id;
     }
 
     public JSONObject getAll() {
@@ -306,7 +298,122 @@ public class TicketHelper {
         /** 將SQL指令、花費時間、影響行數與所有會員資料之JSONArray，封裝成JSONObject回傳 */
         JSONObject response = new JSONObject();
         response.put("data", jsa);
-
+        System.out.println("jsa" + jsa);
         return response;
+    }
+    public JSONObject reserveTickets(int sessionId, int memberId, int amount) {
+    	JSONObject jso = new JSONObject();
+    	Ticket reservedTicket = null;
+    	JSONArray bookedTicket = new JSONArray();
+        String sid = String.valueOf(sessionId);
+    	bookedTicket = getBySessionId(sid).getJSONArray("data");
+		System.out.println("test");
+		System.out.println(bookedTicket);
+    	Session session = sh.getSessionById(sid);
+    	JSONArray seats = session.getTheaterData().getJSONArray("seats_info");
+    	System.out.println(seats);
+    	
+    	//移除無障礙座位
+    	for(int i = 0; i < seats.length(); i++ ) {
+    		JSONObject seat = seats.getJSONObject(i);
+			if(seat.getInt("type") == 2) {
+				seats.remove(i);
+				i--;
+			}
+    	}
+    	
+    	//刪除已經訂走的位置
+    	for(int i = 0; i < seats.length(); i++ ) {
+    		JSONObject seat = seats.getJSONObject(i);
+        	System.out.println(i + ": " + seat);
+    		for(int j = 0; j < bookedTicket.length(); j++) {
+        		JSONObject bookedSeat = bookedTicket.getJSONObject(j).getJSONObject("seat_info");
+        		System.out.println(bookedSeat.getString("seatCode") + ", " + seat.getString("seatCode"));
+        		System.out.println(Objects.equals(bookedSeat.getString("seatCode"), seat.getString("seatCode")));
+    			if(Objects.equals(bookedSeat.getString("seatCode"), seat.getString("seatCode"))) {
+    				seats.remove(i);
+    				i--;
+    			}
+    		}
+    	}
+		System.out.println("seats after deleted: " + seats);
+
+    	JSONArray reservedTickets = new JSONArray();
+    	int nRemainSeats = seats.length();
+    	if(nRemainSeats >= amount) {
+    		for(int i = 0; i < amount; i++) {
+    			reservedTicket = new Ticket(sessionId, memberId, seats.getJSONObject(i).getString("seatCode"), session.getTheater().getId());
+    			long result = create(reservedTicket);
+    			if(result > 0) {
+    				reservedTicket.setId((int) result);
+    				reservedTickets.put(reservedTicket.getTicketAllInfo());
+    			}else {
+    		    	jso.put("message", "database insert failed");
+    				return jso;
+    			}
+    		}
+    	}else {
+	    	jso.put("message", "no more seats!!");
+			return jso;
+		}
+		
+    	jso.put("message", "reserve seats success");
+		jso.put("reservedSeats", reservedTickets);
+		jso.put("bookedSeats", bookedTicket);
+		
+		return jso;
+    }
+    /**
+     * 檢查該名會員之電子郵件信箱是否重複註冊
+     *
+     * @param m 一名會員之Member物件
+     * @return boolean 若重複註冊回傳False，若該信箱不存在則回傳True
+     */
+    public boolean checkDuplicate(Ticket t){
+        /** 紀錄SQL總行數，若為「-1」代表資料庫檢索尚未完成 */
+        int row = -1;
+        /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
+        ResultSet rs = null;
+        
+        try {
+            /** 取得資料庫之連線 */
+            conn = DBMgr.getConnection();
+            /** SQL指令 */
+            String sql = "SELECT count(*) FROM `missa`.`ticket` WHERE `seat_code` = ? AND `theater_id` = ? AND `session_id` = ?";
+            
+            /** 取得所需之參數 */
+            String seatCode = t.getSeat().getCode();
+            int tid = t.getSeat().getTheater().getId();
+            int sid = t.getSession().getId();
+            
+            /** 將參數回填至SQL指令當中 */
+            pres = conn.prepareStatement(sql);
+            pres.setString(1, seatCode);
+            pres.setInt(2, tid);
+            pres.setInt(3, sid);
+            /** 執行查詢之SQL指令並記錄其回傳之資料 */
+            rs = pres.executeQuery();
+
+            /** 讓指標移往最後一列，取得目前有幾行在資料庫內 */
+            rs.next();
+            row = rs.getInt("count(*)");
+            System.out.print(row);
+
+        } catch (SQLException e) {
+            /** 印出JDBC SQL指令錯誤 **/
+            System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            /** 若錯誤則印出錯誤訊息 */
+            e.printStackTrace();
+        } finally {
+            /** 關閉連線並釋放所有資料庫相關之資源 **/
+            DBMgr.close(rs, pres, conn);
+        }
+        
+        /** 
+         * 判斷是否已經有一筆該電子郵件信箱之資料
+         * 若無一筆則回傳False，否則回傳True 
+         */
+        return (row == 0) ? false : true;
     }
 }

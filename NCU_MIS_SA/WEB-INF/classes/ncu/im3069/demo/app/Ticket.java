@@ -17,6 +17,9 @@ public class Ticket {
     /** list，座位列表 */
     private Member member;
     
+    /** list，訂單列表 */
+   // private ArrayList<MealOrder> list = new ArrayList<MealOrder>();
+    
     /** login_times，更新時間的分鐘數 */
     private Seat seat;
     
@@ -28,11 +31,14 @@ public class Ticket {
     /** sh，SeatHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
     private SeatHelper sh = SeatHelper.getHelper();
 
-    /** sh，SeatHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
+    /** seh，SeatHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
     private SessionHelper seh = SessionHelper.getHelper();
 
-    /** sh，SeatHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
+    /** mh，SeatHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
     private MemberHelper mh = MemberHelper.getHelper();
+
+    /** oh，SeatHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
+    //private MealOrderHelper oh = MealOrderHelper.getHelper();
     
     /**
      * 實例化（Instantiates）一個新的（new）Order 物件<br>
@@ -44,10 +50,10 @@ public class Ticket {
      * @param address 會員地址
      * @param phone 會員姓名
      */
-	public Ticket(int id, Date bookTime, int price) {
-		this.id = id;
-		this.bookTime = bookTime;
-		this.price = price;
+	public Ticket(int session_id, int member_id, String seat_code, int theater_id) {
+		getMemberFromDB(member_id);
+        getSessionFromDB(session_id);
+        getSeatFromDB(theater_id, seat_code);
     }
     
     /**
@@ -65,17 +71,23 @@ public class Ticket {
     public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id, Date book_time, int price) {
 		this.id = id;
 		this.bookTime = book_time;
+		this.price = price;
 		getMemberFromDB(member_id);
         getSessionFromDB(session_id);
         getSeatFromDB(theater_id, seat_code);
 	}
-    public Ticket(int id, int session_id, String seat_code, int theater_id) {
+    public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id) {
         getSessionFromDB(session_id);
+		getMemberFromDB(member_id);
         getSeatFromDB(theater_id, seat_code);
 	}
 	
 	public int getId() {
 		return this.id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public Session getSession() {
@@ -110,6 +122,24 @@ public class Ticket {
         return jso;
     }
 	
+	/**
+     * 從 DB 中取得訂單產品
+     */
+    private void getMealFromDB() {
+        //ArrayList<OrderItem> data = oph.getOrderProductByOrderId(this.id);
+        //this.list = data;
+    }
+    
+	/**
+     * 取得訂單產品資料
+     *
+     * @return JSONArray 取得訂單產品資料
+     */
+    public JSONArray getMealData() {
+        JSONArray result = new JSONArray();
+        return result;
+    }
+    
 	/**
      * 從 DB 中取得座位資料
      */

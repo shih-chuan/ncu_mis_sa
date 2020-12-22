@@ -25,7 +25,7 @@ th{
   color: white;
   font-size: 20px;
 }
-.selected{
+.reserved{
   background-color: lime;
 }
 .booked{

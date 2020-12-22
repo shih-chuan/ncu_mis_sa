@@ -125,6 +125,45 @@ function getSession() {
             $("#theater-name").html(res.response.theater_info.theater_info.name);
             $("#session-datetime").html(res.response.session_info.session_date + " " + res.response.session_info.session_time);
             draw();
+            console.log(data.seats)
+        	reserveSeats();
+        },
+        error: function () {
+            alert("無法連線到伺服器！");
+        }
+    });
+}
+
+function reserveSeats() {
+	var params = {
+        	memberId: 2,
+        	sessionId: 2,
+        	amount: 3
+    }
+	var dataString = JSON.stringify(params);
+    $.ajax({
+        type: "POST",
+        url: "/NCU_MIS_SA/api/ticket.do",
+        crossDomain: true,
+        data: dataString,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (res) {
+        	console.log(res);
+            if(res.status == 200){
+            	if(res.response.bookedSeats){
+                	res.response.bookedSeats.map(function(ticket){
+                		data.seats[ticket.seat_info.rowNum][ticket.seat_info.colNum] = 3;
+                	})
+                	res.response.reservedSeats.map(function(ticket){
+                		data.seats[ticket.seat_info.rowNum][ticket.seat_info.colNum] = 4;
+                	})
+            	}else{
+            		alert("no more seats");
+            	}
+            }
+            draw();
         },
         error: function () {
             alert("無法連線到伺服器！");
@@ -206,6 +245,11 @@ let draw = () => {
                    			${alphabet[rowCount-1]}${colCount}
 		                 </td>`
             break;
+           case 4:
+               graph += `<td class="reserved" row=${row} col=${col}>
+                   			${alphabet[rowCount-1]}${colCount}
+		                 </td>`
+            break;
         }
       }
       graph += `</tr>`
@@ -233,7 +277,6 @@ let colIsEmpty = (colNum) => {
 
 $(function(){
 	getSession();
-	getBookedTicket()
 })
 </script>
 </body>
