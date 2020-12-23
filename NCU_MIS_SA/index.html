@@ -93,7 +93,7 @@
                             }
                     });
                 }
-                
+
                 // 更新會員列表表格
                 function updateTable(data) {
                     $("#table > tbody").empty();
@@ -104,6 +104,7 @@
                         table_html += '<td>' + value['email'] + '</td>';
                         table_html += '<td>' + value['login_times'] + '</td>';
                         table_html += '<td>' + value['status'] + '</td>';
+                        
                         table_html += '<td>' + '<a href="edit.html?id=' + value['id'] + '">編輯</a> | ';
                         table_html += '<a href="javascript: deleteMember(' + value['id'] + ');">刪除</a></td></tr>';
                     })

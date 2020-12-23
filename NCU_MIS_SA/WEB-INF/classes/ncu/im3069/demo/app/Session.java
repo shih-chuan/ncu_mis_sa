@@ -123,10 +123,8 @@ public class Session{
      * 從 DB 中取得影廳
      */
     private void getMovieFromDB(int movie_id) {
-    	System.out.println("in getMovieFromDB");
         String mid = String.valueOf(movie_id);
-        this.movie = mh.getById(mid);
-    	System.out.println(this.movie.getGenre());
+        this.movie = mh.getMovieById(mid);
     }
     
     /**
