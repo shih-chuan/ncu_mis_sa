@@ -95,17 +95,17 @@ public class MealController extends HttpServlet {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
-        String id = jsr.getParameter("id");
+        String id_list = jsr.getParameter("id_list");
         
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
-        if (id.isEmpty()) {
+        if (id_list.isEmpty()) {
             /** 透過MemberHelper物件之getAll()方法取回所有會員之資料，回傳之資料為JSONObject物件 */
             JSONObject query = mh.getAll();
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
-            resp.put("message", "所有會員資料取得成功");
+            resp.put("message", "所有套餐資料取得成功");
             resp.put("response", query);
     
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
@@ -113,12 +113,12 @@ public class MealController extends HttpServlet {
         }
         else {
             /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
-            JSONObject query = mh.getByIdList(id);          
+            JSONObject query = mh.getByIdList(id_list);          
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
-            resp.put("message", "會員資料取得成功");
+            resp.put("message", "套餐資料取得成功");
             resp.put("response", query);
     
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
@@ -149,7 +149,7 @@ public class MealController extends HttpServlet {
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
         resp.put("status", "200");
-        resp.put("message", "會員移除成功！");
+        resp.put("message", "套餐移除成功！");
         resp.put("response", query);
 
         /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
