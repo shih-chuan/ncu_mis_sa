@@ -117,7 +117,7 @@ public class MemberHelper {
         /** 新建一個 Member 物件之 m 變數，用於紀錄每一位查詢回之會員資料 */
         Member m = null;
         /** 用於儲存所有檢索回之會員，以JSONArray方式儲存 */
-        JSONArray jsa = new JSONArray();
+        JSONArray jsa = new JSONArray();  //傳json陣列
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
@@ -125,7 +125,7 @@ public class MemberHelper {
         /** 紀錄SQL總行數 */
         int row = 0;
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
-        ResultSet rs = null;
+        ResultSet rs = null;    //resultset 結果集合
         
         try {
             /** 取得資料庫之連線 */
@@ -269,60 +269,6 @@ public class MemberHelper {
         return response;
     }
     
-    public Member getMemberByID(String id) {
-        /** 新建一個 Member 物件之 m 變數，用於紀錄每一位查詢回之會員資料 */
-        Member m = null;
-        /** 記錄實際執行之SQL指令 */
-        String exexcute_sql = "";
-        /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
-        ResultSet rs = null;
-        
-        try {
-            /** 取得資料庫之連線 */
-            conn = DBMgr.getConnection();
-            /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`members` WHERE `id` = ? LIMIT 1";
-            
-            /** 將參數回填至SQL指令當中 */
-            pres = conn.prepareStatement(sql);
-            pres.setString(1, id);
-            /** 執行查詢之SQL指令並記錄其回傳之資料 */
-            rs = pres.executeQuery();
-
-            /** 紀錄真實執行的SQL指令，並印出 **/
-            exexcute_sql = pres.toString();
-            System.out.println(exexcute_sql);
-            
-            /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
-            /** 正確來說資料庫只會有一筆該會員編號之資料，因此其實可以不用使用 while 迴圈 */
-            while(rs.next()) {
-                
-                /** 將 ResultSet 之資料取出 */
-                int member_id = rs.getInt("id");
-                String name = rs.getString("name");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                int login_times = rs.getInt("login_times");
-                String status = rs.getString("status");
-                
-                /** 將每一筆會員資料產生一名新Member物件 */
-                m = new Member(member_id, email, password, name, login_times, status);
-            }
-            
-        } catch (SQLException e) {
-            /** 印出JDBC SQL指令錯誤 **/
-            System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
-        } catch (Exception e) {
-            /** 若錯誤則印出錯誤訊息 */
-            e.printStackTrace();
-        } finally {
-            /** 關閉連線並釋放所有資料庫相關之資源 **/
-            DBMgr.close(rs, pres, conn);
-        }
-
-        return m;
-    }
-    
     /**
      * 取得該名會員之更新時間與所屬之會員組別
      *
@@ -387,7 +333,7 @@ public class MemberHelper {
         try {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
-            /** SQL指令 */
+            /** SQL指令 */  //email->key 
             String sql = "SELECT count(*) FROM `missa`.`members` WHERE `email` = ?";
             
             /** 取得所需之參數 */
@@ -395,12 +341,12 @@ public class MemberHelper {
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
-            pres.setString(1, email);
+            pres.setString(1, email);  //第一個問號塞email
             /** 執行查詢之SQL指令並記錄其回傳之資料 */
             rs = pres.executeQuery();
 
             /** 讓指標移往最後一列，取得目前有幾行在資料庫內 */
-            rs.next();
+            rs.next();   //抓回resultset
             row = rs.getInt("count(*)");
             System.out.print(row);
 
@@ -419,7 +365,7 @@ public class MemberHelper {
          * 判斷是否已經有一筆該電子郵件信箱之資料
          * 若無一筆則回傳False，否則回傳True 
          */
-        return (row == 0) ? false : true;
+        return (row == 0) ? false : true;  //新增會員要row==0
     }
     
     /**
