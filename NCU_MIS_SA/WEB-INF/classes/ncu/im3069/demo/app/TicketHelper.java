@@ -187,7 +187,63 @@ public class TicketHelper {
 
         return data;
     }
-    
+    /**
+     * 透過會員編號（ID）刪除會員
+     *
+     * @param id 會員編號
+     * @return the JSONObject 回傳SQL執行結果
+     */
+    public JSONObject deleteById(int id) {
+        /** 記錄實際執行之SQL指令 */
+        String exexcute_sql = "";
+        /** 紀錄程式開始執行時間 */
+        long start_time = System.nanoTime();
+        /** 紀錄SQL總行數 */
+        int row = 0;
+        /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
+        ResultSet rs = null;
+        
+        try {
+            /** 取得資料庫之連線 */
+            conn = DBMgr.getConnection();
+            
+            /** SQL指令 */
+            String sql = "DELETE FROM `missa`.`ticket` WHERE `ticket_id` = ? LIMIT 1";
+            
+            /** 將參數回填至SQL指令當中 */
+            pres = conn.prepareStatement(sql);
+            pres.setInt(1, id);
+            /** 執行刪除之SQL指令並記錄影響之行數 */
+            row = pres.executeUpdate();
+
+            /** 紀錄真實執行的SQL指令，並印出 **/
+            exexcute_sql = pres.toString();
+            System.out.println(exexcute_sql);
+            
+        } catch (SQLException e) {
+            /** 印出JDBC SQL指令錯誤 **/
+            System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            /** 若錯誤則印出錯誤訊息 */
+            e.printStackTrace();
+        } finally {
+            /** 關閉連線並釋放所有資料庫相關之資源 **/
+            DBMgr.close(rs, pres, conn);
+        }
+
+        /** 紀錄程式結束執行時間 */
+        long end_time = System.nanoTime();
+        /** 紀錄程式執行時間 */
+        long duration = (end_time - start_time);
+        
+        /** 將SQL指令、花費時間與影響行數，封裝成JSONObject回傳 */
+        JSONObject response = new JSONObject();
+        response.put("sql", exexcute_sql);
+        response.put("row", row);
+        response.put("time", duration);
+
+        return response;
+    }
     public Theater getTheaterById(String id) {
         /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
     	Theater t = null;
@@ -397,7 +453,7 @@ public class TicketHelper {
             /** 讓指標移往最後一列，取得目前有幾行在資料庫內 */
             rs.next();
             row = rs.getInt("count(*)");
-            System.out.print(row);
+            System.out.println(row);
 
         } catch (SQLException e) {
             /** 印出JDBC SQL指令錯誤 **/
@@ -415,5 +471,66 @@ public class TicketHelper {
          * 若無一筆則回傳False，否則回傳True 
          */
         return (row == 0) ? false : true;
+    }
+    
+    public boolean checkBookedByMember(Ticket t) {
+        /** 紀錄SQL總行數，若為「-1」代表資料庫檢索尚未完成 */
+        boolean bookedByMember = false;
+        /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
+        ResultSet rs = null;
+        
+        try {
+            /** 取得資料庫之連線 */
+            conn = DBMgr.getConnection();
+            /** SQL指令 */
+            String sql = "SELECT * FROM `missa`.`ticket` WHERE `seat_code` = ? AND `theater_id` = ? AND `session_id` = ?";
+            
+            /** 取得所需之參數 */
+            String seatCode = t.getSeat().getCode();
+            int tid = t.getSeat().getTheater().getId();
+            int sid = t.getSession().getId();
+            
+            /** 將參數回填至SQL指令當中 */
+            pres = conn.prepareStatement(sql);
+            pres.setString(1, seatCode);
+            pres.setInt(2, tid);
+            pres.setInt(3, sid);
+            /** 執行查詢之SQL指令並記錄其回傳之資料 */
+            rs = pres.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            
+            System.out.println("test: " + rs);
+            /** 讓指標移往最後一列，取得目前有幾行在資料庫內 */
+            if(rs.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print(",  ");
+                    String columnValue = rs.getString(i);
+                    System.out.print(columnValue + " " + rsmd.getColumnName(i));
+                }
+                int member_id = rs.getInt("member_id");
+                if(member_id == t.getMember().getID()) {
+                	bookedByMember = true;
+                	System.out.println("BookedByMember!");
+                }
+            }
+
+        } catch (SQLException e) {
+            /** 印出JDBC SQL指令錯誤 **/
+            System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            /** 若錯誤則印出錯誤訊息 */
+            e.printStackTrace();
+        } finally {
+            /** 關閉連線並釋放所有資料庫相關之資源 **/
+            DBMgr.close(rs, pres, conn);
+        }
+        
+        /** 
+         * 判斷是否已經有一筆該電子郵件信箱之資料
+         * 若無一筆則回傳False，否則回傳True 
+         */
+        return (!bookedByMember) ? false : true;
+    	
     }
 }

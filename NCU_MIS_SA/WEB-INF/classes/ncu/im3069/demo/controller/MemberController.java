@@ -39,7 +39,7 @@ public class MemberController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
+        JsonReader jsr = new JsonReader(request);  
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
@@ -55,12 +55,12 @@ public class MemberController extends HttpServlet {
             /** 以字串組出JSON格式之資料 */
             String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
             /** 透過JsonReader物件回傳到前端（以字串方式） */
-            jsr.response(resp, response);
+            jsr.response(resp, response);  //回報錯誤
         }
         /** 透過MemberHelper物件的checkDuplicate()檢查該會員電子郵件信箱是否有重複 */
         else if (!mh.checkDuplicate(m)) {
             /** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
-            JSONObject data = mh.create(m);
+            JSONObject data = mh.create(m);  //資料進入資料庫
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
@@ -69,7 +69,7 @@ public class MemberController extends HttpServlet {
             resp.put("response", data);
             
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            jsr.response(resp, response);
+            jsr.response(resp, response);    //新增會員成功
         }
         else {
             /** 以字串組出JSON格式之資料 */
@@ -161,6 +161,7 @@ public class MemberController extends HttpServlet {
      * @throws ServletException the servlet exception
      * @throws IOException Signals that an I/O exception has occurred.
      */
+    //編輯會員
     public void doPut(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */

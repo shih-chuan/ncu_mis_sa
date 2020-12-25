@@ -230,7 +230,7 @@ public class SessionHelper {
                 Date session_date = session.getSession_date();
                 
                 /** 將每一筆會員資料產生一名新Member物件 */
-                session = new Session( session_id, movie_id, theater_id, session_time, session_date);
+                session = new Session(session_id, movie_id, theater_id, session_time, session_date);
                 /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
                 result.add(session);
             }
