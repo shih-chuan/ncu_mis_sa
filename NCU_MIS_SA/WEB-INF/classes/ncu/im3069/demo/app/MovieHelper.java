@@ -101,6 +101,7 @@ public class MovieHelper {
         return response;
     }
     
+    
     public JSONObject getByIdList(String data) {
       /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
       Movie m = null;
@@ -184,12 +185,17 @@ public class MovieHelper {
       return response;
   }
     
-    public Movie getMovieById(String id) {
+    public JSONObject getMovieById(String id) {
         /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
     	Movie m = null;
-    	
+    	/** 用於儲存所有檢索回之會員，以JSONArray方式儲存 */
+        JSONArray jsa = new JSONArray();
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
+        /** 紀錄程式開始執行時間 */
+        long start_time = System.nanoTime();
+        /** 紀錄SQL總行數 */
+        int row = 0;
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
         ResultSet rs = null;
         
@@ -211,12 +217,16 @@ public class MovieHelper {
             
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
             while(rs.next()) {
-            	
+            	/** 每執行一次迴圈表示有一筆資料 */
+            	row+=1;
                 /** 將 ResultSet 之資料取出 */
             	int movie_id = rs.getInt("movie_id");
                 String movie_name = rs.getString("movie_name");
+                System.out.print(movie_name);
                 String cover = rs.getString("movie_cover");
                 String content = rs.getString("movie_content");
+                System.out.print(content);
+
                 int running_time = rs.getInt("running_time");
                 String genre = rs.getString("genre");
                 Date release_date = rs.getDate("release_date");
@@ -224,7 +234,8 @@ public class MovieHelper {
                 
                 /** 將每一筆商品資料產生一名新Product物件 */
                 m = new Movie(movie_id, movie_name, cover, content, running_time, genre, release_date);
-
+                /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
+                jsa.put(m.getData());
             }
 
         } catch (SQLException e) {
@@ -237,8 +248,20 @@ public class MovieHelper {
             /** 關閉連線並釋放所有資料庫相關之資源 **/
             DBMgr.close(rs, pres, conn);
         }
+        
+        /** 紀錄程式結束執行時間 */
+        long end_time = System.nanoTime();
+        /** 紀錄程式執行時間 */
+        long duration = (end_time - start_time);
+        
+        JSONObject response = new JSONObject();
+        response.put("sql", exexcute_sql);
+        response.put("row", row);
+        response.put("time", duration);
+        response.put("data", jsa);
 
-        return m;
+        return response;
+
     }
     
     
