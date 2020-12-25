@@ -73,11 +73,18 @@
 var url_string = window.location.href;
 var url = new URL(url_string);
 var session_id = url.searchParams.get("session");
+var member_id = url.searchParams.get("member");
+var amount = url.searchParams.get("amount");
+
 let data = {
     width: 0,
     height: 0,
+    theaterId: 0,
     seats: [],
-    seatsData: []
+    seatsData: [],
+    reservedTickets:[],
+    selectedSeats:[],
+    confirmed: false
 }
 
 function getSession() {
@@ -92,6 +99,7 @@ function getSession() {
         success: function (res) {
         	console.log(res);
             if(res.status == 200){
+            	data.theaterId = res.response.theater_info.theater_info.id;
             	data.width = res.response.theater_info.theater_info.width;
             	data.height = res.response.theater_info.theater_info.height;
             	data.seatsData = [...res.response.theater_info.seats_info];
@@ -133,12 +141,111 @@ function getSession() {
         }
     });
 }
+function deleteReservedSeatsOnWindowClosed(){
+	var reservedTicketsNotSelected = [...data.reservedTickets];
+	reservedTicketsNotSelected = reservedTicketsNotSelected.map(function(ticket){
+		return ticket.ticket_info.id;
+	})
+	var ticketsInfo = {
+		by: "ids",
+		ids: reservedTicketsNotSelected
+	}
+	var dataString = JSON.stringify(ticketsInfo);
+	console.log(dataString)
+	if(ticketsInfo.ids.length > 0){
+		$.ajax({
+	        type: "DELETE",
+	        url: "/NCU_MIS_SA/api/ticket.do",
+	        crossDomain: true,
+	        data: dataString,
+	        cache: false,
+	        dataType: 'json',
+	        timeout: 5000,
+	        success: function (res) {
+	            if(res.status == 200){
+	            	alert("success");
+	            }
+	        },
+	        error: function () {
+	            alert("無法連線到伺服器！");
+	        }
+	    });
+	}
+}
+function bookSelectedSeats() {
+	var params = {
+			by: "seats",
+        	memberId: member_id,
+        	sessionId: session_id,
+        	theaterId: data.theaterId,
+        	amount: amount,
+        	seats: data.selectedSeats
+    }
+	var dataString = JSON.stringify(params);
+    $.ajax({
+        type: "POST",
+        url: "/NCU_MIS_SA/api/ticket.do",
+        crossDomain: true,
+        data: dataString,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (res) {
+        	alert(res.message);
+        },
+        error: function () {
+            alert("無法連線到伺服器！");
+        }
+    });
+}
+function deleteUnbookedTickets() {
+	data.confirmed = true;
+	var reservedTicketsNotSelected = [...data.reservedTickets];
+	console.log(reservedTicketsNotSelected)
+	data.reservedTickets.map(function(ticket, tid){
+		console.log(tid + ':' + ticket.seat_info.seatCode);
+		data.selectedSeats.map(function(seat, sid){
+			console.log(sid + ": " + seat.seatCode);
+			console.log(ticket.seat_info.seatCode + " ? " + seat.seatCode);
+			if(ticket.seat_info.seatCode == seat.seatCode){
+				console.log(ticket.seat_info.seatCode + " true " + seat.seatCode);
+				reservedTicketsNotSelected = reservedTicketsNotSelected.filter(function( obj ) {
+				    return obj.seat_info.seatCode !== seat.seatCode;
+				});
+			}	
+		})
+	})
+	reservedTicketsNotSelected = reservedTicketsNotSelected.map(function(ticket){
+		return ticket.ticket_info.id;
+	})
+	var ticketsInfo = {
+		by: "ids",
+		ids: reservedTicketsNotSelected
+	}
+	var dataString = JSON.stringify(ticketsInfo);
+	$.ajax({
+        type: "DELETE",
+        url: "/NCU_MIS_SA/api/ticket.do",
+        crossDomain: true,
+        data: dataString,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (res){
+        	bookSelectedSeats();
+        },
+        error: function () {
+            alert("無法連線到伺服器！");
+        }
+    });
+}
 
 function reserveSeats() {
 	var params = {
-        	memberId: 2,
-        	sessionId: 2,
-        	amount: 3
+			by: "session",
+        	memberId: member_id,
+        	sessionId: session_id,
+        	amount: amount
     }
 	var dataString = JSON.stringify(params);
     $.ajax({
@@ -151,6 +258,8 @@ function reserveSeats() {
         timeout: 5000,
         success: function (res) {
         	console.log(res);
+        	data.reservedSeats=[];
+        	data.selectedSeats=[];
             if(res.status == 200){
             	if(res.response.bookedSeats){
                 	res.response.bookedSeats.map(function(ticket){
@@ -158,6 +267,8 @@ function reserveSeats() {
                 	})
                 	res.response.reservedSeats.map(function(ticket){
                 		data.seats[ticket.seat_info.rowNum][ticket.seat_info.colNum] = 4;
+                		data.reservedTickets.push(ticket);
+                		data.selectedSeats.push(ticket.seat_info);
                 	})
             	}else{
             		alert("no more seats");
@@ -195,11 +306,15 @@ function getBookedTicket() {
         }
     });
 }
+
+
 const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
 let draw = () => {
     var graph = `<tr><th class="col-head"></th>`
     var rowCount = 0, colCount = 0;
+    var seat_id = 0;
+    data.seatsData = [];
     for(var col = 0; col < data.width; col++){
         if(!colIsEmpty(col)){
           graph += `<th class="col-head" col=${col}>
@@ -231,30 +346,73 @@ let draw = () => {
                       </td>`
             break;
           case 1:
-            graph += `<td class="seat" row=${row} col=${col}>
+            graph += `<td class="seat" id=${seat_id} row=${row} col=${col}>
                         ${alphabet[rowCount-1]}${colCount}
                       </td>`
+            data.seatsData.push({
+	            seatCode: `${alphabet[rowCount-1]}${colCount}`,
+	            rowNum: row,
+	            colNum: col,
+	            type: 1
+            })
+            seat_id++;
             break;
           case 2:
-            graph += `<td class="wheel" row=${row} col=${col}>
+            graph += `<td class="wheel" id=${seat_id} row=${row} col=${col}>
                         <i class="fas fa-wheelchair"></i>
                       </td>`
+       		data.seatsData.push({
+	 	            seatCode: `${alphabet[rowCount-1]}${colCount}`,
+	 	            rowNum: row,
+	 	            colNum: col,
+	 	            type: 2
+  		    })
+            seat_id++;
             break;
            case 3:
-               graph += `<td class="booked" row=${row} col=${col}>
+               graph += `<td class="booked" id=${seat_id} row=${row} col=${col}>
                    			${alphabet[rowCount-1]}${colCount}
 		                 </td>`
+		       data.seatsData.push({
+	 	            seatCode: `${alphabet[rowCount-1]}${colCount}`,
+	 	            rowNum: row,
+	 	            colNum: col,
+	 	            type: 3
+		       })
+	           seat_id++;
             break;
            case 4:
-               graph += `<td class="reserved" row=${row} col=${col}>
+               graph += `<td class="reserved" id=${seat_id}  row=${row} col=${col}>
                    			${alphabet[rowCount-1]}${colCount}
 		                 </td>`
+            	data.seatsData.push({
+	 	            seatCode: `${alphabet[rowCount-1]}${colCount}`,
+	 	            rowNum: row,
+	 	            colNum: col,
+	 	            type: 4
+  		        })
+  	            seat_id++;
             break;
         }
       }
       graph += `</tr>`
     }
     $(".seat-table").html(graph)
+    
+	$("td.seat").click(function(){
+		console.log("clicked");
+		var sId = parseInt($(this).attr("id"));
+		
+		var unSelected = data.selectedSeats[0]
+	    data.seats[unSelected.rowNum][unSelected.colNum] = 1;
+	    data.selectedSeats.shift();//刪掉第一個
+
+	    data.seats[data.seatsData[sId].rowNum][data.seatsData[sId].colNum] = 4;
+	    data.selectedSeats.push(data.seatsData[sId]);
+	    
+	    console.log(data.selectedSeats)
+	    draw();
+	})
 }
 
 let rowIsEmpty = (rowNum) => {
@@ -274,9 +432,17 @@ let colIsEmpty = (colNum) => {
   }
   return true;
 }
-
 $(function(){
 	getSession();
+	$("#submit-btn").click(function(){
+		deleteUnbookedTickets();
+	})
+	$(window).on("beforeunload", function() { 
+		if(!data.confirmed){
+			deleteReservedSeatsOnWindowClosed();
+			return "Leave?";
+		}
+	})
 })
 </script>
 </body>
