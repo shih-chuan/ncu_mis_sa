@@ -39,7 +39,7 @@ public class MealHelper {
             conn = DBMgr.getConnection();
             
             /** SQL指令 */
-            String sql = "DELETE FROM `missa`.`meal` WHERE `id` = ? LIMIT 1";
+            String sql = "DELETE FROM `missa`.`meal` WHERE `meal_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -420,7 +420,7 @@ public class MealHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `missa`.`meal` SET `meal_name` = ? ,`meal_price` = ? ,`meal_content` = ?  WHERE meal_image` = ? ";
+            String sql = "Update `missa`.`meal` SET `meal_price` = ? ,`meal_image` = ? ,`meal_content` = ?  WHERE meal_name` = ? ";
             /** 取得所需之參數 */
             String name = m.getName();
             Double price = m.getPrice();
@@ -429,10 +429,10 @@ public class MealHelper {
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
-            pres.setString(1, name);
-            pres.setDouble(2, price);
-            pres.setString(3, image);
-            pres.setString(4, describe);
+            pres.setDouble(1, price);
+            pres.setString(2, image);
+            pres.setString(3, describe);
+            pres.setString(4, name);
             /** 執行更新之SQL指令並記錄影響之行數 */
             row = pres.executeUpdate();
 

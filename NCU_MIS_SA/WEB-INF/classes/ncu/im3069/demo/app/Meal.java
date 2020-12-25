@@ -1,5 +1,7 @@
 package ncu.im3069.demo.app;
 
+import java.util.Calendar;
+
 import org.json.*;
 
 public class Meal {
@@ -18,6 +20,9 @@ public class Meal {
 
     /** id，會員編號 */
 	private String describe;
+	
+	/** mh，MealHelper之物件與Member相關之資料庫方法（Sigleton） */
+    private MealHelper mh =  MealHelper.getHelper();
 
     /**
      * 實例化（Instantiates）一個新的（new）Product 物件<br>
@@ -112,6 +117,27 @@ public class Meal {
 	public String getDescribe() {
 		return this.describe;
 	}
+	
+	/**
+     * 更新套餐資料
+     *
+     * @return the JSON object 回傳SQL更新之結果與相關封裝之資料
+     */
+    public JSONObject update() {
+        /** 新建一個JSONObject用以儲存更新後之資料 */
+        JSONObject data = new JSONObject();
+        
+        
+        /** 檢查該名會員是否已經在資料庫 */
+        if(this.id != 0) {
+            /** 若有則將目前更新後之資料更新至資料庫中 */
+            
+            /** 透過MemberHelper物件，更新目前之會員資料置資料庫中 */
+            data = mh.update(this);
+        }
+        
+        return data;
+    }
 
     /**
      * 取得產品資訊
@@ -121,11 +147,11 @@ public class Meal {
 	public JSONObject getData() {
         /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
         JSONObject jso = new JSONObject();
-        jso.put("id", getID());
-        jso.put("name", getName());
-        jso.put("price", getPrice());
-        jso.put("image", getImage());
-        jso.put("describe", getDescribe());
+        jso.put("meal_id", getID());
+        jso.put("meal_name", getName());
+        jso.put("meal_price", getPrice());
+        jso.put("meal_image", getImage());
+        jso.put("meal_content", getDescribe());
 
         return jso;
     }
