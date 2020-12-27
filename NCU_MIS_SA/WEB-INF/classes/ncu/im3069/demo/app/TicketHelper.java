@@ -362,11 +362,11 @@ public class TicketHelper {
     	Ticket reservedTicket = null;
     	JSONArray bookedTicket = new JSONArray();
         String sid = String.valueOf(sessionId);
-    	bookedTicket = getBySessionId(sid).getJSONArray("data");
+    	bookedTicket = getBySessionId(sid).getJSONArray("data");  //getBySessionId(sid)把場次的票拿來//已定座位
 		System.out.println("test");
 		System.out.println(bookedTicket);
     	Session session = sh.getSessionById(sid);
-    	JSONArray seats = session.getTheaterData().getJSONArray("seats_info");
+    	JSONArray seats = session.getTheaterData().getJSONArray("seats_info");  //全部的位置//全部的位置減掉保留的位置就是剩下的位置
     	System.out.println(seats);
     	
     	//移除無障礙座位

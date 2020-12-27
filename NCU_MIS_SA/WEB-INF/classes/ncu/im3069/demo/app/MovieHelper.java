@@ -45,7 +45,7 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`movie`";
+            String sql = "SELECT * FROM `missa`.`movies`";
             
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
@@ -121,7 +121,7 @@ public class MovieHelper {
           conn = DBMgr.getConnection();
           String[] in_para = DBMgr.stringToArray(data, ",");
           /** SQL指令 */
-          String sql = "SELECT * FROM `missa`.`movie` WHERE `movie`.`movie_id`";
+          String sql = "SELECT * FROM `missa`.`movies` WHERE `movies`.`movie_id`";
           for (int i=0 ; i < in_para.length ; i++) {
               sql += (i == 0) ? "in (?" : ", ?";
               sql += (i == in_para.length-1) ? ")" : "";
@@ -204,7 +204,7 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`movie` WHERE `movie_id` = ? LIMIT 1";
+            String sql = "SELECT * FROM `missa`.`movies` WHERE `movie_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
@@ -337,7 +337,7 @@ public class MovieHelper {
             conn = DBMgr.getConnection();
             
             /** SQL指令 */
-            String sql = "DELETE FROM `missa`.`movie` WHERE `movie_id` = ? LIMIT 1";
+            String sql = "DELETE FROM `missa`.`movies` WHERE `movie_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -394,7 +394,7 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `missa`.`movie` SET `movie_name` = ? ,`movie_cover` = ? , "
+            String sql = "Update `missa`.`movies` SET `movie_name` = ? ,`movie_cover` = ? , "
             		+ "`movie_content` = ? , `running_time` = ? , `genre` = ? , `release_date` = ? WHERE `movie_id` = ?";
             /** 取得所需之參數 */
             int movie_id = m.getID();
@@ -461,7 +461,7 @@ public class MovieHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "INSERT INTO `missa`.`movie`(`movie_name`, `movie_cover`, `movie_content`, `running_time`, `genre`, `release_date`)"
+            String sql = "INSERT INTO `missa`.`movies`(`movie_name`, `movie_cover`, `movie_content`, `running_time`, `genre`, `release_date`)"
                     + " VALUES(?, ?, ?, ?, ?, ?)";
             /** 取得所需之參數 */
             String movie_name = m.getName();
