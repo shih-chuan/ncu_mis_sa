@@ -7,27 +7,27 @@
   <title>訂單列表 ｜ NCU MIS SA</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="/NCU_MIS_SA/statics/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/NCU_MIS_SA/statics/css/all.min.css" rel="stylesheet">
-  <link href="/NCU_MIS_SA/statics/icon/favicon.ico" type="image/x-icon" rel="icon">
-  <link href="/NCU_MIS_SA/statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-  <link href="/NCU_MIS_SA/statics/css/addTheater.css" rel="stylesheet">
-  <link href="/NCU_MIS_SA/statics/css/layout.css" rel="stylesheet">
-  <link href="/NCU_MIS_SA/statics/css/jquery-confirm.css" rel="stylesheet">
+  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+  <link href="statics/css/all.min.css" rel="stylesheet">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+  <link href="statics/css/addTheater.css" rel="stylesheet">
+  <link href="statics/css/layout.css" rel="stylesheet">
+  <link href="statics/css/jquery-confirm.css" rel="stylesheet">
 
-  <script src="/NCU_MIS_SA/statics/js/jquery-3.4.1.min.js"></script>
-  <script src="/NCU_MIS_SA/statics/js/jquery-confirm.js"></script>
-  <script src="/NCU_MIS_SA/statics/js/big.min.js"></script>
+  <script src="statics/js/jquery-3.4.1.min.js"></script>
+  <script src="statics/js/jquery-confirm.js"></script>
+  <script src="statics/js/big.min.js"></script>
 </head>
 <body>
 	<div class="side-nav">
 		<div class="nav-list">
-			<a href="/NCU_MIS_SA/theater.html" class="nav-link">影廳管理</a>
-			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
-			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
+			<a href="theater.html" class="nav-link">影廳管理</a>
+			<a href="addMeal.html" class="nav-link">套餐管理</a>
+			<a href="addmovie.html" class="nav-link">電影管理</a>
 			<a href="" class="nav-link">場次管理</a>
 			<a href="" class="nav-link">票種管理</a>
-			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
+			<a href="index.html" class="nav-link">使用者管理</a>
 		</div>
 	</div>
 	<div class="content">
@@ -54,12 +54,13 @@
 		  	</div>
 	    </div>
 	    <div class="controls">
-   			<a href="/NCU_MIS_SA/theater.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
+   			<a href="theater.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
    			<button type="button" id="submit-btn" class="btn btn-primary show-after">Save</button>
 	    </div>
 	</div>
 	<script>
 		let data = {
+			id: null,
 		    width: 0,
 		    height: 0,
 		    name: null,
@@ -71,11 +72,13 @@
         var url_string = window.location.href;
         var url = new URL(url_string);
         var id = url.searchParams.get("id");
+        data.id = parseInt(id);
+        console.log(data.id)
 		
 		function getTheater() {
             $.ajax({
                 type: "GET",
-                url: "/NCU_MIS_SA/api/theater.do",
+                url: "api/theater.do",
                 crossDomain: true,
                 data: "id=" + id,
                 cache: false,
@@ -312,15 +315,16 @@
               }
               else {
 				  $.ajax({
-	                   type: "POST",
+	                   type: "PUT",
 	                   url: "api/theater.do",
 	                   crossDomain: true,
 	                   cache: false,
 	                   data: JSON.stringify(data),
 	                   dataType: 'json',
-	                   timeout: 5000,
 	                   success: function (response) {
 	                       console.log(response);
+	                       alert("更改成功!!")
+	                       window.location = "theater.html";
 	                   },
 	                   error: function () {
 	                       alert("無法連線到伺服器！");
