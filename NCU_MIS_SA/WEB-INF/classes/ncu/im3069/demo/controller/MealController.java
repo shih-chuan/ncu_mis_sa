@@ -99,13 +99,13 @@ public class MealController extends HttpServlet {
         
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
         if (id.isEmpty()) {
-            /** 透過MemberHelper物件之getAll()方法取回所有會員之資料，回傳之資料為JSONObject物件 */
+            /** 透過MemberHelper物件之getAll()方法取回所有套餐之資料，回傳之資料為JSONObject物件 */
             JSONObject query = mh.getAll();
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
-            resp.put("message", "所有會員資料取得成功");
+            resp.put("message", "所有套餐資料取得成功");
             resp.put("response", query);
     
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
@@ -118,7 +118,7 @@ public class MealController extends HttpServlet {
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
-            resp.put("message", "會員資料取得成功");
+            resp.put("message", "套餐資料取得成功");
             resp.put("response", query);
     
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
@@ -149,7 +149,7 @@ public class MealController extends HttpServlet {
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
         resp.put("status", "200");
-        resp.put("message", "會員移除成功！");
+        resp.put("message", "套餐移除成功！");
         resp.put("response", query);
 
         /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
@@ -185,7 +185,7 @@ public class MealController extends HttpServlet {
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
         resp.put("status", "200");
-        resp.put("message", "成功! 更新會員資料...");
+        resp.put("message", "成功! 更新套餐資料...");
         resp.put("response", data);
         
         /** 透過JsonReader物件回傳到前端（以JSONObject方式） */

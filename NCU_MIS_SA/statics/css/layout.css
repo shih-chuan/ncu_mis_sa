@@ -1,6 +1,11 @@
 body{
 	display: flex;
 	position: relative;
+	margin: 0;
+	padding: 0;
+}
+.content{
+	padding: 40px;
 }
 .side-nav{
 	background-color: #333333;

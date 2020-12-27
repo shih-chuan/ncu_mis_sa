@@ -8,6 +8,7 @@ import org.json.*;
 
 import ncu.im3069.demo.app.Theater;
 import ncu.im3069.demo.app.TheaterHelper;
+import ncu.im3069.demo.app.Ticket;
 import ncu.im3069.demo.app.TicketHelper;
 import ncu.im3069.tools.JsonReader;
 
@@ -72,13 +73,58 @@ public class TicketController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {/** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);/** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         JSONObject jso = jsr.getObject();
+        JSONObject resp = new JSONObject();
+        int memberId, sessionId, amount, theaterId;
+        String status, message;
 
-        /** 取出經解析到 JSONObject 之 Request 參數 */
-        int memberId = jso.getInt("memberId");
-        int sessionId = jso.getInt("sessionId");
-        int amount = jso.getInt("amount");
+        /** 取出經解析到JSONObject之Request參數 */
+        String by = jso.getString("by");
         
-        JSONObject reserveInfo = th.reserveTickets(sessionId, memberId, amount);
+        switch(by) {
+        	/*用session找出空位，給予預設座位保留票*/
+        	case "session":
+                /** 取出經解析到 JSONObject 之 Request 參數 */
+                memberId = jso.getInt("memberId");
+                sessionId = jso.getInt("sessionId");
+                amount = jso.getInt("amount");
+                JSONObject reserveInfo = th.reserveTickets(sessionId, memberId, amount);/** 新建一個 JSONObject 用於將回傳之資料進行封裝 */
+                resp.put("status", "200");
+                resp.put("message", "座位保留成功！");
+                resp.put("response", reserveInfo);
+        		break;
+        	/*新增會員後來更改想要的座位票*/
+        	case "seats":
+                memberId = jso.getInt("memberId");
+                sessionId = jso.getInt("sessionId");
+                amount = jso.getInt("amount");
+                theaterId = jso.getInt("theaterId");
+        		JSONArray seats = jso.getJSONArray("seats");
+        		System.out.println("seatsByseats: " + seats);
+        		status = "200";
+        		message= "成功劃位";
+        		for(int i = 0; i < seats.length(); i++) {
+        	        Ticket t = new Ticket(sessionId, memberId, seats.getJSONObject(i).getString("seatCode"), theaterId);
+        	        if (!th.checkDuplicate(t)) {
+        	            long result = th.create(t);
+        	            if(result >= 0) {
+        	            	t.setId((int)result);
+        	            }else {
+        	        		status = "500";
+        	        		message= "資料庫錯誤";
+        	            }
+        	        } else {
+        	        	if(!th.checkBookedByMember(t)) {
+        	        		status = "500";
+        	        		message= "座位已被買走";
+        	        	}
+        	        }
+        		}
+	            /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+	            resp.put("status", status);
+	            resp.put("message", message);
+	            break;
+        }
+        
 
         /** 建立一個新的訂單物件 */
 //        Theater theater = new Theater(name, width, height);
@@ -90,14 +136,43 @@ public class TicketController extends HttpServlet {
 //        theater.setId((int) result.getLong("theater_id"));
 //        od.setOrderProductId(result.getJSONArray("order_product_id"));
 
-        /** 新建一個 JSONObject 用於將回傳之資料進行封裝 */
-        JSONObject resp = new JSONObject();
-        resp.put("status", "200");
-        resp.put("message", "影廳新增成功！");
-        resp.put("response", reserveInfo);
-
+       
         /** 透過 JsonReader 物件回傳到前端（以 JSONObject 方式） */
         jsr.response(resp, response);
 	}
+	
+	public void doDelete(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
+        JsonReader jsr = new JsonReader(request);
+        JSONObject jso = jsr.getObject();
+        
+        /** 取出經解析到JSONObject之Request參數 */
+        String by = jso.getString("by");
+        
+        switch(by) {
+        	case "ids":
+        		System.out.println("delete by ids");
+                JSONArray ids = jso.getJSONArray("ids");
+                if(!ids.isEmpty()) {
+                    for(int i = 0; i < ids.length(); i++) {
+                    	th.deleteById(ids.getInt(i));
+                    }
+                }
+        		break;
+        }
+        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
+        String query = "Test";
+        		//th.deleteByID(id);
+        
+        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+        JSONObject resp = new JSONObject();
+        resp.put("status", "200");
+        resp.put("message", "會員移除成功！");
+        resp.put("response", query);
+
+        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+        jsr.response(resp, response);
+    }
 
 }
