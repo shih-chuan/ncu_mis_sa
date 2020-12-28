@@ -12,128 +12,101 @@
 </head>
 
 <body>
-    <div id="container">
-        <div id="header">
-            <h1><a href="http://cakephp.org/">CakePHP: the rapid development php framework</a></h1>
-        </div>
+	<div include-html="statics/components/side-bar.html"></div>
+    <div id="content">
+        <h2>新增場次</h2>
+        <a href="viewmovie.html">瀏覽電影</a>
         
-        <div id="content">
-            <h2>新增場次</h2>
-            <a href="viewmovie.html">瀏覽電影</a>
+        
+         <div id="flashMessage" class="message" style="display: none;"></div>
+
+        <form id="form" accept-charset="utf-8">
+            <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+            <div class="input text required">
+                <label for="theater_id">影廳編號:</label>
+                <input name="theater_id" maxlength="25" type="text" id="theater_id" required="required">
             
-            
-             <div id="flashMessage" class="message" style="display: none;"></div>
+                <label for="movie_id">電影編號:</label>
+                <input name="movie_id" maxlength="200" type="text" id="movie_id" required="required">
+                 
+                <label for="session_time">場次時間:</label>
+                <input type="time" step="1" id="session_time" name="session_time" required="required" >
+	<label for="session_date">場次日期:</label>
+    			<input type="date" id="session_date" name="session_date">                
+            </div>
 
-            <form id="form" accept-charset="utf-8">
-                <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
-                <div class="input text required">
-                    <label for="theater_id">影廳編號:</label>
-                    <input name="theater_id" maxlength="25" type="text" id="theater_id" required="required">
-                
-                    <label for="movie_id">電影編號:</label>
-                    <input name="movie_id" maxlength="200" type="text" id="movie_id" required="required">
-                     
-                    <label for="session_time">場次時間:</label>
-                    <input type="time" step="1" id="session_time" name="session_time" required="required" >
-					<label for="session_date">場次日期:</label>
-        			<input type="date" id="session_date" name="session_date">                
-                </div>
-
-           <div class="submit"><input type="button" value="新增" id="submit"></div>
-            </form>
-            
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    // 處理表單點擊事件
-                    var $form = $('#submit');
-                    $form.click(function() {
-                        submit();
-                    });
-
-                    function submit() {
-                        var theater_id = $('#theater_id').val();
-                        var movie_id= $('#movie_id').val();
-                        var session_time = $('#session_time').val();
-                        
-                        var session_date = $('#session_date').val();
-                        
-                            // 將資料組成JSON格式
-                            var data_object = {
-                                "theater_id": theater_id,
-                                "movie_id": movie_id,
-                                "session_time": session_time,
-                                "session_date": session_date,                                
-                            };
-
-                            // 將JSON格式轉換成字串
-                            var data_string = JSON.stringify(data_object);
-
-                            // 發出POST的AJAX請求
-                            $.ajax({
-                                    type: "POST",
-                                    url: "api/session.do",           //?
-                                    data: data_string,
-                                    crossDomain: true,
-                                    cache: false,
-                                    dataType: 'json',
-                                    timeout: 5000,
-                                    success: function (response) {
-                                        $('#flashMessage').html(response.message);
-                                        $('#flashMessage').show();
-                                        if(response.status == 200){
-                                            updateSQLTable(response.response);
-                                        }
-                                    },
-                                    error: function () {
-                                        alert("無法連線到伺服器！??");
-                                    }
-                            });
-                        }
-                    
-
-                    function updateSQLTable(data) {
-                        $("#sql_log > tbody").empty();
-                        var time = (data.time / 1000000).toFixed(2);
-                        var table_html = "";
-
-                        table_html += '<tr>';
-                        table_html += '<td>' + '1' + '</td>';
-                        table_html += '<td>' + data.sql + '</td>';
-                        table_html += '<td style="text-align: right">' + '0' + '</td>';
-                        table_html += '<td style="text-align: right">' + data.row + '</td>';
-                        table_html += '<td style="text-align: right">' + data.row + '</td>';
-                        table_html += '<td style="text-align: right">' + time + '</td>';
-                        table_html += '</tr>';
-                        $("#sql_log > tbody").append(table_html);
-                        $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
-                    }
+       <div class="submit"><input type="button" value="新增" id="submit"></div>
+        </form>
+        <script src="statics/js/include-html.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // 處理表單點擊事件
+                var $form = $('#submit');
+                $form.click(function() {
+                    submit();
                 });
-            </script>
 
-        </div>
-        
-        <div id="footer">
-            <a href="http://www.cakephp.org/" target="_blank" id="cake-powered"><img src="statics/img/cake.power.gif" alt="CakePHP: the rapid development php framework" border="0"></a>
-            <p>CakePHP 2.6.10</p>
-        </div>
+                function submit() {
+                    var theater_id = $('#theater_id').val();
+                    var movie_id= $('#movie_id').val();
+                    var session_time = $('#session_time').val();
+                    
+                    var session_date = $('#session_date').val();
+                    
+                        // 將資料組成JSON格式
+                        var data_object = {
+                            "theater_id": theater_id,
+                            "movie_id": movie_id,
+                            "session_time": session_time,
+                            "session_date": session_date,                                
+                        };
+
+                        // 將JSON格式轉換成字串
+                        var data_string = JSON.stringify(data_object);
+
+                        // 發出POST的AJAX請求
+                        $.ajax({
+                                type: "POST",
+                                url: "api/session.do",           //?
+                                data: data_string,
+                                crossDomain: true,
+                                cache: false,
+                                dataType: 'json',
+                                timeout: 5000,
+                                success: function (response) {
+                                    $('#flashMessage').html(response.message);
+                                    $('#flashMessage').show();
+                                    if(response.status == 200){
+                                        updateSQLTable(response.response);
+                                    }
+                                },
+                                error: function () {
+                                    alert("無法連線到伺服器！??");
+                                }
+                        });
+                    }
+                
+
+                function updateSQLTable(data) {
+                    $("#sql_log > tbody").empty();
+                    var time = (data.time / 1000000).toFixed(2);
+                    var table_html = "";
+
+                    table_html += '<tr>';
+                    table_html += '<td>' + '1' + '</td>';
+                    table_html += '<td>' + data.sql + '</td>';
+                    table_html += '<td style="text-align: right">' + '0' + '</td>';
+                    table_html += '<td style="text-align: right">' + data.row + '</td>';
+                    table_html += '<td style="text-align: right">' + data.row + '</td>';
+                    table_html += '<td style="text-align: right">' + time + '</td>';
+                    table_html += '</tr>';
+                    $("#sql_log > tbody").append(table_html);
+                    $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
+                }
+            });
+        </script>
+
     </div>
-
-    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-        <caption id="sql_summary">(default) 0 queries took 0 ms</caption>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Query</th>
-                <th>Error</th>
-                <th>Affected</th>
-                <th>Num. rows</th>
-                <th>Took (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
 </body>
 
 </html>

@@ -20,16 +20,7 @@
   <script src="statics/js/big.min.js"></script>
 </head>
 <body>
-	<div class="side-nav">
-		<div class="nav-list">
-			<a href="/NCU_MIS_SA/theater.html" class="nav-link">影廳管理</a>
-			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
-			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
-			<a href="" class="nav-link">場次管理</a>
-			<a href="" class="nav-link">票種管理</a>
-			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
-		</div>
-	</div>
+	<div include-html="statics/components/side-bar.html"></div>
 	<div class="content">
 		<h1>新增影廳</h1>
 		<div class="row" style="flex-wrap: nowrap;">
@@ -54,10 +45,11 @@
 		  	</div>
 	    </div>
 	    <div class="controls">
-   			<a href="/NCU_MIS_SA/theater.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
+   			<a href="index_theater.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
    			<button type="button" id="submit-btn" class="btn btn-primary show-after">Save</button>
 	    </div>
 	</div>
+  	<script src="statics/js/include-html.js"></script>
 	<script>
 		let data = {
 		    width: 0,

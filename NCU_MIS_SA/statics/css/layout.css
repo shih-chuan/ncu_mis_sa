@@ -10,20 +10,28 @@ body{
 .side-nav{
 	background-color: #333333;
 	height: 100vh;
-	width: 200px;
+	display: flex;
+	flex-direction: column;
+	padding: 40px;
+	align-items: center;
+	justify-content: space-between;
 }
 .nav-list{
 	color: white;
 	margin: 0;
-	padding: 20px;
 }
 .nav-list .nav-link{
 	display: block;
+	width: 100px;
 	text-decoration: none;
+	color: #EEEEEE;
 	list-style: none;
 	font-size: 20px;
 	padding: 10px 0;
 	margin: 0;
+}
+.nav-list .nav-link:hover{
+	color: #dddddd;
 }
 .content{
 	padding: 40px 60px;
