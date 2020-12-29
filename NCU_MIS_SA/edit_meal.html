@@ -2,49 +2,48 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>CakePHP: the rapid development php framework: Members</title>
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-    <link rel="stylesheet" type="text/css" href="statics/css/cake.generic.css">
-
-    <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>MISSA | Edit Meal</title>
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/layout.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+ 	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div id="container">
-        <div id="header">
-            <h1><a href="http://cakephp.org/">CakePHP: the rapid development php framework</a></h1>
-        </div>
-        <div id="content">
-            <h2>更新套餐資料</h2>
-            <a href="Meal.html">套餐清單</a>
-            <a href="MealCart.html">購物車模組</a>
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
+        <h2>更新套餐資料</h2>
+        <a href="Meal.html">套餐清單</a>
+        <a href="MealCart.html">購物車模組</a>
 
-            <div id="flashMessage" class="message" style="display: none;"></div>
+        <div id="flashMessage" class="message" style="display: none;"></div>
 
-            <form id="form" accept-charset="utf-8">
-                <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
-                <div class="input text required">
-                    <label for="meal_name">套餐名稱</label>
-                    <input name="meal_name" maxlength="30" type="text" id="meal_name" required="required" disabled>
-                </div>
-                <div class="input price required">
-                    <label for="meal_price">價格</label>
-                    <input name="meal_price" maxlength="50" type="text" id="meal_price" required="required">
-                </div>
-                <div class="input image required">
-                    <label for="meal_image">圖片</label>
-                    <input type="file" id="meal_image" name="meal_image" accept="image/png, image/jpg, image/jpeg">
-                </div>
-                <div class="input text required">
-                    <label for="meal_content">描述</label>
-                    <input name="meal_content" maxlength="50" type="text" id="meal_content" required="required" >
-                </div>
-                <div class="submit"><input type="button" value="更新" id="submit"></div>
-            </form>
-
-            <script type="text/javascript">
+        <form id="form" accept-charset="utf-8">
+            <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+            <div class="input text required">
+                <label for="meal_name">套餐名稱</label>
+                <input name="meal_name" maxlength="30" type="text" id="meal_name" required="required" disabled>
+            </div>
+            <div class="input price required">
+                <label for="meal_price">價格</label>
+                <input name="meal_price" maxlength="50" type="text" id="meal_price" required="required">
+            </div>
+            <div class="input image required">
+                <label for="meal_image">圖片</label>
+                <input type="file" id="meal_image" name="meal_image" accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div class="input text required">
+                <label for="meal_content">描述</label>
+                <input name="meal_content" maxlength="50" type="text" id="meal_content" required="required" >
+            </div>
+            <div class="submit"><input type="button" value="更新" id="submit"></div>
+        </form>
+   		<script src="statics/js/include-html.js"></script>
+        <script type="text/javascript">
                 // 取得網址參數
                 var url_string = window.location.href;
                 var url = new URL(url_string);
@@ -172,28 +171,7 @@
                     getMeal();
                 });
             </script>
-        </div>
-        <div id="footer">
-            <a href="http://www.cakephp.org/" target="_blank" id="cake-powered"><img src="statics/img/cake.power.gif" alt="CakePHP: the rapid development php framework" border="0"></a>
-            <p>CakePHP 2.6.10</p>
-        </div>
     </div>
-
-    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-        <caption id="sql_summary">(default) 0 query took 0 ms</caption>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Query</th>
-                <th>Error</th>
-                <th>Affected</th>
-                <th>Num. rows</th>
-                <th>Took (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
 </body>
 
 </html>

@@ -19,16 +19,7 @@
   <script src="statics/js/big.min.js"></script>
 </head>
 <body>
-	<div class="side-nav">
-		<div class="nav-list">
-			<a href="/NCU_MIS_SA/theater.html"" class="nav-link">影廳管理</a>
-			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
-			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
-			<a href="" class="nav-link">場次管理</a>
-			<a href="" class="nav-link">票種管理</a>
-			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
-		</div>
-	</div>
+	<div include-html="statics/components/side-bar.html"></div>
 	
 	<div class="content">
 		<div class="row justify-content-between">
@@ -49,6 +40,7 @@
 		  </tbody>
 		</table>
 	</div>
+  	<script src="statics/js/include-html.js"></script>
 	<script>
     function deleteMember(id) {
         var check = window.confirm("確認刪除影廳？");
@@ -112,7 +104,7 @@
             table_html += '<td>' + value.theater_info['name'] + '</td>';
             table_html += '<td>' + countNormalSeats(value.seats_info) + '</td>';
             table_html += '<td>' + countWheelSeats(value.seats_info) + '</td>';
-            table_html += '<td>' + '<a href="/NCU_MIS_SA/theater/edit.html?id=' + value.theater_info['id'] + '">編輯</a> | ';
+            table_html += '<td>' + '<a href="/NCU_MIS_SA/editTheater.html?id=' + value.theater_info['id'] + '">編輯</a> | ';
             table_html += '<a href="javascript: deleteMember(' + value.theater_info['id'] + ');">刪除</a></td></tr>';
             i++;
         })

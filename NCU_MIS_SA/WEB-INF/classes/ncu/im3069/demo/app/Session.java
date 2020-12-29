@@ -145,6 +145,7 @@ public class Session{
      */
     private void getMovieFromDB(int movie_id) {
         String mid = String.valueOf(movie_id);
+        System.out.println("getMovieFromDB");
         this.movie = mh.getMovieById(mid);
     }
     

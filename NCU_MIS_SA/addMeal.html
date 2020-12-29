@@ -13,17 +13,8 @@
 </head>
 
 <body>
-	<div class="side-nav">
-		<div class="nav-list">
-			<a href="/NCU_MIS_SA/addTheater.html" class="nav-link">影廳管理</a>
-			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
-			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
-			<a href="" class="nav-link">場次管理</a>
-			<a href="" class="nav-link">票種管理</a>
-			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
-		</div>
-	</div>
-    <div class="container content">
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
             <h2>新增套餐資料</h2>
             <a href="Meal.html">套餐清單</a>
             <a href="MealCart.html">購物車模組</a>
@@ -51,6 +42,7 @@
                 <div class="submit"><input type="button" value="新增套餐" id="submit"></div>
             </form>
             
+			<script src="statics/js/include-html.js"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
                     // 處理表單點擊事件

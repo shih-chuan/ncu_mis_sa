@@ -15,16 +15,7 @@
 </head>
 
 <body>
-	<div class="side-nav">
-		<div class="nav-list">
-			<a href="/NCU_MIS_SA/theater.html" class="nav-link">影廳管理</a>
-			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
-			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
-			<a href="" class="nav-link">場次管理</a>
-			<a href="" class="nav-link">票種管理</a>
-			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
-		</div>
-	</div>
+	<div include-html="statics/components/side-bar.html"></div>
     <div class="content">
         <h2>會員清單</h2>
         <a href="addMeal.html">新增套餐</a>
@@ -45,6 +36,7 @@
             <tbody>
             </tbody>
         </table>
+		<script src="statics/js/include-html.js"></script>
         <script type="text/javascript">
             // 全域變數紀錄SQL指令下的次數
             var sql_num = 0;

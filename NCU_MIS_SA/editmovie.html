@@ -2,205 +2,184 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=">
-    <title>CakePHP: the rapid development php framework: Members</title>
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-    <link rel="stylesheet" type="text/css" href="statics/css/cake.generic.css">
-
-    <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>MISSA | Sessions</title>
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/layout.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+ 	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div id="container">
-        <div id="header">
-            <h1><a href="http://cakephp.org/">CakePHP: the rapid development php framework</a></h1>
-        </div>
-        <div id="content">
-            <h2>­×§ï¹q¼v¸ê®Æ</h2>
-            <a href="viewmovie.html">¹q¼v¦Cªí</a>
-            <a href="product.html">ÁÊª«¨®¼Ò²Õ</a>
-            
-
-            <div id="flashMessage" class="message" style="display: none;"></div>
-
-            <form id="form" accept-charset="utf-8">
-                <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
-                <div class="input text required">
-                    <label for="movie_name">¹q¼v¦WºÙ</label>
-                    <input name="movie_name" maxlength="30" type="text" id="movie_name" required="required">
-                </div>
-                <div class="input text required">
-                    <label for="movie_content">¹q¼v¤º®e</label>
-                    <input name="movie_content" maxlength="50" type="text" id="movie_content" required="required" >
-                </div>
-                <div class="input int required">
-                    <label for="movie_running_time">¹q¼v®Éªø</label>
-                    <input name="running_time" type="text" id="running_time" name="running_time" required="required">
-                </div>
-                <div class="select movielevel required">
-        			<label for="movie_genre">¹q¼v¤À¯Å:</label>
-       				<select name="genre" id="genre">
-       				<option value="1">´¶¹M¯Å</option>
-       				<option value="2">»²¾É¯Å</option>
-       				<option value="3">«OÅ@¯Å</option>
-       				<option value="4">­­¨î¯Å</option>
-       			</select></div>
-       			
-       			<div class="input date required">
-        			<label for="movie_release_date">¤W¬M¤é´Á:</label>
-        			<input type="date" id="release_date" name="release_date">
-     			</div>
-     			      
-       			<div class="input file required">
-            		<label for="movie_cover">¹q¼v¹Ï¤ù:</label>
-           			<input type="file" accept="image/*" id="movie_cover" name="movie_cover" >
-        		</div>  
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
+        <h2>ä¿®æ”¹é›»å½±è³‡æ–™</h2>
+        <a href="viewmovie.html">é›»å½±åˆ—è¡¨</a>
+        <a href="product.html">è³¼ç‰©è»Šæ¨¡çµ„</a>
         
-               
-               <div class="submit"><input type="button" value="§ó·s" id="submit"></div>
-            </form>
 
-            <script type="text/javascript">
-                // ¨ú±oºô§}°Ñ¼Æ
-                var url_string = window.location.href;
-                var url = new URL(url_string);
-                var id = url.searchParams.get("id");
-                var sql_num = 0;
+        <div id="flashMessage" class="message" style="display: none;"></div>
 
-                function updateMovie(id) {
-                    var name = $('#movie_name').val();
-                    var content = $('#movie_content').val();
-                    var running_time = $('#running_time').val();
-                 
-                    var selecteItem = document.getElementById("genre");//®³¨ìselectª«¥ó
-                    var index = selecteItem.selectedIndex ;  //®³¨ì¿ï¤¤¶µªº¯Á¤Ş
-                    var genre = selecteItem.options[index].text;//®³¨ì¿ï¤¤¶µoptionsªºtext
-                    
-                    var release_date = $('#release_date').val();
-                    var movie_cover = $('#movie_cover').val();
+        <form id="form" accept-charset="utf-8">
+            <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+            <div class="input text required">
+                <label for="movie_name">é›»å½±åç¨±:</label>
+                <input name="movie_name" maxlength="30" type="text" id="movie_name" required="required">
+            </div>
+            <div class="input text required">
+                <label for="movie_content">é›»å½±å…§å®¹:</label>
+                <input name="movie_content" maxlength="50" type="text" id="movie_content" required="required" >
+            </div>
+            <div class="input int required">
+                <label for="movie_running_time">é›»å½±æ™‚é•·:</label>
+                <input name="running_time" type="text" id="running_time" name="running_time" required="required">
+            </div>
+            <div class="select movielevel required">
+    			<label for="movie_genre">é›»å½±åˆ†ç´š:</label>
+   				<select name="genre" id="genre">
+   				<option value="1">æ™®éç´š</option>
+   				<option value="2">è¼”å°ç´š</option>
+   				<option value="3">ä¿è­·ç´š</option>
+   				<option value="4">é™åˆ¶ç´š</option>
+   			</select></div>
+   			
+   			<div class="input date required">
+    			<label for="movie_release_date">ä¸Šæ˜ æ—¥æœŸ:</label>
+    			<input type="date" id="release_date" name="release_date">
+ 			</div>
+ 			      
+   			<div class="input file required">
+        		<label for="movie_cover">é›»å½±åœ–ç‰‡:</label>
+       			<input type="file" accept="image/*" id="movie_cover" name="movie_cover" >
+    		</div>  
+    
+           
+           <div class="submit"><input type="button" value="æ›´æ–°" id="submit"></div>
+        </form>
 
-                   
+   		<script src="statics/js/include-html.js"></script>
+        <script type="text/javascript">
+            // å–å¾—ç¶²å€åƒæ•¸
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var id = url.searchParams.get("id");
+            var sql_num = 0;
 
-                 	// ±N¸ê®Æ²Õ¦¨JSON®æ¦¡
-                    var data_object = {
-                 		"id":id,
-                        "movie_name":name,
-                        "movie_content":content,
-                        "genre":genre,
-                        "release_date":release_date,
-                        "movie_cover":movie_cover,
-                        "running_time":running_time,
-                        
-                    };
-
-                        // ±NJSON®æ¦¡Âà´«¦¨¦r¦ê
-                        var data_string = JSON.stringify(data_object);
-
-                        // µo¥XPOSTªºPUT½Ğ¨D
-                        $.ajax({
-                                type: "PUT",
-                                url: "api/movie.do",
-                                data: data_string,
-                                crossDomain: true,
-                                cache: false,
-                                dataType: 'json',
-                                timeout: 5000,
-                                success: function (response) {
-                                    $('#flashMessage').html(response.message);
-                                    $('#flashMessage').show();
-                                    if(response.status == 200){
-                                        updateSQLTable(response.response);
-                                        getMovie();
-                                    }
-                                },
-                                error: function () {
-                                    alert("µLªk³s½u¨ì¦øªA¾¹¡I");
-                                }
-                        });
-                    }
+            function updateMovie(id) {
+                var name = $('#movie_name').val();
+                var content = $('#movie_content').val();
+                var running_time = $('#running_time').val();
+             
+                var selecteItem = document.getElementById("genre");//æ‹¿åˆ°selectç‰©ä»¶
+                var index = selecteItem.selectedIndex ;  //æ‹¿åˆ°é¸ä¸­é …çš„ç´¢å¼•
+                var genre = selecteItem.options[index].text;//æ‹¿åˆ°é¸ä¸­é …optionsçš„text
                 
+                var release_date = $('#release_date').val();
+                var movie_cover = $('#movie_cover').val();
 
-                // §ó·sSQL«ü¥O¾ú¥vªí®æ
-                function updateSQLTable(data) {
-                    var time = (data.time / 1000000).toFixed(2);
-                    var table_html = "";
+               
+
+             	// å°‡è³‡æ–™çµ„æˆJSONæ ¼å¼
+                var data_object = {
+             		"id":id,
+                    "movie_name":name,
+                    "movie_content":content,
+                    "genre":genre,
+                    "release_date":release_date,
+                    "movie_cover":movie_cover,
+                    "running_time":running_time,
                     
-                    sql_num += 1
+                };
 
-                    table_html += '<tr>';
-                    table_html += '<td>' + sql_num + '</td>';
-                    table_html += '<td>' + data.sql + '</td>';
-                    table_html += '<td style="text-align: right">' + '0' + '</td>';
-                    table_html += '<td style="text-align: right">' + data.row + '</td>';
-                    table_html += '<td style="text-align: right">' + data.row + '</td>';
-                    table_html += '<td style="text-align: right">' + time + '</td>';
-                    table_html += '</tr>';
-                    $("#sql_log > tbody").append(table_html);
-                    $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
-                }
+                    // å°‡JSONæ ¼å¼è½‰æ›æˆå­—ä¸²
+                    var data_string = JSON.stringify(data_object);
 
-                function getMovie() {
+                    // ç™¼å‡ºPOSTçš„PUTè«‹æ±‚
                     $.ajax({
-                        type: "GET",
-                        url: "api/movie.do",
-                        crossDomain: true,
-                        data: "id=" + id,
-                        cache: false,
-                        dataType: 'json',
-                        timeout: 5000,
-                        success: function (response) {
-                            if(response.status == 200){
-                            	updateSQLTable(response.response);
-                            	
-                            	document.getElementById('movie_name').value = response['response']['data'][0]['name'];
-                            	document.getElementById('movie_content').value = response['response']['data'][0]['content'];
-                            	document.getElementById('genre').value = response['response']['data'][0]['genre'];
-                            	document.getElementById('release_date').value = response['response']['data'][0]['release_date'];
-                            	//document.getElementById('movie_cover').value = response['response']['data'][0]['movie_cover'];
-                            	document.getElementById('running_time').value = response['response']['data'][0]['running_time'];
-                            	
+                            type: "PUT",
+                            url: "api/movie.do",
+                            data: data_string,
+                            crossDomain: true,
+                            cache: false,
+                            dataType: 'json',
+                            timeout: 5000,
+                            success: function (response) {
+                                $('#flashMessage').html(response.message);
+                                $('#flashMessage').show();
+                                if(response.status == 200){
+                                    updateSQLTable(response.response);
+                                    getMovie();
+                                }
+                            },
+                            error: function () {
+                                alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
                             }
-                            console.log(response);
-                        },
-                        error: function () {
-                            alert("µLªk³s½u¨ì¦øªA¾¹¡I");
-                        }
                     });
                 }
+            
 
-                $('#submit').click(function() {
-                    updateMovie(id)
-                });
+            // æ›´æ–°SQLæŒ‡ä»¤æ­·å²è¡¨æ ¼
+            function updateSQLTable(data) {
+                var time = (data.time / 1000000).toFixed(2);
+                var table_html = "";
                 
-                $(document).ready(function() {
-                	// µo¥XGETªºAJAX½Ğ¨D¨ú±o­ì¥»¸Ó·|­ûªº¸ê®Æ
-                 	$("#sql_log > tbody").empty();
-                    getMovie();
-                });
-            </script>
-        </div>
-        <div id="footer">
-            <a href="http://www.cakephp.org/" target="_blank" id="cake-powered"><img src="statics/img/cake.power.gif" alt="CakePHP: the rapid development php framework" border="0"></a>
-            <p>CakePHP 2.6.10</p>
-        </div>
-    </div>
+                sql_num += 1
 
-    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-        <caption id="sql_summary">(default) 0 query took 0 ms</caption>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Query</th>
-                <th>Error</th>
-                <th>Affected</th>
-                <th>Num. rows</th>
-                <th>Took (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+                table_html += '<tr>';
+                table_html += '<td>' + sql_num + '</td>';
+                table_html += '<td>' + data.sql + '</td>';
+                table_html += '<td style="text-align: right">' + '0' + '</td>';
+                table_html += '<td style="text-align: right">' + data.row + '</td>';
+                table_html += '<td style="text-align: right">' + data.row + '</td>';
+                table_html += '<td style="text-align: right">' + time + '</td>';
+                table_html += '</tr>';
+                $("#sql_log > tbody").append(table_html);
+                $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
+            }
+
+            function getMovie() {
+                $.ajax({
+                    type: "GET",
+                    url: "api/movie.do",
+                    crossDomain: true,
+                    data: "id=" + id,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                        if(response.status == 200){
+                        	updateSQLTable(response.response);
+                        	
+                        	document.getElementById('movie_name').value = response['response']['data'][0]['name'];
+                        	document.getElementById('movie_content').value = response['response']['data'][0]['content'];
+                        	document.getElementById('genre').value = response['response']['data'][0]['genre'];
+                        	document.getElementById('release_date').value = response['response']['data'][0]['release_date'];
+                        	//document.getElementById('movie_cover').value = response['response']['data'][0]['movie_cover'];
+                        	document.getElementById('running_time').value = response['response']['data'][0]['running_time'];
+                        	
+                        }
+                        console.log(response);
+                    },
+                    error: function () {
+                        alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
+                    }
+                });
+            }
+
+            $('#submit').click(function() {
+                updateMovie(id)
+            });
+            
+            $(document).ready(function() {
+            	// ç™¼å‡ºGETçš„AJAXè«‹æ±‚å–å¾—åŸæœ¬è©²æœƒå“¡çš„è³‡æ–™
+             	$("#sql_log > tbody").empty();
+                getMovie();
+            });
+        </script>
+    </div>
 </body>
 
 </html>

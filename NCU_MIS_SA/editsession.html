@@ -2,48 +2,47 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=">
-    <title>CakePHP: the rapid development php framework: Members</title>
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-    <link rel="stylesheet" type="text/css" href="statics/css/cake.generic.css">
-
-    <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>MISSA | Sessions</title>
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/layout.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+ 	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div id="container">
-        <div id="header">
-            <h1><a href="http://cakephp.org/">CakePHP: the rapid development php framework</a></h1>
-        </div>
-        <div id="content">
-            <h2>­×§ï³õ¦¸¸ê®Æ</h2>
-            <a href="viewmovie.html">¹q¼v¦Cªí</a>
-            <a href="product.html">ÁÊª«¨®¼Ò²Õ</a>
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
+        <h2>ä¿®æ”¹å ´æ¬¡è³‡æ–™</h2>
+        <a href="viewmovie.html">é›»å½±åˆ—è¡¨</a>
+        <a href="product.html">è³¼ç‰©è»Šæ¨¡çµ„</a>
+        
+
+        <div id="flashMessage" class="message" style="display: none;"></div>
+
+  		<form id="form" accept-charset="utf-8">
+            <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+            <div class="input text required">
+                <label for="theater_id">å½±å»³ç·¨è™Ÿ:</label>
+                <input name="theater_id" maxlength="25" type="text" id="theater_id" required="required"><br>
             
+                <label for="movie_id">é›»å½±ç·¨è™Ÿ:</label>
+                <input name="movie_id" maxlength="200" type="text" id="movie_id" required="required"><br>
+                 
+                <label for="session_time">å ´æ¬¡æ™‚é–“:</label>
+                <input name="session_time" type="time" step="1" id="session_time" required="required" ><br>
+				<label for="session_date">å ´æ¬¡æ—¥æœŸ:</label>
+    			<input name="session_date" type="date" id="session_date" >
+            </div>
 
-            <div id="flashMessage" class="message" style="display: none;"></div>
-
-      <form id="form" accept-charset="utf-8">
-                <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
-                <div class="input text required">
-                    <label for="theater_id">¼vÆU½s¸¹:</label>
-                    <input name="theater_id" maxlength="25" type="text" id="theater_id" required="required">
-                
-                    <label for="movie_id">¹q¼v½s¸¹:</label>
-                    <input name="movie_id" maxlength="200" type="text" id="movie_id" required="required">
-                     
-                    <label for="session_time">³õ¦¸®É¶¡:</label>
-                    <input name="session_time" type="time" step="1" id="session_time" required="required" >
-					<label for="session_date">³õ¦¸¤é´Á:</label>
-        			<input name="session_date" type="date" id="session_date" >                
-                </div>
-
-           <div class="submit"><input type="button" value="·s¼W" id="submit"></div>
-            </form>
-            
-            <script type="text/javascript">
-                // ¨ú±oºô§}°Ñ¼Æ
+       		<div class="submit"><input type="button" value="æ–°å¢ž" id="submit"></div>
+        </form>
+		<script src="statics/js/include-html.js"></script>
+        <script type="text/javascript">
+                // å–å¾—ç¶²å€åƒæ•¸
                 var url_string = window.location.href;
                 var url = new URL(url_string);
                 var id = url.searchParams.get("id");
@@ -55,7 +54,7 @@
                     var session_time = $('#session_time').val();
                     var session_date = $('#session_date').val();
                     
-                        // ±N¸ê®Æ²Õ¦¨JSON®æ¦¡
+                        // å°‡è³‡æ–™çµ„æˆJSONæ ¼å¼
                         var data_object = {
                         	"session_id": id,
                             "theater_id": theater_id,
@@ -64,10 +63,10 @@
                             "session_date": session_date,                                
                         };
 
-                        // ±NJSON®æ¦¡Âà´«¦¨¦r¦ê
+                        // å°‡JSONæ ¼å¼è½‰æ›æˆå­—ä¸²
                         var data_string = JSON.stringify(data_object);
 
-                        // µo¥XPOSTªºPUT½Ð¨D
+                        // ç™¼å‡ºPOSTçš„PUTè«‹æ±‚
                         $.ajax({
                                 type: "PUT",
                                 url: "api/session.do",
@@ -85,13 +84,13 @@
                                     }
                                 },
                                 error: function () {
-                                    alert("µLªk³s½u¨ì¦øªA¾¹¡I");
+                                    alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
                                 }
                         });
                     }
                 
 
-                // §ó·sSQL«ü¥O¾ú¥vªí®æ
+                // æ›´æ–°SQLæŒ‡ä»¤æ­·å²è¡¨æ ¼
                 function updateSQLTable(data) {
                     var time = (data.time / 1000000).toFixed(2);
                     var table_html = "";
@@ -133,7 +132,7 @@
 //                        console.log(response);
 //                 },
 //                error: function () {
-//                  alert("µLªk³s½u¨ì¦øªA¾¹¡I");
+//                  alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
 //            }
 //      });
 //}
@@ -143,33 +142,12 @@
                 });
                 
                 $(document).ready(function() {
-                	// µo¥XGETªºAJAX½Ð¨D¨ú±o­ì¥»¸Ó·|­ûªº¸ê®Æ
+                	// ç™¼å‡ºGETçš„AJAXè«‹æ±‚å–å¾—åŽŸæœ¬è©²æœƒå“¡çš„è³‡æ–™
                  	$("#sql_log > tbody").empty();
                     //getSession();
                 });
             </script>
-        </div>
-        <div id="footer">
-            <a href="http://www.cakephp.org/" target="_blank" id="cake-powered"><img src="statics/img/cake.power.gif" alt="CakePHP: the rapid development php framework" border="0"></a>
-            <p>CakePHP 2.6.10</p>
-        </div>
     </div>
-
-    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-        <caption id="sql_summary">(default) 0 query took 0 ms</caption>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Query</th>
-                <th>Error</th>
-                <th>Affected</th>
-                <th>Num. rows</th>
-                <th>Took (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
 </body>
 
 </html>
