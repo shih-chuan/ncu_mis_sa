@@ -162,7 +162,8 @@
 		inner_html += '<p class="card-text">上映日期：' + data.release_date + '</p>';
 		inner_html += '<div class="d-flex justify-content-between align-items-center">';
 		inner_html += '<div class="btn-group">';
-		inner_html += '<button id="add_cart_' + data.id + '" name="add_cart" type="button" class="btn btn-lg btn-block btn-outline-primary">加入購物車</button>';
+		inner_html += '<a class="p-2 text-dark" href="movie_detail.html?id=' + data.id+'"><font color="blue">檢視詳情</font></p>';
+		//inner_html += '<button id="add_cart_' + data.id + '" name="add_cart" type="button" class="btn btn-lg btn-block btn-outline-primary">加入購物車</button>';
 		inner_html += '</div><small class="text-muted">id: ' + data.id + '</small>';
 		inner_html += '</div></div></div></div>';
     	

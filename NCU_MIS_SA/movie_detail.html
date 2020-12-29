@@ -130,8 +130,8 @@
                 function addSession(data) {		//每抓到一個movie 就add movie
                 	let inner_html = '';
                 	
-            		inner_html += '<p class="card-text">場次日期：' + data.session_date + '</p>';
             		inner_html += '<p class="card-text">場次時間：' + data.session_time + '</p>';
+            		inner_html += '<p class="card-text">場次日期：' + data.session_date + '</p>';
             		//inner_html += '<div class="d-flex justify-content-between align-items-center">';
             		//inner_html += '<div class="btn-group">';
             		inner_html += '<a class="p-2 text-dark" href="order.html?id=' + id+'&ssid='+data.session_id+'"><font color="blue">訂票去！</font></a>';
