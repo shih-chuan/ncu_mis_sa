@@ -8,8 +8,10 @@ public class Session{
     private int id;
     
     private Movie movie;
+    private int movie_id;
     
     private Theater theater;
+    private int theater_id;
     
     /** session_time，場次時間 */
 	private String session_time;	
@@ -23,6 +25,7 @@ public class Session{
     /** th，ProductHelper 之物件與 OrderItem 相關之資料庫方法（Sigleton） */
     private MovieHelper mh =  MovieHelper.getHelper();
     
+    private SessionHelper sh =  SessionHelper.getHelper();
     /**
      * 實例化（Instantiates）一個新的（new）Product 物件<br>
      * 採用多載（overload）方法進行，此建構子用於新增產品時
@@ -41,8 +44,9 @@ public class Session{
      * @param price 產品價格
      * @param image 產品圖片
      */
-	public Session(int session_id, String session_time, String session_date) {
-		this.id = session_id;
+	public Session(int movie_id, int theater_id, String session_time, String session_date) {
+		this.movie_id = movie_id;
+		this.theater_id = theater_id;
 		this.session_time = session_time;
 		this.session_date = session_date;
 	}
@@ -57,7 +61,7 @@ public class Session{
      * @param image 產品圖片
      * @param describe 產品敘述
      */
-	public Session(int session_id, int movie_id, int theater_id, String session_date, String session_time) {
+	public Session(int session_id, int movie_id, int theater_id, String session_time, String session_date) {
 		this.id = session_id;
 		getTheaterFromDB(theater_id);
 		getMovieFromDB(movie_id);
@@ -65,6 +69,15 @@ public class Session{
 		this.session_date = session_date;
 	}
     
+	public Session(int session_id, int movie_id, int theater_id, String session_time, String session_date, String p) {
+		this.id = session_id;
+		//getTheaterFromDB(theater_id);
+		this.theater_id = theater_id;
+		//getMovieFromDB(movie_id);
+		this.movie_id = movie_id;
+		this.session_time = session_time;
+		this.session_date = session_date;
+	}
     /**
      * 取得場次編號
      *
@@ -76,6 +89,14 @@ public class Session{
 
 	public Theater getTheater() {
 		return this.theater;
+	}
+	
+	public int getMovie_id() {
+		return this.movie_id;
+	}
+	
+	public int getTheater_id() {
+		return this.theater_id;
 	}
 
 	public Movie getMovie() {
@@ -124,6 +145,7 @@ public class Session{
      */
     private void getMovieFromDB(int movie_id) {
         String mid = String.valueOf(movie_id);
+        System.out.println("getMovieFromDB");
         this.movie = mh.getMovieById(mid);
     }
     
@@ -149,6 +171,8 @@ public class Session{
         /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
         JSONObject jso = new JSONObject();
         jso.put("session_id", getId());
+        jso.put("movie_id", getMovie_id());
+        jso.put("theater_id", getTheater_id());
         jso.put("session_time", getSession_time());
         jso.put("session_date", getSession_date());
         
@@ -167,5 +191,17 @@ public class Session{
        jso.put("movie_info", getMovieData());
        return jso;
    }
+   
+   public JSONObject update() {
+       /** 新建一個JSONObject用以儲存更新後之資料 */
+       JSONObject data = new JSONObject();
+       
+       /** 檢查該名會員是否已經在資料庫 */
+       if(this.id != 0) {
+           /** 透過MemberHelper物件，更新目前之會員資料置資料庫中 */
+           data = sh.update(this);
+       }
+       
+       return data;
+   }
 }
-

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>CakePHP: the rapid development php framework: Members</title>
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/layout.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+ 	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
+        <h2>電影清單</h2>
+        <a href="addmovie.html">新增電影</a>
+        <a href="viewmovie.html">瀏覽電影</a>
+        <a href="addsession.html">新增場次</a>
+        <a href="index_session.html">檢視場次清單</a>
+
+        <div id="flashMessage" class="message" style="display: none;"></div>
+
+        <table id="table" class="table">
+            <thead>
+                <tr>
+                    <th>編號</th>
+                    <th>名稱</th>
+                    <th>內容</th>
+                    <th>片長</th>
+                    <th>分級</th>
+                    <th>上映日期</th>
+                    <th>圖片</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script src="statics/js/include-html.js"></script>
+    <script type="text/javascript">
+        // 全域變數紀錄SQL指令下的次數
+        var sql_num = 0;
+        function deleteMovie(id) {
+            var check = window.confirm("確認刪除電影？");
+            if (check == true) {
+                console.log("You pressed OK!");
+                var request = {'id': id};
+                var data_string = JSON.stringify(request);
+                $.ajax({
+                    type: "DELETE",
+                    url: "api/movie.do",
+                    crossDomain: true,
+                    data: data_string,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                        if(response.status == 200){
+                            $("#flashMessage").html("成功! 已經成功刪除會員...");
+                            $("#flashMessage").show();
+                            getAllMovie();
+                        }
+                        console.log(response);
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+            }
+            else {
+                console.log("You pressed Cancel!");
+            }
+        }
+
+        function getAllMovie() {
+            // 發出POST的GET請求取得所有會員列表
+            $.ajax({
+                    type: "GET",
+                    url: "api/movie.do",
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                        if(response.status == 200){
+                            updateTable(response.response.data);
+                            updateSQLTable(response.response);
+                        }
+                        console.log(response);
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+            });
+        }
+
+        // 更新會員列表表格
+        function updateTable(data) {
+            $("#table > tbody").empty();
+            var table_html = '';
+            $.each(data, function(index, value) {
+                table_html += '<tr><td scope="row">' + value['id'] + '</td>';
+                table_html += '<td>' + value['name'] + '</td>';
+                table_html += '<td>' + value['content'] + '</td>';
+                table_html += '<td>' + value['running_time'] + '</td>';
+                table_html += '<td>' + value['genre'] + '</td>';
+                table_html += '<td>' + value['release_date'] + '</td>';
+                table_html += '<td>' + value['cover'] + '</td>';
+                
+                table_html += '<td>' + '<a href="editmovie.html?id=' + value['id'] + '">編輯</a> | ';
+                table_html += '<a href="javascript: deleteMovie(' + value['id'] + ');">刪除</a></td></tr>';
+            })
+
+            $("#table > tbody").append(table_html);
+        }
+        
+        // 更新SQL指令歷史表格
+        function updateSQLTable(data) {
+            $("#sql_log > tbody").empty();
+            var time = (data.time / 1000000).toFixed(2);
+            var table_html = "";
+            
+            sql_num = 0;
+            sql_num += 1
+
+            table_html += '<tr>';
+            table_html += '<td>' + sql_num + '</td>';
+            table_html += '<td>' + data.sql + '</td>';
+            table_html += '<td style="text-align: right">' + '0' + '</td>';
+            table_html += '<td style="text-align: right">' + data.row + '</td>';
+            table_html += '<td style="text-align: right">' + data.row + '</td>';
+            table_html += '<td style="text-align: right">' + time + '</td>';
+            table_html += '</tr>';
+            $("#sql_log > tbody").append(table_html);
+            $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
+        }
+        $(document).ready(function() {
+            getAllMovie();
+        });
+    </script>
+</body>
+
+</html>

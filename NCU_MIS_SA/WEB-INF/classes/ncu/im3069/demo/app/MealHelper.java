@@ -39,7 +39,7 @@ public class MealHelper {
             conn = DBMgr.getConnection();
             
             /** SQL指令 */
-            String sql = "DELETE FROM `missa`.`members` WHERE `id` = ? LIMIT 1";
+            String sql = "DELETE FROM `missa`.`meal` WHERE `meal_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -123,7 +123,7 @@ public class MealHelper {
                 String image = rs.getString("meal_image");
                 String describe = rs.getString("meal_content");
                 
-                /** 將每一筆商品資料產生一名新Product物件 */
+                /** 將每一筆商品資料產生一名新Meal物件 */
                 m = new Meal(meal_id, name, price, image, describe);
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
                 jsa.put(m.getData());
@@ -287,48 +287,7 @@ public class MealHelper {
         return m;
     }
     
-    public JSONObject getLoginTimesStatus(Member m) {
-        /** 用於儲存該名會員所檢索之更新時間分鐘數與會員組別之資料 */
-        JSONObject jso = new JSONObject();
-        /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
-        ResultSet rs = null;
-
-        try {
-            /** 取得資料庫之連線 */
-            conn = DBMgr.getConnection();
-            /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`members` WHERE `id` = ? LIMIT 1";
-            
-            /** 將參數回填至SQL指令當中 */
-            pres = conn.prepareStatement(sql);
-            pres.setInt(1, m.getID());
-            /** 執行查詢之SQL指令並記錄其回傳之資料 */
-            rs = pres.executeQuery();
-            
-            /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
-            /** 正確來說資料庫只會有一筆該電子郵件之資料，因此其實可以不用使用 while迴圈 */
-            while(rs.next()) {
-                /** 將 ResultSet 之資料取出 */
-                int login_times = rs.getInt("login_times");
-                String status = rs.getString("status");
-                /** 將其封裝至JSONObject資料 */
-                jso.put("login_times", login_times);
-                jso.put("status", status);
-            }
-            
-        } catch (SQLException e) {
-            /** 印出JDBC SQL指令錯誤 **/
-            System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
-        } catch (Exception e) {
-            /** 若錯誤則印出錯誤訊息 */
-            e.printStackTrace();
-        } finally {
-            /** 關閉連線並釋放所有資料庫相關之資源 **/
-            DBMgr.close(rs, pres, conn);
-        }
-
-        return jso;
-    }
+    
     
     /**
      * 檢查該名會員之電子郵件信箱是否重複註冊
@@ -447,7 +406,7 @@ public class MealHelper {
         return response;
     }
     
-    public JSONObject update(Member m) {
+    public JSONObject update(Meal m) {
         /** 紀錄回傳之資料 */
         JSONArray jsa = new JSONArray();
         /** 記錄實際執行之SQL指令 */
@@ -461,18 +420,19 @@ public class MealHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `missa`.`meal` SET `name` = ? ,`password` = ? , `modified` = ? WHERE `email` = ?";
+            String sql = "Update `missa`.`meal` SET `meal_price` = ? ,`meal_image` = ? ,`meal_content` = ?  WHERE meal_name` = ? ";
             /** 取得所需之參數 */
             String name = m.getName();
-            String email = m.getEmail();
-            String password = m.getPassword();
+            Double price = m.getPrice();
+            String image = m.getImage();
+            String describe = m.getDescribe();
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
-            pres.setString(1, name);
-            pres.setString(2, password);
-            pres.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-            pres.setString(4, email);
+            pres.setDouble(1, price);
+            pres.setString(2, image);
+            pres.setString(3, describe);
+            pres.setString(4, name);
             /** 執行更新之SQL指令並記錄影響之行數 */
             row = pres.executeUpdate();
 
@@ -511,43 +471,8 @@ public class MealHelper {
      *
      * @param m 一名會員之Member物件
      */
-    public void updateLoginTimes(Member m) {
-        /** 更新時間之分鐘數 */
-        int new_times = m.getLoginTimes();
-        
-        /** 記錄實際執行之SQL指令 */
-        String exexcute_sql = "";
-        
-        try {
-            /** 取得資料庫之連線 */
-            conn = DBMgr.getConnection();
-            /** SQL指令 */
-            String sql = "Update `missa`.`members` SET `login_times` = ? WHERE `id` = ?";
-            /** 取得會員編號 */
-            int id = m.getID();
-            
-            /** 將參數回填至SQL指令當中 */
-            pres = conn.prepareStatement(sql);
-            pres.setInt(1, new_times);
-            pres.setInt(2, id);
-            /** 執行更新之SQL指令 */
-            pres.executeUpdate();
-
-            /** 紀錄真實執行的SQL指令，並印出 **/
-            exexcute_sql = pres.toString();
-            System.out.println(exexcute_sql);
-
-        } catch (SQLException e) {
-            /** 印出JDBC SQL指令錯誤 **/
-            System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
-        } catch (Exception e) {
-            /** 若錯誤則印出錯誤訊息 */
-            e.printStackTrace();
-        } finally {
-            /** 關閉連線並釋放所有資料庫相關之資源 **/
-            DBMgr.close(pres, conn);
-        }
-    }
+   
+   
     
     /**
      * 更新會員之會員組別

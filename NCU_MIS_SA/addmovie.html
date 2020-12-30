@@ -2,165 +2,141 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>CakePHP: the rapid development php framework: Members</title>
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
-    <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-    <link rel="stylesheet" type="text/css" href="statics/css/cake.generic.css">
-
-    <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>MISSA | Sessions</title>
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/layout.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+ 	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div id="container">
-        <div id="header">
-            <h1><a href="http://cakephp.org/">CakePHP: the rapid development php framework</a></h1>
-        </div>
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
+        <h2>新增電影</h2>
+        <a href="viewmovie.html">瀏覽電影</a>
+        <a href="addsession.html">新增場次</a>
         
-        <div id="content">
-            <h2>新增電影</h2>
-            <a href="viewmovie.html">檢視電影資料</a>
-            
-            
-             <div id="flashMessage" class="message" style="display: none;"></div>
+         <div id="flashMessage" class="message" style="display: none;"></div>
 
-            <form id="form" accept-charset="utf-8">
-                <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
-                <div class="input text required">
-                    <label for="movie_name">電影名稱:</label>
-                    <input name="movie_name" maxlength="25" type="text" id="movie_name" required="required">
-                
-                    <label for="movie_content">電影內容:</label>
-                    <input name="movie_content" maxlength="200" type="text" id="movie_content" required="required">
-                     
-                    <label for="running_time">電影片長:</label>
-                    <input type="text" id="running_time" name="running_time" required="required" >
-                </div>
-        <div class="select movielevel required">
-        <label for="genre">電影分級:</label>
-        <select name="genre" id="genre">
-        <option value="1">普遍級</option>
-        <option value="2">輔導級</option>
-        <option value="3">保護級</option>
-        <option value="4">限制級</option>
-        </select>
+        <form id="form" accept-charset="utf-8">
+            <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+            <div class="input text required">
+                <label for="movie_name">電影名稱:</label>
+                <input name="movie_name" maxlength="25" type="text" id="movie_name" required="required"><br>
+            
+                <label for="movie_content">電影內容:</label>
+                <input name="movie_content" maxlength="200" type="text" id="movie_content" required="required"><br>
+                 
+                <label for="running_time">電影片長:</label>
+                <input type="text" id="running_time" name="running_time" required="required" >
+            </div>
+    <div class="select movielevel required">
+    <label for="genre">電影分級:</label>
+    <select name="genre" id="genre">
+    <option value="1">普遍級</option>
+    <option value="2">輔導級</option>
+    <option value="3">保護級</option>
+    <option value="4">限制級</option>
+    </select>
+    
+    </div>  
+    <div class="input date required">
+    <label for="release_date">上映日期:</label>
+    <input type="date" id="release_date" name="release_date">
+    </div>    
+    
+
+       
+    <div class="input file required">
+        <label for="movie_cover">電影圖片:</label>
+        <input type="file" accept="image/*" id="movie_cover" name="movie_cover" >
+    </div>  
+         
+       <div class="submit"><input type="button" value="新增" id="submit"></div>
+        </form>
         
-        </div>  
-        <div class="input date required">
-        <label for="release_date">上映日期:</label>
-        <input type="date" id="release_date" name="release_date">
-        </div>    
-        
- 
-           
-        <div class="input file required">
-            <label for="movie_cover">電影圖片:</label>
-            <input type="file" accept="image/*" id="movie_cover" name="movie_cover" >
-        </div>  
-             
-           <div class="submit"><input type="button" value="新增" id="submit"></div>
-            </form>
-            
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    // 處理表單點擊事件
-                    var $form = $('#submit');
-                    $form.click(function() {
-                        submit();
-                    });
-
-                    function submit() {
-                        var movie_name = $('#movie_name').val();
-                        var movie_content= $('#movie_content').val();
-
-                        var selecteItem = document.getElementById("genre");//拿到select物件
-                        var index = selecteItem.selectedIndex ;  //拿到選中項的索引
-                        var genre = selecteItem.options[index].text;//拿到選中項options的text
-                        
-                        var release_date = $('#release_date').val();
-                        var movie_cover = $('#movie_cover').val();
-                        var running_time = $('#running_time').val(); 
-                        
-                            // 將資料組成JSON格式
-                            var data_object = {
-                                "movie_name": movie_name,
-                                "movie_content": movie_content,
-                                "genre": genre,
-                                "release_date": release_date,
-                                "movie_cover": movie_cover,
-                                "running_time": running_time,
-                                
-                            };
-
-                            // 將JSON格式轉換成字串
-                            var data_string = JSON.stringify(data_object);
-
-                            // 發出POST的AJAX請求
-                            $.ajax({
-                                    type: "POST",
-                                    url: "api/movie.do",           //?
-                                    data: data_string,
-                                    crossDomain: true,
-                                    cache: false,
-                                    dataType: 'json',
-                                    timeout: 5000,
-                                    success: function (response) {
-                                        $('#flashMessage').html(response.message);
-                                        $('#flashMessage').show();
-                                        if(response.status == 200){
-                                            updateSQLTable(response.response);
-                                        }
-                                    },
-                                    error: function () {
-                                        alert("無法連線到伺服器！??");
-                                    }
-                            });
-                        }
-                    
-
-                    function updateSQLTable(data) {
-                        $("#sql_log > tbody").empty();
-                        var time = (data.time / 1000000).toFixed(2);
-                        var table_html = "";
-
-                        table_html += '<tr>';
-                        table_html += '<td>' + '1' + '</td>';
-                        table_html += '<td>' + data.sql + '</td>';
-                        table_html += '<td style="text-align: right">' + '0' + '</td>';
-                        table_html += '<td style="text-align: right">' + data.row + '</td>';
-                        table_html += '<td style="text-align: right">' + data.row + '</td>';
-                        table_html += '<td style="text-align: right">' + time + '</td>';
-                        table_html += '</tr>';
-                        $("#sql_log > tbody").append(table_html);
-                        $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
-                    }
+		<script src="statics/js/include-html.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // 處理表單點擊事件
+                var $form = $('#submit');
+                $form.click(function() {
+                    submit();
                 });
-            </script>
 
-        </div>
-        
-        <div id="footer">
-            <a href="http://www.cakephp.org/" target="_blank" id="cake-powered"><img src="statics/img/cake.power.gif" alt="CakePHP: the rapid development php framework" border="0"></a>
-            <p>CakePHP 2.6.10</p>
-        </div>
+                function submit() {
+                    var movie_name = $('#movie_name').val();
+                    var movie_content= $('#movie_content').val();
+
+                    var selecteItem = document.getElementById("genre");//拿到select物件
+                    var index = selecteItem.selectedIndex ;  //拿到選中項的索引
+                    var genre = selecteItem.options[index].text;//拿到選中項options的text
+                    
+                    var release_date = $('#release_date').val();
+                    var movie_cover = $('#movie_cover').val();
+                    var running_time = $('#running_time').val(); 
+                    
+                        // 將資料組成JSON格式
+                        var data_object = {
+                            "movie_name": movie_name,
+                            "movie_content": movie_content,
+                            "genre": genre,
+                            "release_date": release_date,
+                            "movie_cover": movie_cover,
+                            "running_time": running_time,
+                            
+                        };
+
+                        // 將JSON格式轉換成字串
+                        var data_string = JSON.stringify(data_object);
+
+                        // 發出POST的AJAX請求
+                        $.ajax({
+                                type: "POST",
+                                url: "api/movie.do",           //?
+                                data: data_string,
+                                crossDomain: true,
+                                cache: false,
+                                dataType: 'json',
+                                timeout: 5000,
+                                success: function (response) {
+                                    $('#flashMessage').html(response.message);
+                                    $('#flashMessage').show();
+                                    if(response.status == 200){
+                                        updateSQLTable(response.response);
+                                    }
+                                },
+                                error: function () {
+                                    alert("無法連線到伺服器！??");
+                                }
+                        });
+                    }
+                
+
+                function updateSQLTable(data) {
+                    $("#sql_log > tbody").empty();
+                    var time = (data.time / 1000000).toFixed(2);
+                    var table_html = "";
+
+                    table_html += '<tr>';
+                    table_html += '<td>' + '1' + '</td>';
+                    table_html += '<td>' + data.sql + '</td>';
+                    table_html += '<td style="text-align: right">' + '0' + '</td>';
+                    table_html += '<td style="text-align: right">' + data.row + '</td>';
+                    table_html += '<td style="text-align: right">' + data.row + '</td>';
+                    table_html += '<td style="text-align: right">' + time + '</td>';
+                    table_html += '</tr>';
+                    $("#sql_log > tbody").append(table_html);
+                    $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
+                }
+            });
+        </script>
+
     </div>
-
-    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-        <caption id="sql_summary">(default) 0 queries took 0 ms</caption>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Query</th>
-                <th>Error</th>
-                <th>Affected</th>
-                <th>Num. rows</th>
-                <th>Took (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
 </body>
 
 </html>

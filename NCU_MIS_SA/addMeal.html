@@ -13,20 +13,11 @@
 </head>
 
 <body>
-	<div class="side-nav">
-		<div class="nav-list">
-			<a href="/NCU_MIS_SA/addTheater.html" class="nav-link">影廳管理</a>
-			<a href="/NCU_MIS_SA/addMeal.html" class="nav-link">套餐管理</a>
-			<a href="/NCU_MIS_SA/addmovie.html" class="nav-link">電影管理</a>
-			<a href="" class="nav-link">場次管理</a>
-			<a href="" class="nav-link">票種管理</a>
-			<a href="/NCU_MIS_SA/index.html" class="nav-link">使用者管理</a>
-		</div>
-	</div>
-    <div class="container content">
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
             <h2>新增套餐資料</h2>
             <a href="Meal.html">套餐清單</a>
-            <a href="product.html">購物車模組</a>
+            <a href="MealCart.html">購物車模組</a>
             
             <div id="flashMessage" class="message" style="display: none;"></div>
 
@@ -34,23 +25,24 @@
                 <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
                 <div class="input text required">
                     <label for="meal_name">套餐名稱</label>
-                    <input name="name" maxlength="30" type="text" id="meal_name" required="required">
+                    <input name="meal_name" maxlength="30" type="text" id="meal_name" required="required">
                 </div>
-                <div class="input email required">
+                <div class="input price required">
                     <label for="meal_price">價格</label>
                     <input name="meal_price" maxlength="50" type="text" id="meal_price" required="required">
                 </div>
-                <div class="input password required">
+                <div class="input image required">
                     <label for="meal_image">圖片</label>
                     <input type="file" id="meal_image" name="meal_image" accept="image/png, image/jpg, image/jpeg">
                 </div>
-                <div class="input password required">
+                <div class="input text required">
                     <label for="meal_content">描述</label>
                     <input name="meal_content" maxlength="30" type="text" id="meal_content" required="required">
                 </div>
                 <div class="submit"><input type="button" value="新增套餐" id="submit"></div>
             </form>
             
+			<script src="statics/js/include-html.js"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
                     // 處理表單點擊事件
@@ -171,22 +163,7 @@
                })
             </script>
         
-		    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-		        <caption id="sql_summary">(default) 0 queries took 0 ms</caption>
-		        <thead>
-		            <tr>
-		                <th>Nr</th>
-		                <th>Query</th>
-		                <th>Error</th>
-		                <th>Affected</th>
-		                <th>Num. rows</th>
-		                <th>Took (ms)</th>
-		            </tr>
-		        </thead>
-		        <tbody>
-		        </tbody>
-		    </table>
-    </div>
+	 </div>
 
 
 </body>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>MISSA | Sessions</title>
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/layout.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+ 	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+	<div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
+        <h2>修改場次資料</h2>
+        <a href="viewmovie.html">電影列表</a>
+        <a href="product.html">購物車模組</a>
+        
+
+        <div id="flashMessage" class="message" style="display: none;"></div>
+
+  		<form id="form" accept-charset="utf-8">
+            <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+            <div class="input text required">
+                <label for="theater_id">影廳編號:</label>
+                <input name="theater_id" maxlength="25" type="text" id="theater_id" required="required"><br>
+            
+                <label for="movie_id">電影編號:</label>
+                <input name="movie_id" maxlength="200" type="text" id="movie_id" required="required"><br>
+                 
+                <label for="session_time">場次時間:</label>
+                <input name="session_time" type="time" step="1" id="session_time" required="required" ><br>
+				<label for="session_date">場次日期:</label>
+    			<input name="session_date" type="date" id="session_date" >
+            </div>
+
+       		<div class="submit"><input type="button" value="新增" id="submit"></div>
+        </form>
+		<script src="statics/js/include-html.js"></script>
+        <script type="text/javascript">
+                // 取得網址參數
+                var url_string = window.location.href;
+                var url = new URL(url_string);
+                var id = url.searchParams.get("id");
+                var sql_num = 0;
+
+                function updateMovie(id) {
+                	var theater_id = $('#theater_id').val();
+                    var movie_id= $('#movie_id').val();
+                    var session_time = $('#session_time').val();
+                    var session_date = $('#session_date').val();
+                    
+                        // 將資料組成JSON格式
+                        var data_object = {
+                        	"session_id": id,
+                            "theater_id": theater_id,
+                            "movie_id": movie_id,
+                            "session_time": session_time,
+                            "session_date": session_date,                                
+                        };
+
+                        // 將JSON格式轉換成字串
+                        var data_string = JSON.stringify(data_object);
+
+                        // 發出POST的PUT請求
+                        $.ajax({
+                                type: "PUT",
+                                url: "api/session.do",
+                                data: data_string,
+                                crossDomain: true,
+                                cache: false,
+                                dataType: 'json',
+                                timeout: 5000,
+                                success: function (response) {
+                                    $('#flashMessage').html(response.message);
+                                    $('#flashMessage').show();
+                                    if(response.status == 200){
+                                        updateSQLTable(response.response);
+                                        //getSession();
+                                    }
+                                },
+                                error: function () {
+                                    alert("無法連線到伺服器！");
+                                }
+                        });
+                    }
+                
+
+                // 更新SQL指令歷史表格
+                function updateSQLTable(data) {
+                    var time = (data.time / 1000000).toFixed(2);
+                    var table_html = "";
+                    
+                    sql_num += 1
+
+                    table_html += '<tr>';
+                    table_html += '<td>' + sql_num + '</td>';
+                    table_html += '<td>' + data.sql + '</td>';
+                    table_html += '<td style="text-align: right">' + '0' + '</td>';
+                    table_html += '<td style="text-align: right">' + data.row + '</td>';
+                    table_html += '<td style="text-align: right">' + data.row + '</td>';
+                    table_html += '<td style="text-align: right">' + time + '</td>';
+                    table_html += '</tr>';
+                    $("#sql_log > tbody").append(table_html);
+                    $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
+                    $("#sql_summary").html("(default) " + data.row );
+                }
+
+//                function getSession() {
+//                    $.ajax({
+//                        type: "GET",
+//                        url: "api/session.do",
+//                        crossDomain: true,
+//                       data: "id=" + id,
+//                       cache: false,
+//                       dataType: 'json',
+//                       timeout: 5000,
+//                       success: function (response) {
+//                         if(response.status == 200){
+//                       		updateSQLTable(response.data);
+                     	
+//                   			document.getElementById('movie_id').value = response['data'][0]['movie_id'];
+//                			document.getElementById('theater_id').value = response['data'][0]['theater_id'];
+//               				document.getElementById('session_date').value = response['data'][0]['session_date'];
+//             				document.getElementById('session_time').value = response['data'][0]['session_time'];
+                            	
+//                          }
+//                        console.log(response);
+//                 },
+//                error: function () {
+//                  alert("無法連線到伺服器！");
+//            }
+//      });
+//}
+
+                $('#submit').click(function() {
+                    updateMovie(id)
+                });
+                
+                $(document).ready(function() {
+                	// 發出GET的AJAX請求取得原本該會員的資料
+                 	$("#sql_log > tbody").empty();
+                    //getSession();
+                });
+            </script>
+    </div>
+</body>
+
+</html>

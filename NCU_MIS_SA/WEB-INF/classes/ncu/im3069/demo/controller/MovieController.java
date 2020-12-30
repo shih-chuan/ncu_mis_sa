@@ -110,7 +110,9 @@ public class MovieController extends HttpServlet {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
-        String id = jsr.getParameter("movie_id");
+        String id = jsr.getParameter("id");
+        System.out.print("id=");
+        System.out.println(id);
         
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
         if (id.isEmpty()) {
@@ -128,7 +130,7 @@ public class MovieController extends HttpServlet {
         }
         else {
             /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
-            Movie query = moh.getMovieById(id);
+            JSONObject query = moh.getById(id);
             
              /**新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
@@ -156,7 +158,7 @@ public class MovieController extends HttpServlet {
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
-        int id = jso.getInt("movie_id");
+        int id = jso.getInt("id");
         
         /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
         JSONObject query = moh.deleteByID(id);
@@ -184,15 +186,13 @@ public class MovieController extends HttpServlet {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         JSONObject jso = jsr.getObject();
-        
         /** 取出經解析到JSONObject之Request參數 */
-        int movie_id = jso.getInt("movie_id");
+        int movie_id = jso.getInt("id");
         String movie_name = jso.getString("movie_name");
         String cover = jso.getString("movie_cover");
         String content = jso.getString("movie_content");
         int running_time = jso.getInt("running_time");
         String genre = jso.getString("genre");
-        
         String date = jso.getString("release_date");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date release_date=null;
