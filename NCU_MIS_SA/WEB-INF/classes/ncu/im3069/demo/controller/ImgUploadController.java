@@ -55,7 +55,7 @@ public class ImgUploadController extends HttpServlet {
 	    Properties p=new Properties();  
 	    p.load(reader);  
 
-	    File targetFile = new File(p.getProperty("PROJECT_PATH") + "statics/img/meal/" + fileName);
+	    File targetFile = new File(p.getProperty("PROJECT_PATH") +  fileName);
 	    OutputStream outStream = new FileOutputStream(targetFile);
 	    outStream.write(buffer);
 	    outStream.close();
@@ -67,7 +67,7 @@ public class ImgUploadController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         /** 將JSON格式之字串轉換成 */
         JSONObject responseObj = new JSONObject();
-        responseObj.put("imgSrc", "statics/img/meal/" + fileName);
+        responseObj.put("imgSrc", fileName);
         /** 取得PrintWriter準Response回前端 */
         PrintWriter out = response.getWriter();
         /** 將Response Object放入，回傳前端 */

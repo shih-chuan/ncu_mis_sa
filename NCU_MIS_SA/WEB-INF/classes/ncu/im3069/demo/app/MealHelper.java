@@ -236,11 +236,17 @@ public class MealHelper {
       return response;
   }
     
-    public Meal getById(String id) {
-        /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
+    public JSONObject getByID(String id) {
+        /** 新建一個 Member 物件之 m 變數，用於紀錄每一位查詢回之會員資料 */
         Meal m = null;
+        /** 用於儲存所有檢索回之會員，以JSONArray方式儲存 */
+        JSONArray jsa = new JSONArray();
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
+        /** 紀錄程式開始執行時間 */
+        long start_time = System.nanoTime();
+        /** 紀錄SQL總行數 */
+        int row = 0;
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
         ResultSet rs = null;
         
@@ -248,9 +254,9 @@ public class MealHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`meal` WHERE `meal`.`meal_id` = ? LIMIT 1";
+            String sql = "SELECT * FROM `missa`.`meal` WHERE `meal_id` = ? LIMIT 1";
             
-            /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
+            /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
             pres.setString(1, id);
             /** 執行查詢之SQL指令並記錄其回傳之資料 */
@@ -261,18 +267,25 @@ public class MealHelper {
             System.out.println(exexcute_sql);
             
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
+            /** 正確來說資料庫只會有一筆該會員編號之資料，因此其實可以不用使用 while 迴圈 */
             while(rs.next()) {
+                /** 每執行一次迴圈表示有一筆資料 */
+                row += 1;
+                
                 /** 將 ResultSet 之資料取出 */
                 int meal_id = rs.getInt("meal_id");
                 String name = rs.getString("meal_name");
-                double price = rs.getDouble("meal_price");
+                Double price = rs.getDouble("meal_price");
                 String image = rs.getString("meal_image");
                 String describe = rs.getString("meal_content");
+         
                 
-                /** 將每一筆商品資料產生一名新Product物件 */
-                m = new Meal(meal_id, name, price, image, describe);
+                /** 將每一筆會員資料產生一名新Member物件 */
+                m = new Meal(meal_id,name,price,image,describe);
+                /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
+                jsa.put(m.getData());
             }
-
+            
         } catch (SQLException e) {
             /** 印出JDBC SQL指令錯誤 **/
             System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
@@ -283,8 +296,20 @@ public class MealHelper {
             /** 關閉連線並釋放所有資料庫相關之資源 **/
             DBMgr.close(rs, pres, conn);
         }
+        
+        /** 紀錄程式結束執行時間 */
+        long end_time = System.nanoTime();
+        /** 紀錄程式執行時間 */
+        long duration = (end_time - start_time);
+        
+        /** 將SQL指令、花費時間、影響行數與所有會員資料之JSONArray，封裝成JSONObject回傳 */
+        JSONObject response = new JSONObject();
+        response.put("sql", exexcute_sql);
+        response.put("row", row);
+        response.put("time", duration);
+        response.put("data", jsa);
 
-        return m;
+        return response;
     }
     
     
@@ -420,7 +445,7 @@ public class MealHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `missa`.`meal` SET `meal_price` = ? ,`meal_image` = ? ,`meal_content` = ?  WHERE meal_name` = ? ";
+            String sql = "Update `missa`.`meal` SET `meal_price` = ? ,`meal_image` = ? ,`meal_content` = ?  WHERE `meal_name` = ? ";
             /** 取得所需之參數 */
             String name = m.getName();
             Double price = m.getPrice();

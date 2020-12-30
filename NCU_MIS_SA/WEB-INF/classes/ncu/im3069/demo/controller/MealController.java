@@ -113,8 +113,8 @@ public class MealController extends HttpServlet {
         }
         else {
             /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
-            JSONObject query = mh.getByIdList(id);          
-            
+  //          JSONObject query = mh.getByIdList(id_list);          
+        	JSONObject query = mh.getByID(id);
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
@@ -171,15 +171,16 @@ public class MealController extends HttpServlet {
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
+        int id = jso.getInt("meal_id");
         String name = jso.getString("meal_name");
         Double price = jso.getDouble("meal_price");
         String image = jso.getString("meal_image");
         String describe = jso.getString("meal_content");
         
         /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
-        Meal m = new Meal(name, price, image, describe);
+        Meal m = new Meal(id,name, price, image, describe);
         
-        /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
+        /** 透過Meal物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
         JSONObject data = m.update();
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
