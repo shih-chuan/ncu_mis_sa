@@ -530,7 +530,7 @@ public class SessionHelper {
                 /** 取得資料庫之連線 */
                 conn = DBMgr.getConnection();
                 /** SQL指令 */
-                String sql = "SELECT * FROM `missa`.`session` WHERE `session`.`movie_id` = ? ";
+                String sql = "SELECT * FROM `missa`.`session` WHERE `session`.`movie_id` = ? AND `session`.`session_date` >= CURDATE() ";
                 
                 /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
                 pres = conn.prepareStatement(sql);
@@ -551,6 +551,8 @@ public class SessionHelper {
                     int theater_id = rs.getInt("theater_id");
                     String session_date = rs.getString("session_date");
                     String session_time = rs.getString("session_time");
+                    
+                    
                     
                     /** 將每一筆商品資料產生一名新Product物件 */
                     s = new Session(session_id, movie_id, theater_id,session_time, session_date,p);

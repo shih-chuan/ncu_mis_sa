@@ -61,7 +61,7 @@ public class Session{
      * @param image 產品圖片
      * @param describe 產品敘述
      */
-	public Session(int session_id, int movie_id, int theater_id, String session_time, String session_date) {
+	public Session(int session_id, int movie_id, int theater_id, String session_date, String session_time) {
 		this.id = session_id;
 		getTheaterFromDB(theater_id);
 		getMovieFromDB(movie_id);

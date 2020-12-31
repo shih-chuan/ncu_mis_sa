@@ -42,14 +42,15 @@
                 // 眔呼把计
                 var url_string = window.location.href;
                 var url = new URL(url_string);
-                var id = url.searchParams.get("id");
+                var mid = url.searchParams.get("id");
+                var movie_id = parseInt(mid) ;
                 var sql_num = 0;
                 function getMovie() {
                     $.ajax({
                         type: "GET",
                         url: "api/movie.do",
                         crossDomain: true,
-                        data: "id=" + id,
+                        data: "id=" + mid,
                         cache: false,
                         dataType: 'json',
                         timeout: 5000,
@@ -103,7 +104,7 @@
                         type: "GET",
                         url: "api/moviesession.do",
                         crossDomain: true,
-                        data: "id=" + id,
+                        data: "id=" + mid,
                         cache: false,
                         dataType: 'json',
                         timeout: 5000,
@@ -117,6 +118,7 @@
                           	})
                           	
                           	$("#session_panel").append(session_panel);
+                          	setButtonFunction();
                             }
                           },
                         error: function () {
@@ -128,19 +130,39 @@
                 getSession();
 				
                 function addSession(data) {		//–ъmovie 碞add movie
-                	let inner_html = '';
+                	let inner_html = '----------------';
                 	
             		inner_html += '<p class="card-text">初Ω丁' + data.session_time + '</p>';
             		inner_html += '<p class="card-text">初Ωら戳' + data.session_date + '</p>';
             		//inner_html += '<div class="d-flex justify-content-between align-items-center">';
             		//inner_html += '<div class="btn-group">';
-            		inner_html += '<a class="p-2 text-dark" href="order.html?id=' + id+'&ssid='+data.session_id+'"><font color="blue">璹布</font></a>';
+            		//inner_html += '<a class="p-2 text-dark" href="order.html?id=' + mid+'&ssid='+data.session_id+'"><font color="blue">璹布</font></a>';
+      				inner_html += '<button id="session_id_' + data.session_id + '" name="session_id" type="button" >璹布</button></br>';
+					//ssid = data.session_id;
             		//inner_html += '</div></div></div></div>';
                 	
             		return inner_html;
+            			
                 }
                 
-               
+                function setButtonFunction() {
+                	$('button[name="session_id"]').click(function () {
+                		var object = (this.id).split('_')[0];
+                		var col = (this.id).split('_')[1];
+                		var ssid = (this.id).split('_')[2];
+                		//addProductToCart(id, 1);
+						
+                		var session_id = parseInt(ssid) ;
+    					localStorage.setItem("movie_id", JSON.stringify(movie_id));
+        				localStorage.setItem("session_id", JSON.stringify(session_id));
+
+                        document.location.href = "order.html";
+                		
+                    });
+                }
+                
+                
+                
             </script>
         </div>
         <div id="footer">
