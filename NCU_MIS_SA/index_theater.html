@@ -20,7 +20,6 @@
 </head>
 <body>
 	<div include-html="statics/components/side-bar.html"></div>
-	
 	<div class="content">
 		<div class="row justify-content-between">
 			<h1>影廳管理</h1>
@@ -85,8 +84,9 @@
                 success: function (response) {
                     if(response.status == 200){
                         updateTable(response.response.data);
+                    }else{
+                    	alert(response.message);
                     }
-                    console.log(response);
                 },
                 error: function () {
                     alert("無法連線到伺服器！");

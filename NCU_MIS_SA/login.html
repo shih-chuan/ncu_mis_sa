@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<title>訂單列表 ｜ NCU MIS SA</title>
+	
+	<!-- Bootstrap core CSS -->
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/masthead.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+	
+	<script src="statics/js/jquery-3.4.1.min.js"></script>
+	<script src="statics/js/jquery-confirm.js"></script>
+	<script src="statics/js/big.min.js"></script>
+	<style>
+		form{
+			background-color: white;
+			border-radius: 5px;
+			color: black;
+			padding: 30px;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+		table{
+  			border-spacing: 5px;
+		}
+		form tr{
+			padding-bottom: 5px;
+		}
+	</style>
+</head>
+<body>
+	<div include-html="statics/components/header.html"></div>
+	<div class="masthead">
+		<form method="post">
+			<h3 class="mb-3">MISSA | 登入</h3>
+			<table class="table table-borderless">
+				<tr class="mb-1">
+					<td>Email	:</td>
+					<td><input id="email" type="text" name="name"></td>
+				</tr>
+				<tr class="mb-1">
+					<td>Password:</td>
+					<td><input id="password" type="password" name="password"></td>
+				</tr>
+			</table> 
+			<input id="submit-btn" class="btn btn-primary btn-xl" type="submit" value="login">
+			<a href="register.html" class="mt-3">註冊</a>  
+		</form>  
+    </div>
+	<script src="statics/js/include-html.js"></script>
+	<script>
+		$(function(){
+			$("#submit-btn").click(function(e){
+				  e.preventDefault();
+                  var email = $('#email').val();
+                  var pass = $('#password').val();
+                  var dataObj = {
+                      "email": email,
+                      "password": pass
+                  }
+                  console.log(JSON.stringify(dataObj));
+				  $.ajax({
+	                   type: "POST",
+	                   url: "api/auth.do",
+	                   crossDomain: true,
+	                   cache: false,
+	                   data: JSON.stringify(dataObj),
+	                   dataType: 'json',
+	                   timeout: 5000,
+	                   success: function (response) {
+	                	   console.log(response)
+	                       alert(response.message);
+	                	   if(response.status == "200"){
+							   localStorage.setItem("member_id", response.member_id);
+							   localStorage.setItem("member_name", response.member_name);
+		                       window.location.replace("index.html");
+	                	   }
+	                   },
+	                   error: function () {
+	                       alert("無法連線到伺服器！");
+	                   }
+	              });
+			  })
+		})
+	</script>
+</body>
