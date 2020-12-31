@@ -8,7 +8,7 @@
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Jekyll v3.8.5">
 
-  <title>購物車 ｜ NCU MIS SA</title>
+  <title>套餐購物車 ｜ NCU MIS SA</title>
 
   <!-- Bootstrap core CSS -->
   <link href="statics/css/bootstrap.min.css" rel="stylesheet">
@@ -46,15 +46,15 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">NCU_MIS-SA</h5>
     <nav class="my-2 my-md-0 mr-md-3">
       <a class="p-2 text-dark" href="index.html">會員管理模組</a>
-      <a class="p-2 text-dark" href="product.html">商品列表</a>
+      <a class="p-2 text-dark" href="Meal.html">套餐列表</a>
       <a class="p-2 text-dark" href="order.html">訂單列表</a>
     </nav>
     <a class="btn btn-outline-primary" href="MealCart.html">購物車</a>
   </div>
 
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center bg-light">
-    <h1 class="display-4">購物車</h1>
-    <p class="lead">以下是目前存在於購物車之商品，請輸入訂單相關資訊後即可送出訂單！</p>
+    <h1 class="display-4">套餐購物車</h1>
+ <!--    <p class="lead">以下是目前存在於購物車之商品，請輸入訂單相關資訊後即可送出訂單！</p> -->
   </div>
 
   <div class="container">
@@ -85,39 +85,13 @@
 		          <strong>$ <span id="summary">0.00</span></strong>
 		        </li>
 		      </ul>
-		      <button id="check" class="btn btn-primary btn-lg btn-block" type="button">結帳</button>
+		      <form action="bookSeat.html">
+		      <button id="check" class="btn btn-primary btn-lg btn-block" type="submit">劃位</button>
 		      <button id="clean" class="btn btn-dark btn-lg btn-block" type="button">清空購物車</button>
+		    </form>
 		    </div>
 
-		    <div class="col-md-8 order-md-1">
-		      <h4 class="mb-3">個人資訊</h4>
-		      <hr class="mb-4">
-	        <div class="row">
-	          <div class="col-md-6 mb-2">
-	            <label for="lastName">姓</label>
-	            <input type="text" class="form-control" id="last_name" maxlength="10" value="" required>
-	          </div>
-
-	          <div class="col-md-6 mb-4">
-	            <label for="firstName">名</label>
-	            <input type="text" class="form-control" id="first_name" maxlength="10" placeholder="" value="" required>
-	          </div>
-	        </div>
-
-	        <div class="mb-3">
-	          <label for="email">Email <span class="text-muted">(Optional)</span></label>
-	          <input type="email" class="form-control" maxlength="50" id="email" placeholder="you@example.com">
-	        </div>
-
-	        <div class="mb-3">
-	          <label for="phonenum">手機號碼:</label><br/>
-	          <input id="phone" type="tel" class="form-control" maxlength="12" placeholder="09xx-xxx-xxx" required>
-	        </div>
-
-	        <div class="mb-3">
-	          <label for="address">住址</label>
-	          <input type="text" class="form-control" id="address" maxlength="255" placeholder="請輸入有效之地址！" required>
-	        </div>
+		    
 
 	        <h4 class="mb-3">商品資訊</h4>
 	        <hr class="mb-4">
@@ -146,32 +120,26 @@
   </div>
 
   <script>
-    var [client_cart_obj, client_cart_amount]  = getCartDataFromClient();
+    var [client_meal_obj, client_meal_amount]  = getCartDataFromClient();
 
-    if (client_cart_obj.length == 0) {
-    	alert("購物車沒有任何商品！");
+    if (client_meal_obj.length == 0) {
+    	alert("購物車沒有任何套餐！");
     	calcSummaryInformation();
     	setButtonState("check", false);
     }
     else
     	getCartProduct();
 
-    $("#check").click(function () {
-    	var data = {
-    			"first_name": $("#first_name").val(),
-    			"last_name": $("#last_name").val(),
-    			"email": $("#email").val(),
-    			"phone": $("#phone").val(),
-    			"address": $("#address").val(),
-    			"item": client_cart_obj,
-    			"quantity": client_cart_amount
+//    $("#check").click(function () {
+ //   	$("#check").attr("href","bookSeat.html");
+  //  }
+/*    	var data = {
+    			
+    			"item": client_meal_obj,
+    			"quantity": client_meal_amount
     	}
 
-    	// 驗證輸入的資料
-    	pass_vaild = vaildData(data);
-    	if (pass_vaild) {
-    		var data_string = JSON.stringify(data);
-
+    	var data_string = JSON.stringify(data);
     		// 發出POST的AJAX請求
         $.ajax({
           type: "POST",
@@ -189,13 +157,13 @@
                     type: 'green',
                     animation: 'scale',
                     title: '系統提醒',
-                    content: "「購物車結帳成功」，已完成新增訂單！",
+                    content: "「餐點確認」，已新增套餐！",
                     buttons: {
                         確定: {
                             text: '確定',
                             btnClass: 'btn-blue',
                             action: function () {
-                          	  cleanAllData();
+  //                        	  cleanAllData();
                               document.location.href = "order.html";
                             }
                         }
@@ -208,28 +176,17 @@
           }
         });
     	}
-    });
+*/  //  );
 
     $("#clean").click(function () {
     	console.log("[@Action]清空購物車");
     	cleanAllData();
     });
 
-    function vaildData(data) {
-    	var email_rule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
-    	var phone_rule = /^09\d{2}-\d{3}-\d{3}$/;
-
-    	if (data["first_name"] == "" || data["last_name"] == "" || data['phone'] == "" || data['address'] == "")  alert("必填寫欄位不得有空值！");
-    	else if (data['email'] != "" && !email_rule.test(data['email'])) alert("Email格式不符！");
-    	else if (!phone_rule.test(data['phone'])) alert("手機格式不符（應為09XX-XXX-XXX）！");
-    	else return true;
-
-    	return false;
-    }
 
     function cleanAllData() {
-    	client_cart_obj = [];
-      client_cart_amount = [];
+    	client_meal_obj = [];
+      client_meal_amount = [];
       updateCartDataToClent();
       $("#cart_table > tbody").empty();
       $("#total_item").html('0');
@@ -244,7 +201,7 @@
         url: "api/meal.do",
         crossDomain: true,
         cache: false,
-        data: "id_list=" + client_cart_obj.toString(),
+        data: "id=" + client_meal_obj.toString(),
         dataType: 'json',
         timeout: 5000,
         success: function (response) {
@@ -262,9 +219,9 @@
     }
 
     function updateAllQuantitySubtotal() {
-    	for (var i=0 ; i < client_cart_obj.length ; i++) {
-    		var id = client_cart_obj[i];
-    		var amount = client_cart_amount[i];
+    	for (var i=0 ; i < client_meal_obj.length ; i++) {
+    		var id = client_meal_obj[i];
+    		var amount = client_meal_amount[i];
     		var price = $('#price_' + id).html();
     		$('#quantity_' + id).val(amount);
     		var subtotal = calcSubTotal(price, amount);
@@ -304,17 +261,17 @@
 
     	$('button[name="remove[]"').click(function () {
     		var id = (this.id).split('_')[1];
-    		var i = client_cart_obj.indexOf(id);
+    		var i = client_meal_obj.indexOf(id);
 
     		if (i > -1) {
-	    		client_cart_obj.splice(i, 1);
-	    		client_cart_amount.splice(i, 1);
+	    		client_meal_obj.splice(i, 1);
+	    		client_meal_amount.splice(i, 1);
     		}
 
     		updateCartDataToClent();
     		$('#row_' + id).remove();
-    		if (client_cart_obj.length == 0)
-  		      alert("購物車沒有任何商品！");
+    		if (client_meal_obj.length == 0)
+  		      alert("尚未選購套餐！");
     		calcSummaryInformation();
     	});
 
@@ -331,13 +288,13 @@
     	table_html = '';
     	$("#cart_table > tbody").empty();
         $.each(data, function(index, value) {
-        	table_html += '<tr id="row_' + value.id + '">';
-        	table_html += '<td class="align-middle text-center">' + value.id + '</td>';
-        	table_html += '<td class="align-middle"><p class="text-break">' + value.name + '</p></td>';
-        	table_html += '<td class="align-middle text-center"><span id="price_' + value.id + '">' + value.price + '</td>';
-        	table_html += '<td class="align-middle text-center"><input type="input" name="quantity[]" class="input-sm form-control text-center" id="quantity_' + value.id + '" maxlength="5" min="0" step="1"></td>';
-        	table_html += '<td class="align-middle text-center"><strong><span id="subtotal_' + value.id + '"><strong></td>';
-        	table_html += '<td class="align-middle text-center"><button id="remove_' + value.id + '" name="remove[]" type="button" class="btn btn-danger">移除</button></td>';
+        	table_html += '<tr id="row_' + value.meal_id + '">';
+        	table_html += '<td class="align-middle text-center">' + value.meal_id + '</td>';
+        	table_html += '<td class="align-middle"><p class="text-break">' + value.meal_name + '</p></td>';
+        	table_html += '<td class="align-middle text-center"><span id="price_' + value.meal_id + '">' + value.meal_price + '</td>';
+        	table_html += '<td class="align-middle text-center"><input type="input" name="quantity[]" class="input-sm form-control text-center" id="quantity_' + value.meal_id + '" maxlength="5" min="0" step="1"></td>';
+        	table_html += '<td class="align-middle text-center"><strong><span id="subtotal_' + value.meal_id + '"><strong></td>';
+        	table_html += '<td class="align-middle text-center"><button id="remove_' + value.meal_id + '" name="remove[]" type="button" class="btn btn-danger">移除</button></td>';
         	table_html += '</tr>';
         })
 
@@ -345,31 +302,31 @@
     }
 
     function getCartDataFromClient() {
-    	let cart = JSON.parse(localStorage.getItem("client_cart_obj"));
-    	let amount = JSON.parse(localStorage.getItem("client_cart_amount"));
+    	let cart = JSON.parse(localStorage.getItem("client_meal_obj"));
+    	let amount = JSON.parse(localStorage.getItem("client_meal_amount"));
     	cart = !cart ? new Array() : cart;
     	amount = !amount ? new Array() : amount;
     	return [cart, amount];
     }
 
     function updateCartDataToClent() {
-    	localStorage.setItem("client_cart_obj", JSON.stringify(client_cart_obj));
-    	localStorage.setItem("client_cart_amount", JSON.stringify(client_cart_amount));
+    	localStorage.setItem("client_meal_obj", JSON.stringify(client_meal_obj));
+    	localStorage.setItem("client_meal_amount", JSON.stringify(client_meal_amount));
     }
 
     function updateClentCartData(id, quantity) {
-    	var i = client_cart_obj.indexOf(id);
-    	client_cart_amount[i] = (quantity === "") ? 0 : parseInt(quantity);
+    	var i = client_meal_obj.indexOf(id);
+    	client_meal_amount[i] = (quantity === "") ? 0 : parseInt(quantity);
     	updateCartDataToClent();
     }
 
     function calcSummaryInformation() {
-    	var total_item = client_cart_obj.length;
+    	var total_item = client_meal_obj.length;
     	var total_price = 0.00;
     	var total_quantity = 0;
 
     	for(var i=0 ; i < total_item ; i++) {
-    		var id = client_cart_obj[i];
+    		var id = client_meal_obj[i];
     		var price = $('#price_' + id).html();
     		var quantity = $('#quantity_' + id).val()
     		calc = parseFloat(price) * parseInt(quantity);
@@ -391,12 +348,12 @@
       if (!action) {
           $('#' + id).prop('disabled', true);
           $('#' + id).addClass('disabled');
-          $('#' + id).html('請先新增商品');
+          $('#' + id).html('請先新增套餐');
       }
       else {
     	  $('#' + id).prop('disabled', false);
         $('#' + id).removeClass('disabled');
-        $('#' + id).html('結帳');
+        $('#' + id).html('劃位');
       }
     }
   </script>

@@ -113,8 +113,13 @@ public class MealController extends HttpServlet {
         }
         else {
             /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
-  //          JSONObject query = mh.getByIdList(id_list);          
-        	JSONObject query = mh.getByID(id);
+  //      	int i = id.length();
+        	JSONObject query = new JSONObject();
+        	if(id.length()==1)
+        	{ query = mh.getByID(id);}
+        	else {
+            query = mh.getByIdList(id);          
+        	}
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");

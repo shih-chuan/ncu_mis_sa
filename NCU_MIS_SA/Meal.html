@@ -42,6 +42,38 @@
 		<h1 class="display-4">套餐列表</h1>
 		<p class="lead">以下是所有商品包含其ID、品名、價格與說明</p>
 	</div>
+	
+	<h4 class="mb-3">商品資訊</h4>
+	   <hr class="mb-4">
+	   <form action="Meal.html">
+	      <div class="row">
+		    <div class="table-responsive">
+			  <table id="cart_table" class="table table-striped table-sm">
+                 <thead>
+                    <tr>
+                      <th class="text-center" style="width: 10%">價格</th>
+                      <th class="text-center" style="width: 10%">數量</th>
+   <!--                     <th class="text-center" style="width: 10%">合計</th>-->
+                    </tr>
+                    <tr>
+                      <th class="text-center" style="width: 10%">$200</th>
+                      <th class="text-center" style="width: 10%"><input name="ticketNum" maxlength="2" type="text" id="ticketNum" required="required"></th>
+                      
+  <!--                     <th class="text-center" style="width: 10%">合計</th> -->
+                    </tr>
+                    <tr>
+                    <div class="submit"><input type="button" value="選擇完畢" id="submit"></div>
+                    <button id="done"_  name="done" type="button" >儲存</button>
+  <!--                   <button id="clean"  type="submit">選擇完畢</button>  -->
+                  </tr>
+                </thead>
+            <tbody>
+       </tbody>
+        </table>
+     </div>
+     </div>   
+     </form>
+	
 	<div class="album py-5 bg-light">
 	  <div class="container">
 		<div id="product_panel" class="row">
@@ -50,7 +82,23 @@
 	</div>
 	<script src="statics/js/include-html.js"></script>
   <script>   
-    var [client_cart_obj, client_cart_amount]  = getCartDataFromClient();
+    var [client_meal_obj, client_meal_amount]  = getCartDataFromClient();
+    var [client_ticket_num]  = getNumOfTicket();
+    var ticketNum =0;
+ //   localStorage.setItem("client_ticket_num", JSON.stringify(client_ticket_num));
+ 
+    $(document).ready(function() {
+                    // 處理表單點擊事件
+                    var $form = $('#submit');
+                    $form.click(function() {
+                        submit();
+                    });
+    });
+                    
+    function submit() {
+    	this.ticketNum = Number($('#ticketNum').val());
+  
+    }
     
     function getAllProduct() {
       $.ajax({
@@ -101,6 +149,7 @@
 		return inner_html;
     }
     
+    
     function setButtonFunction() {
     	$('button[name="add_cart"]').click(function () {
     		var action = (this.id).split('_')[0];
@@ -110,27 +159,62 @@
         });
     }
     
+           
+    
+    $('button[name="done"]').click(function () {
+		var action = (this.id).split('_')[0];
+		var destination = (this.id).split('_')[1];
+		var id = (this.id).split('_')[2];
+//		var ticketNum = this.ticketNum;
+		
+		addTicketToCart(ticketNum);
+    });
+ 
+    
+    
     function getCartDataFromClient() {
-    	let cart = JSON.parse(localStorage.getItem("client_cart_obj"));
-    	let amount = JSON.parse(localStorage.getItem("client_cart_amount"));
+    	let cart = JSON.parse(localStorage.getItem("client_meal_obj"));
+    	let amount = JSON.parse(localStorage.getItem("client_meal_amount"));
     	cart = !cart ? new Array() : cart;
     	amount = !amount ? new Array() : amount;
     	return [cart, amount];
     }
     
     function addProductToCart(id, amount) {
-    	if (!(client_cart_obj.includes(id))) {
-    		client_cart_obj.push(id);
-    		client_cart_amount.push(amount);
+    	if (!(client_meal_obj.includes(id))) {
+    		client_meal_obj.push(id);
+    		client_meal_amount.push(amount);
     		updateCartDataToClent();
+    		
     	}
     	
     	checkIfExistInCart();
     }
     
     function updateCartDataToClent() {
-    	localStorage.setItem("client_cart_obj", JSON.stringify(client_cart_obj));
-    	localStorage.setItem("client_cart_amount", JSON.stringify(client_cart_amount));
+    	localStorage.setItem("client_meal_obj", JSON.stringify(client_meal_obj));
+    	localStorage.setItem("client_meal_amount", JSON.stringify(client_meal_amount));
+    }
+    
+    function getNumOfTicket() {
+    	let ticket_num = JSON.parse(localStorage.getItem("client_ticket_num"));
+    	ticket_num = !ticket_num ? new Array() : ticket_num;
+    	return [ticket_num];
+    }
+    
+    function updateNumOfTicket() {
+    	localStorage.setItem("client_ticket_num", JSON.stringify(client_ticket_num));
+      }
+    
+    function addTicketToCart(num) {
+    	client_ticket_num.push(num);
+    		updateNumOfTicket();
+    	}
+    	
+    function calcTicketSubTotal(price, quantity) {
+    	var result = (parseFloat(price) * parseFloat(quantity)).toFixed(2);
+    	result = isNaN(result) ? 0.00 : result;
+    	return result;
     }
     
     function checkIfExistInCart() {
@@ -138,7 +222,7 @@
     		var action = (this.id).split('_')[0];
     		var destination = (this.id).split('_')[1];
     		var id = (this.id).split('_')[2];
-    		if (client_cart_obj.includes(id)) {
+    		if (client_meal_obj.includes(id)) {
     			setButtonState(this.id, false);
     		}
     		else {
