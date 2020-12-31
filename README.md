@@ -3,7 +3,7 @@
 ```
 DB_USERNAME=root
 DB_PASSWORD=123456
-PROJECT_PATH=C:/Users/Wisdo/git/ncu_mis_sa/NCU_MIS_SA/statics/img/meal/
+PROJECT_PATH=C:/Users/Wisdo/git/ncu_mis_sa/NCU_MIS_SA/
 ```
 
 若使用eclipse做開發，記得將Workspace的Refresh選項打勾，才會即時更新專案資料夾。
