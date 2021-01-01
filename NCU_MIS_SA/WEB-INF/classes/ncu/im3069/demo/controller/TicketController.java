@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
 
+import ncu.im3069.demo.app.Member;
 import ncu.im3069.demo.app.Theater;
 import ncu.im3069.demo.app.TheaterHelper;
 import ncu.im3069.demo.app.Ticket;
@@ -37,6 +38,7 @@ public class TicketController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         String session = jsr.getParameter("session");
+        String member = jsr.getParameter("member");
         
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
         if (session.isEmpty()) {
@@ -53,17 +55,32 @@ public class TicketController extends HttpServlet {
             jsr.response(resp, response);
         }
         else {
-            /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
-        	JSONObject query = th.getBySessionId(session);
-            
-            /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-            JSONObject resp = new JSONObject();
-            resp.put("status", "200");
-            resp.put("message", "影廳資料取得成功");
-            resp.put("response", query);
-    
-            /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            jsr.response(resp, response);
+        	if(member.isEmpty()) {
+                /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
+            	JSONObject query = th.getBySessionId(session);
+                
+                /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+                JSONObject resp = new JSONObject();
+                resp.put("status", "200");
+                resp.put("message", "影廳資料取得成功");
+                resp.put("response", query);
+        
+                /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+                jsr.response(resp, response);
+        	}else {
+                /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
+            	JSONObject query = th.getUnbookedTicketsByMemberSession(session, member);
+                
+                /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+                JSONObject resp = new JSONObject();
+                resp.put("status", "200");
+                resp.put("message", "影廳資料取得成功");
+                resp.put("response", query);
+        
+                /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+                jsr.response(resp, response);
+        		
+        	}
         }
 	}
 
@@ -175,4 +192,25 @@ public class TicketController extends HttpServlet {
         jsr.response(resp, response);
     }
 
+    public void doPut(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
+        JsonReader jsr = new JsonReader(request);
+        JSONObject jso = jsr.getObject();
+        
+        /** 取出經解析到JSONObject之Request參數 */
+        String mid = jso.getString("member_id");
+        String sid = jso.getString("session_id");
+
+        JSONObject data = th.bookTicketsByMemberSession(mid, sid);
+        
+        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+        JSONObject resp = new JSONObject();
+        resp.put("status", "200");
+        resp.put("message", "成功! 更新會員資料...");
+        resp.put("response", data);
+        
+        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+        jsr.response(resp, response);
+    }
 }

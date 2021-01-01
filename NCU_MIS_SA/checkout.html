@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<title>訂單列表 ｜ NCU MIS SA</title>
+	
+	<!-- Bootstrap core CSS -->
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+	
+	<script src="statics/js/jquery-3.4.1.min.js"></script>
+	<script src="statics/js/jquery-confirm.js"></script>
+	<script src="statics/js/big.min.js"></script>
+	
+	<style>
+		td{
+			padding: 5px;
+		}
+		.content{
+			padding-top: 50px;
+			padding-bottom: 50px;
+		}
+	</style>
+</head>
+<body>
+	<div include-html="statics/components/header.html"></div>
+	<div class="content container">
+		<div class="row">
+		    <div class="col-md-8">
+				<h4 class="d-flex justify-content-between align-items-center mb-3">
+					<span class="text-muted">電影票明細</span>
+				</h4>
+		        <table id="ticket_table" class="table table-striped">
+					<thead>
+						<tr>
+							<th style="width: 30%">品名</th>
+							<th style="width: 10%">座位</th>
+							<th style="width: 15%">小計</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+		        </table>
+		        <div class="meal-details">
+					<h4 class="d-flex justify-content-between align-items-center mb-3">
+						<span class="text-muted">餐點明細</span>
+					</h4>
+			        <table id="cart_table" class="table table-striped">
+						<thead>
+							<tr>
+								<th style="width: 30%">品名</th>
+								<th style="width: 15%">單價</th>
+								<th style="width: 10%">數量</th>
+								<th style="width: 15%">小計</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+			        </table>
+		        </div>
+			</div>
+		  	<div class="col-md-4">
+			    <ul class="list-group mb-4">
+			      <li class="list-group-item active" aria-current="true">
+			        <i class="far fa-clock"></i>
+			        <span id="remain-time">時間剩餘 10:00</span>
+			       </li>
+			    </ul>
+			    <ul class="list-group mb-4">
+			      <li class="list-group-item active" aria-current="true">訂票資訊</li>
+			      <li class="list-group-item">
+			        <i class="far fa-clock"></i>
+			        <span id="session-datetime">{{session-time}}</span>
+			      </li>
+			      <li class="list-group-item">
+			        <i class="fas fa-video"></i>
+			        <span id="theater-name">{{theater-name}}</span>
+			      </li>
+			      <li class="list-group-item">
+			        <i class="fas fa-film"></i>
+			        <span id="movie-name">{{movie-name}}</span>
+			      </li>
+			    </ul>
+				<ul class="list-group mb-4">
+			      <li class="list-group-item active" aria-current="true">總計</li>
+				  <li class="list-group-item d-flex justify-content-between">
+				    <span>Total</span>
+				    <strong>$ <span id="summary">0.00</span></strong>
+				  </li>
+				</ul>
+				<div class="controls text-right">
+					<a href="/NCU_MIS_SA/index.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
+					<button type="button" id="submit-btn" class="btn btn-primary show-after">結帳</button>
+				</div>
+		    </div>
+		</div>
+	</div>
+	<script src="statics/js/include-html.js"></script>
+	<script>
+		var confirmed = false; //用於確認是否按下結帳
+		var ticketPrice = 600;
+		var session_id = localStorage.getItem("session_id");
+		var member_id = localStorage.getItem("member_id");
+		var nTicket = localStorage.getItem("client_ticket_num");
+		var unbookedTickets = [];
+		var client_meal_obj, client_meal_amount;
+	    [client_meal_obj, client_meal_amount]  = getCartDataFromClient();
+
+	    if (client_meal_obj.length == 0) {
+	    	$(".meal-details").hide();
+	    	calcSummaryInformation();
+	    	setButtonState("check", false);
+	    }
+	    else
+	    	getCartProduct();
+
+	    function getCartProduct() {
+	      $.ajax({
+	        type: "GET",
+	        url: "api/meal.do",
+	        crossDomain: true,
+	        cache: false,
+	        data: "id=" + client_meal_obj.toString(),
+	        dataType: 'json',
+	        timeout: 5000,
+	        success: function (response) {
+	          if (response.status == 200) {
+	        	  updateCartTable(response.response.data);
+	        	  updateAllQuantitySubtotal();
+	        	  calcSummaryInformation();
+	          }
+	        },
+	        error: function () {
+	          alert("無法連線到伺服器！");
+	        }
+	      });
+	    }
+
+	    function updateAllQuantitySubtotal() {
+	    	for (var i=0 ; i < client_meal_obj.length ; i++) {
+	    		var id = client_meal_obj[i];
+	    		var amount = client_meal_amount[i];
+	    		var price = $('#price_' + id).html();
+	    		$('#quantity_' + id).html(amount);
+	    		var subtotal = calcSubTotal(price, amount);
+	    		$('#subtotal_' + id).html(subtotal);
+	    	}
+	    }
+
+	    function isNumberKey(evt){
+		    var charCode = (evt.which) ? evt.which : evt.keyCode
+		    if (charCode > 31 && (charCode < 48 || charCode > 57))
+		        return false;
+		    return true;
+	    }
+
+	    function calcSubTotal(price, quantity) {
+	    	var result = (parseFloat(price) * parseFloat(quantity)).toFixed(2);
+	    	result = isNaN(result) ? 0.00 : result;
+	    	return result;
+	    }
+
+	    function updateCartTable(data) {
+	    	table_html = '';
+	    	$("#cart_table > tbody").empty();
+	        $.each(data, function(index, value) {
+	        	table_html += '<tr id="row_' + value.meal_id + '">';
+	        	table_html += '<td>' + value.meal_name + '</td>';
+	        	table_html += '<td><span id="price_' + value.meal_id + '">' + value.meal_price + '</td>';
+	        	table_html += '<td><span id="quantity_' + value.meal_id + '"></span></td>';
+	        	table_html += '<td><strong><span id="subtotal_' + value.meal_id + '"><strong></td>';table_html += '</tr>';
+	        })
+
+	      $("#cart_table > tbody").append(table_html);
+	    }
+
+	    function getCartDataFromClient() {
+	    	let cart = JSON.parse(localStorage.getItem("client_meal_obj"));
+	    	let amount = JSON.parse(localStorage.getItem("client_meal_amount"));
+	    	cart = !cart ? new Array() : cart;
+	    	amount = !amount ? new Array() : amount;
+	    	return [cart, amount];
+	    }
+
+	    function updateCartDataToClent() {
+	    	localStorage.setItem("client_meal_obj", JSON.stringify(client_meal_obj));
+	    	localStorage.setItem("client_meal_amount", JSON.stringify(client_meal_amount));
+	    }
+
+	    function updateClentCartData(id, quantity) {
+	    	var i = client_meal_obj.indexOf(id);
+	    	client_meal_amount[i] = (quantity === "") ? 0 : parseInt(quantity);
+	    	updateCartDataToClent();
+	    }
+
+	    function calcSummaryInformation() {
+	    	var total_item = client_meal_obj.length;
+	    	var total_price = 0.00;
+	    	var total_quantity = 0;
+
+	    	for(var i=0 ; i < total_item ; i++) {
+	    		var id = client_meal_obj[i];
+	    		var price = $('#price_' + id).html();
+	    		var quantity = $('#quantity_' + id).html();
+	    		calc = parseFloat(price) * parseInt(quantity);
+	    		total_price += isNaN(calc) ? 0.0 : calc;
+	    	}
+			total_price += ticketPrice * unbookedTickets.length;
+	    	$("#summary").html(total_price.toFixed(2));
+	    }
+	    /*取得場次資料*/
+	    function getSession() {
+	        $.ajax({
+	            type: "GET",
+	            url: "/NCU_MIS_SA/api/session.do",
+	            crossDomain: true,
+	            data: "id=" + session_id,
+	            cache: false,
+	            dataType: 'json',
+	            timeout: 5000,
+	            success: function (res) {
+	            	console.log(res);
+	                if(res.status == 200){
+		                $("#movie-name").html(res.response.movie_info.name);
+		                $("#theater-name").html(res.response.theater_info.theater_info.name);
+		                $("#session-datetime").html(res.response.session_info.session_date + " " + res.response.session_info.session_time);
+	                }
+	            },
+	            error: function () {
+	                alert("無法連線到伺服器！");
+	            }
+	        });
+	    }
+	    
+	    function getUnbookedTickets(){
+	    	var data = {
+	   			member: member_id,
+	    		session: session_id
+	    	}
+	    	console.log(data)
+	        $.ajax({
+	            type: "GET",
+	            url: "api/ticket.do",
+	            crossDomain: true,
+	            data: "session=" + session_id + "&member=" + member_id,
+	            cache: false,
+	            dataType: 'json',
+	            timeout: 5000,
+	            success: function (res) {
+	            	console.log(res);
+	                if(res.status == 200){
+	                	res.response.data.map(function(ticket){
+		                	unbookedTickets.push({
+		                		ticket_id: ticket.ticket_info.id,
+		                		seatCode: ticket.seat_info.seatCode
+		                	})
+	                	})
+	        			updateTicketTable();
+	                }
+	            },
+	            error: function () {
+	                alert("無法連線到伺服器！");
+	            }
+	        });
+	    	
+	    }
+	    
+	    function orderMeals(){
+	    	
+	    }
+	    
+	    
+	    function bookTickets(){
+	    	var data = {
+    			member_id: member_id,
+	    		session_id: session_id
+	    	}
+	        $.ajax({
+	            type: "PUT",
+	            url: "api/ticket.do",
+	            crossDomain: true,
+	            data: JSON.stringify(data),
+	            cache: false,
+	            dataType: 'json',
+	            timeout: 5000,
+	            success: function (res) {
+	            	console.log(res);
+	                if(res.status == 200){
+	                	alert("訂票成功")
+	                	//orderMeals()//訂票結束完，將所訂的餐點存進資料庫
+	                }
+	            },
+	            error: function () {
+	                alert("無法連線到伺服器！");
+	            }
+	        });
+	    }
+	    
+	    function orderMeals(){
+	    	var data = {
+    			meals: client_meal_obj,
+    			amount: client_meal_amount
+	    	}
+	        $.ajax({
+	            type: "POST",
+	            url: "api/mealOrder.do",
+	            crossDomain: true,
+	            data: JSON.stringify(data),
+	            cache: false,
+	            dataType: 'json',
+	            timeout: 5000,
+	            success: function (res) {
+	            	console.log(res);
+	                if(res.status == 200){
+	                	alert("訂票成功")
+	                	window.location.replace("index.html")
+	                }
+	            },
+	            error: function () {
+	                alert("無法連線到伺服器！");
+	            }
+	        });
+	    }
+	    
+		function updateTicketTable(orderList) {
+	    	var table_html = '';
+	    	$("#ticket_table > tbody").empty();
+	    	unbookedTickets.map(function(ticket){
+	    		table_html += `<tr>
+					<td>全票</td>
+					<td>${ticket.seatCode}</td>
+					<td><strong>$${ticketPrice}</strong></td>
+	    		</tr>`
+	    	})
+	        $("#ticket_table > tbody").append(table_html);
+	    }
+
+		/*當使用者未完成劃位直接跳轉頁面時，到資料庫刪除保留票*/
+		function deleteReservedSeatsOnWindowClosed(){
+			var ticketsInfo = {
+				by: "ids",
+				ids: unbookedTickets.map((t)=>t.ticket_id)
+			}
+			console.log(ticketsInfo)
+			var dataString = JSON.stringify(ticketsInfo);
+			if(ticketsInfo.ids.length > 0){
+				$.ajax({
+			        type: "DELETE",
+			        url: "/NCU_MIS_SA/api/ticket.do",
+			        crossDomain: true,
+			        data: dataString,
+			        cache: false,
+			        dataType: 'json',
+			        timeout: 5000,
+			        success: function (res) {
+			            if(res.status == 200){
+			            	alert("success");
+			            }
+			        },
+			        error: function () {
+			            alert("無法連線到伺服器！");
+			        }
+			    });
+			}
+		}
+		$(function(){
+			getSession();
+			getUnbookedTickets();
+			$("#submit-btn").click(function(){
+				//orderMeals();
+				confirmed = true;
+				bookTickets();
+			})
+			$(window).on("beforeunload", function() { 
+				if(!confirmed){
+					deleteReservedSeatsOnWindowClosed();
+					return "Leave?";
+				}
+			})
+		})
+	</script>
+</body>
+</html>

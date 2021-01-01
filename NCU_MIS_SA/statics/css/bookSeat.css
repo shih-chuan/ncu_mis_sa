@@ -38,15 +38,17 @@ table{
 }
 .content{
   display: flex;
+  flex-wrap: no-wrap;
   padding: 40px;
   justify-content: center;
 }
 .seat-table{
   margin-right: 20px;
-  flex: 8;
 }
 .ticket-info{
-  flex: 4;
+  flex: 270px;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 .ticket-info .list-group{
   margin-bottom: 20px;
