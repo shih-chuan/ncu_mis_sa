@@ -20,7 +20,7 @@ import ncu.im3069.tools.JsonReader;
  * @version 1.0.0
  * @since 1.0.0
  */
-@WebServlet("/api/meal.do")
+@WebServlet("/api/mealOrder.do")
 public class MealOrderController extends HttpServlet {
     
     /** The Constant serialVersionUID. */
