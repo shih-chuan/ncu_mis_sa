@@ -39,7 +39,7 @@ public class MealOrderHelper {
             conn = DBMgr.getConnection();
             
             /** SQL指令 */
-            String sql = "DELETE FROM `missa`.`meal` WHERE `meal_id` = ? LIMIT 1";
+            String sql = "DELETE FROM `missa`.`meal_order` WHERE `meal_order_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -84,7 +84,7 @@ public class MealOrderHelper {
     
     public JSONObject getAll() {
         /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
-    	Meal m = null;
+    	MealOrder m = null;
         /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
         JSONArray jsa = new JSONArray();
         /** 記錄實際執行之SQL指令 */
@@ -100,7 +100,7 @@ public class MealOrderHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`meal`";
+            String sql = "SELECT * FROM `missa`.`meal_order`";
             
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
@@ -117,16 +117,14 @@ public class MealOrderHelper {
                 row += 1;
                 
                 /** 將 ResultSet 之資料取出 */
-                int meal_id = rs.getInt("meal_id");
-                String name = rs.getString("meal_name");
-                double price = rs.getDouble("meal_price");
-                String image = rs.getString("meal_image");
-                String describe = rs.getString("meal_content");
-                
+                int meal_order_id = rs.getInt("meal_order_id");
+                int ticket_id = rs.getInt("ticket_id");
+                int meal_id = rs.getInt("meal_order_id");
+                int quantity = rs.getInt("quantity");
                 /** 將每一筆商品資料產生一名新Meal物件 */
-                m = new Meal(meal_id, name, price, image, describe);
+                m = new MealOrder(meal_order_id, ticket_id, meal_id, quantity);
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
-                jsa.put(m.getData());
+                jsa.put(m.getMealOrderData());
             }
 
         } catch (SQLException e) {

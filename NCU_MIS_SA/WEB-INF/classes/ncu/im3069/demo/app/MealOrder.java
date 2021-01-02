@@ -103,12 +103,26 @@ public class MealOrder {
 	public Ticket getTicket() {
 		return this.ticket;
 	}
+	
+    public JSONObject getTicketData() {
+	    JSONObject result = new JSONObject();
 
+        result = this.ticket.getTicketAllInfo();
+
+        return result;
+    }
+    
 	private void getTicketFromDB(int ticket_id){
 		 String id = String.valueOf(ticket_id);
 	     this.ticket = th.getTicketById(id);
 	}
 	
+    public JSONObject getMealData() {
+	    JSONObject result = new JSONObject();
+        result = this.meal.getData();
+        return result;
+    }
+    
 	private void getMealFromDB(int meal_id) {
 		String id = String.valueOf(meal_id);
 	     this.meal = mh.getMealById(id);
@@ -139,12 +153,21 @@ public class MealOrder {
      *
      * @return JSONObject 回傳產品資訊
      */
+	
 	public JSONObject getData() {
         /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
         JSONObject jso = new JSONObject();
         jso.put("id", getID());
-
         jso.put("quantity", getQuantity());
+        
+        return jso;
+	}
+	public JSONObject getMealOrderData() {
+        /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
+        JSONObject jso = new JSONObject();
+        jso.put("meal_order_info", getData());
+        jso.put("meal_info", getMealData());
+        jso.put("ticket_info", getTicketData());
         
         return jso;
     }

@@ -164,7 +164,6 @@ public class TicketController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
         JSONObject jso = jsr.getObject();
         JSONObject query = jsr.getObject();
-        if(!jso.getString("by").isEmpty()) {
         	/** 取出經解析到JSONObject之Request參數 */
         	String by = jso.getString("by");
         
@@ -178,18 +177,21 @@ public class TicketController extends HttpServlet {
         				}
         			}
         			break;
+        		case "id":
+        			System.out.println("delete by id");
+        			/** 取出經解析到JSONObject之Request參數 */
+        	        int id = jso.getInt("id");
+        	        
+        	        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
+        	        query = th.deleteById(id);
+
+        			
         	}
         /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
         //String query = "Test";
         		//th.deleteByID(id);
-        }
-        else {
-        	/** 取出經解析到JSONObject之Request參數 */
-	        int id = jso.getInt("id");
-	        
-	        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
-	        query = th.deleteById(id);
-        }
+        
+        
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
         resp.put("status", "200");
