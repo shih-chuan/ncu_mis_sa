@@ -320,7 +320,7 @@ public class MealOrderHelper {
      * @return the JSON object 回傳SQL指令執行之結果
      */
     
-    public JSONObject create(int meal_id, int ticket_id,int  quantity) {
+    public JSONObject create(int ticket_id,int meal_id, int  quantity) {
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
@@ -332,7 +332,7 @@ public class MealOrderHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "INSERT INTO `missa`.`mealOrder`(`meal_id`, `ticket_id`, `quantity`)"
+            String sql = "INSERT INTO `missa`.`meal_order`(`ticket_id`, `meal_id`, `quantity`)"
                     + " VALUES( ?, ?, ?)";
             
             /** 取得所需之參數 */
@@ -343,8 +343,8 @@ public class MealOrderHelper {
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
-            pres.setInt(1, meal_id);
-            pres.setInt(2, ticket_id);
+            pres.setInt(1, ticket_id);
+            pres.setInt(2, meal_id);
             pres.setInt(3, quantity);
             
             /** 執行新增之SQL指令並記錄影響之行數 */

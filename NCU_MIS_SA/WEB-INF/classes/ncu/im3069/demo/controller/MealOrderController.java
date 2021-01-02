@@ -56,7 +56,7 @@ public class MealOrderController extends HttpServlet {
         for(int i =0;i < meal_id.length();i++) {
  //       	mo = new  MealOrder( Integer.parseInt(meal_id.getString(i)),  ticket_id,quantity);
         	/** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
-            JSONObject data = moh.create(Integer.parseInt(meal_id.getString(0)),  ticket_id,meal_amount.getInt(i));
+            JSONObject data = moh.create(ticket_id,Integer.parseInt(meal_id.getString(0)),meal_amount.getInt(i));
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();

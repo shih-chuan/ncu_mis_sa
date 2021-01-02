@@ -43,7 +43,7 @@ public class MealOrder {
      * @param price 產品價格
      * @param image 產品圖片
      */
-	public MealOrder(int meal_id, int ticket_id,int  quantity ) {
+	public MealOrder(int ticket_id,int meal_id, int  quantity ) {
 		this.quantity = quantity;
 		getMealFromDB(meal_id);
 		getTicketFromDB(ticket_id);
@@ -61,7 +61,7 @@ public class MealOrder {
      */
 	
 
-	public MealOrder(int id, int meal_id, int ticket_id,int  quantity) {
+	public MealOrder(int id,int ticket_id, int meal_id, int  quantity) {
 		this.id = id;
 		getMealFromDB(meal_id);
 		getTicketFromDB(ticket_id);
