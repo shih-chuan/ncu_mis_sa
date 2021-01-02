@@ -4,6 +4,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.json.*;
 
@@ -80,7 +82,7 @@ public class TicketHelper {
 
     public JSONObject getAll() {
         /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
-    	Theater t = null;
+    	Ticket t = null;
         /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
         JSONArray jsa = new JSONArray();
         /** 記錄實際執行之SQL指令 */
@@ -93,7 +95,7 @@ public class TicketHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `missa`.`theater`";
+            String sql = "SELECT * FROM `missa`.`ticket`";
             
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
@@ -107,15 +109,25 @@ public class TicketHelper {
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
             while(rs.next()) {
                 /** 將 ResultSet 之資料取出 */
+            	/** 將 ResultSet 之資料取出 */
+                int ticket_id = rs.getInt("ticket_id");
+                int session_id = rs.getInt("session_id");
+                int member_id = rs.getInt("member_id");
+                String seat_code = rs.getString("seat_code");
                 int theater_id = rs.getInt("theater_id");
-                String name = rs.getString("theater_name");
-                int width = rs.getInt("width");
-                int height = rs.getInt("height");
+                String str = rs.getString("book_time");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date book_time = null;
+                try {
+                	book_time = format.parse(str);
+                } catch (ParseException e) {
+                 e.printStackTrace();
+                }
                 
                 /** 將每一筆商品資料產生一名新Product物件 */
-                t = new Theater(theater_id, name, width, height);
+                t = new Ticket(ticket_id, session_id, member_id, seat_code, theater_id,book_time);
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
-                jsa.put(t.getTheaterAllInfo());
+                jsa.put(t.getTicketAllInfo());
             }
 
         } catch (SQLException e) {

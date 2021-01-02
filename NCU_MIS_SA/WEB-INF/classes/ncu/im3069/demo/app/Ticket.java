@@ -26,7 +26,7 @@ public class Ticket {
     /** list，座位列表 */
     private Date bookTime;
     
- 
+    private int price;
 
     /** sh，SeatHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
     private SeatHelper sh = SeatHelper.getHelper();
@@ -109,12 +109,15 @@ public class Ticket {
 		return this.bookTime;
 	}
 
-	
+	public int getPrice() {
+		return this.price;
+	}
 
 	public JSONObject getData() {
         JSONObject jso = new JSONObject();
         jso.put("id", getId());
         jso.put("book_time", getBookTime());
+        //jso.put("price", getPrice());
         return jso;
     }
 	
@@ -205,6 +208,7 @@ public class Ticket {
         jso.put("ticket_info", getData());
         jso.put("member_info", getMemberData());
         jso.put("seat_info", getSeatData());
+        jso.put("session_info", getSessionData());
         return jso;
     }
     
