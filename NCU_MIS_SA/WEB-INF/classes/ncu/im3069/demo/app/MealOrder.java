@@ -10,19 +10,20 @@ public class MealOrder {
     private int id;
 
     /** id，會員編號 */
-    private String name;
+    private Meal meal;
 
     /** id，會員編號 */
-    private double price;
+    private Ticket ticket;
 
     /** id，會員編號 */
-    private String image;
+    private int quantity;
 
-    /** id，會員編號 */
-	private String describe;
+
 	
 	/** mh，MealHelper之物件與Member相關之資料庫方法（Sigleton） */
     private MealOrderHelper moh =  MealOrderHelper.getHelper();
+    private TicketHelper th =  TicketHelper.getHelper();
+    private MealHelper mh =  MealHelper.getHelper();
 
     /**
      * 實例化（Instantiates）一個新的（new）Product 物件<br>
@@ -42,10 +43,10 @@ public class MealOrder {
      * @param price 產品價格
      * @param image 產品圖片
      */
-	public MealOrder(String name, double price, String image) {
-		this.name = name;
-		this.price = price;
-		this.image = image;
+	public MealOrder(int meal_id, int ticket_id,int  quantity ) {
+		this.quantity = quantity;
+		getMealFromDB(meal_id);
+		getTicketFromDB(ticket_id);
 	}
 
     /**
@@ -58,19 +59,13 @@ public class MealOrder {
      * @param image 產品圖片
      * @param describe 產品敘述
      */
-	public MealOrder( String name, double price, String image, String describe) {
-		this.name = name;
-		this.price = price;
-		this.image = image;
-		this.describe = describe;
-	}
+	
 
-	public MealOrder(int id, String name, double price, String image, String describe) {
+	public MealOrder(int id, int meal_id, int ticket_id,int  quantity) {
 		this.id = id;
-		this.name = name;
-		this.price = price;
-		this.image = image;
-		this.describe = describe;
+		getMealFromDB(meal_id);
+		getTicketFromDB(ticket_id);
+		this.quantity = quantity;
 	}
 
     /**
@@ -87,8 +82,8 @@ public class MealOrder {
      *
      * @return String 回傳產品名稱
      */
-	public String getName() {
-		return this.name;
+	public Meal getMeal() {
+		return this.meal;
 	}
 
     /**
@@ -96,8 +91,8 @@ public class MealOrder {
      *
      * @return double 回傳產品價格
      */
-	public double getPrice() {
-		return this.price;
+	public double getQuantity() {
+		return this.quantity;
 	}
 
     /**
@@ -105,39 +100,39 @@ public class MealOrder {
      *
      * @return String 回傳產品圖片
      */
-	public String getImage() {
-		return this.image;
+	public Ticket getTicket() {
+		return this.ticket;
 	}
 
-    /**
-     * 取得產品敘述
-     *
-     * @return String 回傳產品敘述
-     */
-	public String getDescribe() {
-		return this.describe;
+	private void getTicketFromDB(int ticket_id){
+		 String id = String.valueOf(ticket_id);
+	     this.ticket = th.getTicketById(id);
 	}
 	
+	private void getMealFromDB(int meal_id) {
+		String id = String.valueOf(meal_id);
+	     this.meal = mh.getMealById(id);
+	}
 	/**
      * 更新套餐資料
      *
      * @return the JSON object 回傳SQL更新之結果與相關封裝之資料
      */
-    public JSONObject update() {
+ //   public JSONObject update() {
         /** 新建一個JSONObject用以儲存更新後之資料 */
-        JSONObject data = new JSONObject();
+ //       JSONObject data = new JSONObject();
         
         
         /** 檢查該名會員是否已經在資料庫 */
-        if(this.id != 0) {
+ //       if(this.id != 0) {
             /** 若有則將目前更新後之資料更新至資料庫中 */
             
             /** 透過MemberHelper物件，更新目前之會員資料置資料庫中 */
-            data = moh.update(this);
-        }
+//            data = moh.update(this);
+  //      }
         
-        return data;
-    }
+ //       return data;
+  //  }
 
     /**
      * 取得產品資訊
@@ -147,12 +142,10 @@ public class MealOrder {
 	public JSONObject getData() {
         /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
         JSONObject jso = new JSONObject();
-        jso.put("meal_id", getID());
-        jso.put("meal_name", getName());
-        jso.put("meal_price", getPrice());
-        jso.put("meal_image", getImage());
-        jso.put("meal_content", getDescribe());
+        jso.put("id", getID());
 
+        jso.put("quantity", getQuantity());
+        
         return jso;
     }
 }
