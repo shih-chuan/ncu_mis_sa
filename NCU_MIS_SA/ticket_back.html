@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>CakePHP: the rapid development php framework: Members</title>
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/layout.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+ 	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+ <div include-html="statics/components/side-bar.html"></div>
+    <div class="content">
+        <h2>訂票清單</h2>
+        
+        <div id="flashMessage" class="message" style="display: none;"></div>
+
+        <table id="table" class="table">
+            <thead>
+                <tr>
+                    <th>編號</th>
+                    <th>會員編號</th>
+                    <th>場次編號</th>
+                    <th>影廳編號</th>
+                    <th>座位編號</th>
+                    <th>訂票時間</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script src="statics/js/include-html.js"></script>
+    <script type="text/javascript">
+
+  
+  function getAllTicketData() {
+	  $.ajax({
+          type: "GET",
+          url: "api/ticket.do",
+          crossDomain: true,
+          cache: false,
+          dataType: 'json',
+          timeout: 5000,
+          success: function (response) {
+              if(response.status == 200){
+            	  updateTable(response.response.data);
+              }
+              console.log(response);
+          },
+          error: function () {
+              alert("無法連線到伺服器！");
+          }
+    });
+  }
+  
+  getAllTicketData();
+  
+  /*function updateHTML(data) {
+	  var inner_html = '';
+	  var temp = '';
+	  
+	  $.each(data, function (key, value) {
+		  var total_price = Big(0.0);
+		  $.each(value['product_info'], function (k, v) {
+			  total_price = total_price.plus(v['subtotal'])
+		  });
+		  
+		  temp = '<div class="col-md-6">';
+		  temp += '<div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">';
+		  temp += '<div class="col p-4 d-flex flex-column position-static">';
+		  temp += '<strong class="d-inline-block mb-2 text-primary">訂單編號：#' + value['order_info']['id'] + '</strong>';
+		  temp += '<h3 class="mb-0"><span class="p-2">' + value['order_info']['last_name'] + '</span>';
+		  temp += '<span>' + value['order_info']['first_name'] + '</span></h3>';
+		  temp += '<hr/>';
+		  temp += '<div class="mb-1 text-muted">建立時間：' + value['order_info']['create'] + '</div>';
+		  temp += '<div class="mb-1 text-muted">修改時間：' + value['order_info']['modify'] + '</div>';
+		  temp += '<p class="card-text mb-auto">總價：$ ' + total_price + '</p>';
+		  temp += '<a href="order_detail.html?id=' + value['order_info']['id'] + '" class="stretched-link">詳細資料</a>';
+		  temp += '</div></div></div>';
+		  inner_html = temp + inner_html;
+	  });
+	  
+	  $('#order_panel').append(inner_html);
+	  
+  }*/
+  
+  function updateTable(res) {
+      $("#table > tbody").empty();
+      var table_html = '';
+      $.each(res, function(index, value) {
+          table_html += '<tr><td scope="row">' +  value['ticket_info']['id'] + '</td>';
+          table_html += '<td>' + value['member_info']['id'] + '</td>';
+          table_html += '<td>' + value['session_info']['session_info']['session_id'] + '</td>';
+          table_html += '<td>' + value['session_info']['theater_info']['theater_info']['id'] + '</td>';
+          table_html += '<td>' + value['seat_info']['seatCode'] + '</td>';
+          table_html += '<td>' + value['ticket_info']['book_time'] + '</td>';
+          
+          //table_html += '<td>' + '<a href="editmovie.html?id=' + value['id'] + '">編輯</a> | ';
+          table_html += '<td><a href="javascript: deleteTicket(' + value['ticket_info']['id'] + ');">刪除</a></td></tr>';
+      })
+
+      $("#table > tbody").append(table_html);
+  }
+  
+  function deleteTicket(id) {
+      var check = window.confirm("確認刪除電影票？");
+      if (check == true) {
+          console.log("You pressed OK!");
+          var request = {'id': id};
+          var data_string = JSON.stringify(request);
+          $.ajax({
+              type: "DELETE",
+              url: "api/ticket.do",
+              crossDomain: true,
+              data: data_string,
+              cache: false,
+              dataType: 'json',
+              timeout: 5000,
+              success: function (response) {
+                  if(response.status == 200){
+                      $("#flashMessage").html("成功! 已經成功刪除電影票...");
+                      $("#flashMessage").show();
+                      getAllTicket();
+                  }
+                  console.log(response);
+              },
+              error: function () {
+                  alert("無法連線到伺服器！");
+              }
+          });
+      }
+      else {
+          console.log("You pressed Cancel!");
+      }
+  }
+  </script>
+
+ 
+</body>
+
+</html>

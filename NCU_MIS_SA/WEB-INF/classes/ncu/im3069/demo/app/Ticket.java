@@ -68,10 +68,9 @@ public class Ticket {
      * @param create 訂單創建時間
      * @param modify 訂單修改時間
      */
-    public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id, Date book_time, int price) {
+    public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id, Date book_time) {
 		this.id = id;
 		this.bookTime = book_time;
-		this.price = price;
 		getMemberFromDB(member_id);
         getSessionFromDB(session_id);
         getSeatFromDB(theater_id, seat_code);
@@ -118,7 +117,7 @@ public class Ticket {
         JSONObject jso = new JSONObject();
         jso.put("id", getId());
         jso.put("book_time", getBookTime());
-        jso.put("price", getPrice());
+        //jso.put("price", getPrice());
         return jso;
     }
 	
@@ -209,6 +208,7 @@ public class Ticket {
         jso.put("ticket_info", getData());
         jso.put("member_info", getMemberData());
         jso.put("seat_info", getSeatData());
+        jso.put("session_info", getSessionData());
         return jso;
     }
     

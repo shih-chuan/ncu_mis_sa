@@ -7,6 +7,8 @@ import javax.servlet.http.*;
 import org.json.*;
 import ncu.im3069.demo.app.Meal;
 import ncu.im3069.demo.app.MealHelper;
+import ncu.im3069.demo.app.MealOrderHelper;
+
 import ncu.im3069.tools.JsonReader;
 
 // TODO: Auto-generated Javadoc
@@ -27,7 +29,7 @@ public class MealOrderController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     /** mh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
-    private MealOrderHelper moh =  MealOrderHelper.getHelper();
+    private MealOrderHelper mh =  MealOrderHelper.getHelper();
     
     /**
      * 處理Http Method請求POST方法（新增資料）

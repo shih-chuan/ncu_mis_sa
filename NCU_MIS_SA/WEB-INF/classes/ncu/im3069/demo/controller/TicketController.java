@@ -163,25 +163,33 @@ public class TicketController extends HttpServlet {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         JSONObject jso = jsr.getObject();
+        JSONObject query = jsr.getObject();
+        if(!jso.getString("by").isEmpty()) {
+        	/** 取出經解析到JSONObject之Request參數 */
+        	String by = jso.getString("by");
         
-        /** 取出經解析到JSONObject之Request參數 */
-        String by = jso.getString("by");
-        
-        switch(by) {
-        	case "ids":
-        		System.out.println("delete by ids");
-                JSONArray ids = jso.getJSONArray("ids");
-                if(!ids.isEmpty()) {
-                    for(int i = 0; i < ids.length(); i++) {
-                    	th.deleteById(ids.getInt(i));
-                    }
-                }
-        		break;
-        }
+        	switch(by) {
+        		case "ids":
+        			System.out.println("delete by ids");
+        			JSONArray ids = jso.getJSONArray("ids");
+        			if(!ids.isEmpty()) {
+        				for(int i = 0; i < ids.length(); i++) {
+        					th.deleteById(ids.getInt(i));
+        				}
+        			}
+        			break;
+        	}
         /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
-        String query = "Test";
+        //String query = "Test";
         		//th.deleteByID(id);
-        
+        }
+        else {
+        	/** 取出經解析到JSONObject之Request參數 */
+	        int id = jso.getInt("id");
+	        
+	        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
+	        query = th.deleteById(id);
+        }
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
         resp.put("status", "200");
