@@ -38,9 +38,11 @@ table{
 }
 .content{
   display: flex;
-  flex-wrap: no-wrap;
-  padding: 40px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 24px 0px 60px 0;
   justify-content: center;
+  background-color: #f8f9fa;
 }
 .seat-table{
   margin-right: 20px;
