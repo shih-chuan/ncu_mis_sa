@@ -110,7 +110,7 @@
 		var unbookedTickets = [];
 		var client_meal_obj, client_meal_amount;
 	    [client_meal_obj, client_meal_amount]  = getCartDataFromClient();
-	    //var ticket_id = unbookedTickets[0].ticket_id;
+	    var ticket_id = "";
 	    var meal_id = JSON.parse(localStorage.getItem("client_meal_obj"));
 	    var meal_amount = JSON.parse(localStorage.getItem("client_meal_amount"));
 
@@ -143,13 +143,14 @@
 	    }
 	    
 	    function createMealOrder() {
-	    	
+//	    getUnbookedTickets();
+	   	ticket_id = unbookedTickets[0].ticket_id;
 	    var data_object = {
                 "ticket_id": ticket_id,
                 "meal_id" : meal_id,
                 "meal_amount" : meal_amount
             };
-           	console.log(res.imgSrc);
+       
             // 將JSON格式轉換成字串
             var data_string = JSON.stringify(data_object);
             $.ajax({
@@ -165,7 +166,7 @@
                 error: function () {
                 	console.log("failed");
                 }
-            })
+            });
     	}
 
 	    function updateAllQuantitySubtotal() {

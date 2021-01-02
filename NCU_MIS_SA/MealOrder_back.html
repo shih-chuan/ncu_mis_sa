@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>訂票清單</title>
+	<title>訂餐清單</title>
 	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
 	<link href="statics/css/all.min.css" rel="stylesheet">
 	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
@@ -16,7 +16,7 @@
 <body>
  <div include-html="statics/components/side-bar.html"></div>
     <div class="content">
-        <h2>訂票清單</h2>
+        <h2>訂餐清單</h2>
         
         <div id="flashMessage" class="message" style="display: none;"></div>
 
@@ -24,14 +24,10 @@
             <thead>
                 <tr>
                     <th>編號</th>
-                    <th>會員編號</th>
-                    <th>場次編號</th>
-                    <th>場次日期</th>
-                    <th>場次時間</th>
-                    <th>電影名稱</th>
-                    <th>影廳名稱</th>
-                    <th>座位編號</th>
-                    <th>訂票時間</th>
+                    <th>電影票編號</th>
+                    <th>餐點編號</th>
+                    <th>餐點名稱</th>
+                    <th>數量</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -43,10 +39,10 @@
     <script type="text/javascript">
 
   
-  function getAllTicketData() {
+  function getAllMealOrderData() {
 	  $.ajax({
           type: "GET",
-          url: "api/ticket.do",
+          url: "api/mealOrder.do",
           crossDomain: true,
           cache: false,
           dataType: 'json',
@@ -63,7 +59,7 @@
     });
   }
   
-  getAllTicketData();
+  getAllMealOrderData();
   
   /*function updateHTML(data) {
 	  var inner_html = '';
@@ -98,37 +94,31 @@
       $("#table > tbody").empty();
       var table_html = '';
       $.each(res, function(index, value) {
-          table_html += '<tr><td scope="row">' +  value['ticket_info']['id'] + '</td>';
-          table_html += '<td>' + value['member_info']['id'] + '</td>';
-          table_html += '<td>' + value['session_info']['session_info']['session_id'] + '</td>';
-          table_html += '<td>' + value['session_info']['session_info']['session_date'] + '</td>';
-          table_html += '<td>' + value['session_info']['session_info']['session_time'] + '</td>';
-          table_html += '<td>' + value['session_info']['movie_info']['name'] + '</td>';
-          //table_html += '<td>' + value['session_info']['theater_info']['theater_info']['id'] + '</td>';
-          table_html += '<td>' + value['session_info']['theater_info']['theater_info']['name'] + '</td>';
-          table_html += '<td>' + value['seat_info']['seatCode'] + '</td>';
-          table_html += '<td>' + value['ticket_info']['book_time'] + '</td>';
+          table_html += '<tr><td scope="row">' +  value['meal_order_info']['id'] + '</td>';
+          table_html += '<td>' + value['ticket_info']['ticket_info']['id'] + '</td>';
+          table_html += '<td>' + value['meal_info']['meal_id'] + '</td>';
+          table_html += '<td>' + value['meal_info']['meal_name'] + '</td>';
+          table_html += '<td>' + value['meal_order_info']['quantity'] + '</td>';
+
           
           //table_html += '<td>' + '<a href="editmovie.html?id=' + value['id'] + '">編輯</a> | ';
-          table_html += '<td><a href="javascript: deleteTicket(' + value['ticket_info']['id'] + ');">刪除</a></td></tr>';
+          table_html += '<td><a href="javascript: deletemealOrder(' + value['meal_order_info']['id'] + ');">刪除</a></td></tr>';
       })
 
       $("#table > tbody").append(table_html);
   }
   
 
-  function deleteTicket(id) {
-      var check = window.confirm("確認刪除電影票？");
+  function deletemealOrder(id) {
+      var check = window.confirm("確認刪除訂餐？");
   
       if (check == true) {
           console.log("You pressed OK!");
-          var request = {
-        		  by: "id",
-      			  id: id };
+          var request = {'id': id};
           var data_string = JSON.stringify(request);
           $.ajax({
               type: "DELETE",
-              url: "api/ticket.do",
+              url: "api/mealOrder.do",
               crossDomain: true,
               data: data_string,
               cache: false,
@@ -136,9 +126,9 @@
               timeout: 5000,
               success: function (response) {
                   if(response.status == 200){
-                      $("#flashMessage").html("成功! 已經成功刪除電影票...");
+                      $("#flashMessage").html("成功! 已經成功刪除訂餐...");
                       $("#flashMessage").show();
-                      getAllTicket();
+                      getAllMealOrderData();
                   }
                   console.log(response);
               },
