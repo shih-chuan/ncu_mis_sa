@@ -1,6 +1,9 @@
 package ncu.im3069.demo.app;
 
 import java.util.Calendar;
+import ncu.im3069.demo.app.Meal;
+import ncu.im3069.demo.app.MealHelper;
+import ncu.im3069.demo.app.MealOrderHelper;
 
 import org.json.*;
 

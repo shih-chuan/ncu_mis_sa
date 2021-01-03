@@ -90,9 +90,9 @@ public class MealOrderHelper {
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
-        long start_time = System.nanoTime();
+        //long start_time = System.nanoTime();
         /** 紀錄SQL總行數 */
-        int row = 0;
+        //int row = 0;*/
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
         ResultSet rs = null;
         
@@ -114,12 +114,12 @@ public class MealOrderHelper {
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
             while(rs.next()) {
                 /** 每執行一次迴圈表示有一筆資料 */
-                row += 1;
+               // row += 1;
                 
                 /** 將 ResultSet 之資料取出 */
                 int meal_order_id = rs.getInt("meal_order_id");
                 int ticket_id = rs.getInt("ticket_id");
-                int meal_id = rs.getInt("meal_order_id");
+                int meal_id = rs.getInt("meal_id");
                 int quantity = rs.getInt("quantity");
                 /** 將每一筆商品資料產生一名新Meal物件 */
                 m = new MealOrder(meal_order_id, ticket_id, meal_id, quantity);
@@ -139,15 +139,15 @@ public class MealOrderHelper {
         }
         
         /** 紀錄程式結束執行時間 */
-        long end_time = System.nanoTime();
+        //long end_time = System.nanoTime();
         /** 紀錄程式執行時間 */
-        long duration = (end_time - start_time);
+        //long duration = (end_time - start_time);
         
         /** 將SQL指令、花費時間、影響行數與所有會員資料之JSONArray，封裝成JSONObject回傳 */
         JSONObject response = new JSONObject();
         response.put("sql", exexcute_sql);
-        response.put("row", row);
-        response.put("time", duration);
+        /*response.put("row", row);
+        response.put("time", duration)*/;
         response.put("data", jsa);
 
         return response;
