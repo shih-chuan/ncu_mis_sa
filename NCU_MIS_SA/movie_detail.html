@@ -3,53 +3,77 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=">
-    <title>CakePHP: the rapid development php framework: Members</title>
+    <title>電影詳情 ｜ NCU MIS SA</title>
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-    <link rel="stylesheet" type="text/css" href="statics/css/cake.generic.css">
-
+   
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
     <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<style>
+ 	body{ 
+ 	background-image: url("statics/img/moviebg.jpg") ;
+ 	background-size:1520px 850px;
+ 	background-position: 0% 10%;
+   background-repeat:no-repeat;
+ 	                 
+ 	}
+ 	div.txt{
+ 	  font-size:120%;
+ 	} 
+ 	div.icon{
+ 	    position:absolute;
+ 	     left: 660px;
+        top: 82px;
+ 	}
+</style>
 </head>
 
 <body>
-    <div id="container">
-        <div id="header">
-            <h1><a href="http://cakephp.org/">CakePHP: the rapid development php framework</a></h1>
-        </div>
-        <div id="content">
-            <h2>電影詳情</h2>
-            <a href="viewmovie.html">電影列表</a>
-            <a href="product.html">購物車模組</a>
+   <div include-html="statics/components/header.html"></div>
+      
+        <div id="content"  > 
+        <div class="icon">
+             <img src="statics/icon/film.png" width="31" height="32" ></div>
+            <h2 style="text-align:center"><b>電影詳情</b></h2>
+            <div id="viewmovie" style="text-align:center" >
+            <a href="viewmovie.html" >電影列表</a><br>
+            </div>
+            
             
 
             <div id="flashMessage" class="message" style="display: none;"></div>
 
-			  <div class="album py-5 bg-light">
-    			<div class="container">
-      				<div id="movie_panel" class="row">
+			  
+      <div id="flashMessage" class="message" style="display: none;"></div>
+
+			 
+    			
+      				<div id="movie_panel" >
       				</div>
-    			</div>
-  			  </div>
+    			
+  			
   			  
-  			  <div class="album py-5 bg-light">
-    			<div class="container">
-      				<div id="session_panel" class="row">
+  			 
+    		
+      				<div id="session_panel">
       				</div>
-    			</div>
-  			  </div>
+    			
+    			
+  			  <script src="statics/js/include-html.js"></script> 
 			
             <script type="text/javascript">
                 // 取得網址參數
                 var url_string = window.location.href;
                 var url = new URL(url_string);
-                var id = url.searchParams.get("id");
+                var mid = url.searchParams.get("id");
+                var movie_id = parseInt(mid) ;
                 var sql_num = 0;
                 function getMovie() {
                     $.ajax({
                         type: "GET",
                         url: "api/movie.do",
                         crossDomain: true,
-                        data: "id=" + id,
+                        data: "id=" + mid,
                         cache: false,
                         dataType: 'json',
                         timeout: 5000,
@@ -77,22 +101,26 @@
                 function addMovie(data) {		//每抓到一個movie 就add movie
                 	let inner_html = '';
                 	//inner_html += '<div class="col-md-4">';
-               		inner_html += '<div class="card-header">';
-               		inner_html += '<h4 class="font-weight-normal text-center text-truncate">' + data.name + '</h4>';
+               		inner_html += '<div class="container">';
+               		inner_html += '<br>';
+               		inner_html += '<h3 style="font-weight:bold;text-align:center">' + data.name + '</h3>';
+
+             		inner_html += '<div class="pic">';
+             		inner_html += '<img src="statics/img/movie/' + data.cover + '" style="float: left;margin:30px" width="33%" >';
              		inner_html += '</div>';
-             		inner_html += '<div class="card mb-4 shadow-sm">';
-             		inner_html += '<img src="statics/img/movie/' + data.cover + '" width="30%" >';
-            		inner_html += '<div class="card-body">';
-            		inner_html += '<p class="card-text">內容介紹：' + data.content + '</p>';
-            		inner_html += '<p class="card-text">影片長度：' + data.running_time + '分鐘</p>';
-            		inner_html += '<p class="card-text">分級：' + data.genre + '</p>';
-            		inner_html += '<p class="card-text">上映日期：' + data.release_date + '</p>';
-            		inner_html += '<div class="d-flex justify-content-between align-items-center">';
-            		inner_html += '<div class="btn-group">';
+            		
+             		inner_html += '<br>';
+            		inner_html += '<div class="txt">';
+            		inner_html += '<p style="font-weight:bold">內容介紹：' + data.content + '</p>';
+            		inner_html += '<p style="font-weight:bold">影片長度：' + data.running_time + '分鐘</p>';
+            		inner_html += '<p style="font-weight:bold">分級：' + data.genre + '</p>';
+            		inner_html += '<p style="font-weight:bold">上映日期：' + data.release_date + '</p>';
+            		inner_html += '</div>';
+            		
             		//inner_html += '<a class="p-2 text-dark" href="movie_detail.html?id=' + data.id+'"><font color="blue">詳細資訊</font></a>';
             		//inner_html += '<button id="add_cart_' + data.id + '" name="add_cart" type="button" class="btn btn-lg btn-block btn-outline-primary">加入購物車</button>';
             		//inner_html += '</div><small class="text-muted">id: ' + data.id + '</small>';
-            		inner_html += '</div></div></div></div>';
+            		inner_html += '</div>';
                 	
             		return inner_html;
                 }
@@ -103,7 +131,7 @@
                         type: "GET",
                         url: "api/moviesession.do",
                         crossDomain: true,
-                        data: "id=" + id,
+                        data: "id=" + mid,
                         cache: false,
                         dataType: 'json',
                         timeout: 5000,
@@ -117,6 +145,7 @@
                           	})
                           	
                           	$("#session_panel").append(session_panel);
+                          	setButtonFunction();
                             }
                           },
                         error: function () {
@@ -128,42 +157,43 @@
                 getSession();
 				
                 function addSession(data) {		//每抓到一個movie 就add movie
-                	let inner_html = '';
                 	
-            		inner_html += '<p class="card-text">場次時間：' + data.session_time + '</p>';
-            		inner_html += '<p class="card-text">場次日期：' + data.session_date + '</p>';
+                	let inner_html = '----------------';
+                	inner_html += '<div class="txt">';
+                    inner_html += '<p style="font-weight:bold">場次時間：' + data.session_time + '</p>';
+            		inner_html += '<p style="font-weight:bold">場次日期：' + data.session_date + '</p>';
             		//inner_html += '<div class="d-flex justify-content-between align-items-center">';
             		//inner_html += '<div class="btn-group">';
-            		inner_html += '<a class="p-2 text-dark" href="order.html?id=' + id+'&ssid='+data.session_id+'"><font color="blue">訂票去！</font></a>';
+            		//inner_html += '<a class="p-2 text-dark" href="order.html?id=' + mid+'&ssid='+data.session_id+'"><font color="blue">訂票去！</font></a>';
+      				inner_html += '<button id="session_id_' + data.session_id + '" name="session_id" type="button" >訂票去！</button></br>';
+					//ssid = data.session_id;
             		//inner_html += '</div></div></div></div>';
-                	
-            		return inner_html;
+            	    inner_html += '</div>'  
+                	return inner_html;
+            			
                 }
                 
-               
+                function setButtonFunction() {
+                	$('button[name="session_id"]').click(function () {
+                		var object = (this.id).split('_')[0];
+                		var col = (this.id).split('_')[1];
+                		var ssid = (this.id).split('_')[2];
+                		//addProductToCart(id, 1);
+						
+                		var session_id = parseInt(ssid) ;
+    					localStorage.setItem("movie_id", JSON.stringify(movie_id));
+        				localStorage.setItem("session_id", JSON.stringify(session_id));
+
+                        document.location.href = "order.html";
+                		
+                    });
+                }
+                
+                
+                
             </script>
         </div>
-        <div id="footer">
-            <a href="http://www.cakephp.org/" target="_blank" id="cake-powered"><img src="statics/img/cake.power.gif" alt="CakePHP: the rapid development php framework" border="0"></a>
-            <p>CakePHP 2.6.10</p>
-        </div>
-    </div>
-
-    <table class="cake-sql-log" id="sql_log" summary="Cake SQL Log" cellspacing="0">
-        <caption id="sql_summary">(default) 0 query took 0 ms</caption>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Query</th>
-                <th>Error</th>
-                <th>Affected</th>
-                <th>Num. rows</th>
-                <th>Took (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+       
 </body>
 
 </html>
