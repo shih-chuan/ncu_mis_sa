@@ -55,10 +55,15 @@ public class Ticket {
         getSessionFromDB(session_id);
         getSeatFromDB(theater_id, seat_code);
     }
+	
+	//訂單紀錄
+    
+
     
     /**
      * 實例化（Instantiates）一個新的（new）Order 物件<br>
      * 採用多載（overload）方法進行，此建構子用於修改訂單資料時，新改資料庫已存在的訂單
+     * @param member_id 
      *
      * @param first_name 會員名
      * @param last_name 會員姓
@@ -68,6 +73,15 @@ public class Ticket {
      * @param create 訂單創建時間
      * @param modify 訂單修改時間
      */
+	//訂單紀錄
+    public Ticket( int member_id, Date book_time) {
+	  //  this.id = id;
+    	getMemberFromDB(member_id);
+		this.bookTime = book_time;
+      //  getSessionFromDB(session_id);
+      //  getSeatFromDB(theater_id, seat_code);
+	}
+    
     public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id, Date book_time) {
 		this.id = id;
 		this.bookTime = book_time;
@@ -75,6 +89,8 @@ public class Ticket {
         getSessionFromDB(session_id);
         getSeatFromDB(theater_id, seat_code);
 	}
+
+    
     public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id) {
         getSessionFromDB(session_id);
 		getMemberFromDB(member_id);
@@ -209,6 +225,15 @@ public class Ticket {
         jso.put("member_info", getMemberData());
         jso.put("seat_info", getSeatData());
         jso.put("session_info", getSessionData());
+        return jso;
+    }
+    
+    public JSONObject getTicketByMemberInfo() {
+        JSONObject jso = new JSONObject();
+        jso.put("ticket_info", getData());
+        jso.put("member_info", getMemberData());
+       // jso.put("seat_info", getSeatData());
+       // jso.put("session_info", getSessionData());
         return jso;
     }
     

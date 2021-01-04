@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Jekyll v3.8.5">
+
+  <title>會員訂單 ｜ NCU MIS SA</title>
+  
+  <!-- Bootstrap core CSS -->
+  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <!-- Custom styles for this template -->
+  <link href="statics/css/product.css" rel="stylesheet">
+
+  <script src="statics/js/jquery-3.4.1.min.js"></script>
+</head>
+
+<body>
+	
+  <div include-html="statics/components/header.html"></div>
+
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h2>會員訂單</h2>
+    <p></p>
+        <div id="flashMessage" class="message" style="display: none;"></div>
+
+        <table id="table" class="table">
+            <thead>
+                <tr>
+                    <th>訂購票數</th>      
+                    <th>訂購時間</th>    
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table></div>
+  		<script src="statics/js/include-html.js"></script>
+        <script type="text/javascript">
+            // 全域變數紀錄SQL指令下的次數
+            var sql_num = 0;
+        /**    function deleteMember(id) {
+                var check = window.confirm("確認刪除會員？");
+                if (check == true) {
+                    console.log("You pressed OK!");
+                    var request = {'id': id};
+                    var data_string = JSON.stringify(request);
+                    $.ajax({
+                        type: "DELETE",
+                        url: "api/ticket.do",
+                        crossDomain: true,
+                        data: data_string,
+                        cache: false,
+                        dataType: 'json',
+                        timeout: 5000,
+                        success: function (response) {
+                            if(response.status == 200){
+                                $("#flashMessage").html("成功! 已經成功刪除會員...");
+                                $("#flashMessage").show();
+                                getAllMember();
+                            }
+                            console.log(response);
+                        },
+                        error: function () {
+                            alert("無法連線到伺服器！");
+                        }
+                    });
+                }
+                else {
+                    console.log("You pressed Cancel!");
+                }
+            }**/
+            let id = JSON.parse(localStorage.getItem("member_id"));
+            
+            let booktimes = []
+            let nTickets = []
+            let mealTicketIds = []
+
+            function getTicketByMemberId()  {
+                // 發出POST的GET請求取得所有會員列表
+                $.ajax({
+                        type: "GET",
+                        url: "api/ticket.do",
+                        crossDomain: true,
+                        data:"member=" + id,
+                        cache: false,
+                        dataType: 'json',
+                        timeout: 5000,
+                        success: function (response) {
+                            if(response.status == 200){
+                            	var data = response.response.data;
+                            	var nTicket = 0;
+                            	data.map(function(ticket){
+                            		var index = booktimes.indexOf(ticket.ticket_info.book_time);
+                            		if(index == -1){
+                            			nTicket=1;
+                            			nTickets.push(nTicket);
+                            			mealTicketIds.push(ticket.ticket_info.id)
+                                		booktimes.push(ticket.ticket_info.book_time)
+                            		}else{
+                            			nTicket++;
+                            			nTickets[index] = nTicket;
+                            		}
+                            	})
+                            	console.log(booktimes)
+                            	console.log(nTickets)
+                            	console.log(mealTicketIds)
+                                updateTable(booktimes);
+                                //updateTable(response.response.data);
+                                //updateSQLTable(response.response);
+                            }
+                            console.log(response);
+                        },
+                        error: function () {
+                            alert("無法連線到伺服器！");
+                        }
+                });
+            }
+            getTicketByMemberId();
+            // 更新會員列表表格
+           function updateTable(res) {
+                $("#table > tbody").empty();
+                var table_html = '';
+                for(var i=0; i<booktimes.length; i++){
+                	table_html += '<tr>';
+                	table_html += '<td>'+ nTickets[i] +'</td>';
+                	table_html += '<td>'+ booktimes[i] +'</td>';
+                	table_html += '<td><a href="member_order_detail.html?ticketId='+ mealTicketIds[i] +'booktime='+ booktimes[i] +'">查看下訂</a></td></tr>';
+                	table_html += '<tr>';
+                }
+                //res.map(function(booktime){
+                	//console.log(booktime)
+                	//table_html += '<tr>';
+                	//table_html += '<td><a href="member_order_detail.html?id='+ booktime +'">'+ booktime +'</a></td></tr>';
+                	//table_html += '<td><a href="member_order_detail.html?id='+ booktime +'">'+ booktime +'</a></td></tr>';
+                //})
+                //$.each(res, function(index, value) {
+                	//table_html += '<tr><td scope="row">' +  value['member_info']['id']  + '</td>';
+                	//table_html += '<tr>';
+                    //table_html += '<td>' + value['session_info']['session_info']['session_id'] + '</td>';
+                    //table_html += '<td>' + value+ '</td>';
+                    //table_html += '<td>' + value['session_info']['session_info']['session_date'] + '</td>';
+                    //table_html += '<td>' + value['session_info']['session_info']['session_time'] + '</td>';
+                    //table_html += '<td>' + value['session_info']['movie_info']['name'] + '</td>';
+                    //table_html += '<td>' + value['session_info']['theater_info']['theater_info']['id'] + '</td>';
+                    //table_html += '<td>' + value['session_info']['theater_info']['theater_info']['name'] + '</td>';
+                    //table_html += '<td>' + value['seat_info']['seatCode'] + '</td>';
+                   // table_html += '<td>' + value['ticket_info']['book_time'] + '</td></tr>';
+                    //table_html += '<td>' + '<a href="editmovie.html?id=' + value['id'] + '">編輯</a> | ';
+                    //table_html += '<td><a href="member_order_detail.html?id='+value['ticket_info']['book_time'] +'">'+ value['ticket_info']['book_time']+'</a></td></tr>';
+                    //table_html += '<td><a href="javascript: deleteTicket(' + value['ticket_info']['id'] + ');">刪除</a></td></tr>';
+                //})
+
+                $("#table > tbody").append(table_html);
+            }
+            
+            // 更新SQL指令歷史表格
+           
+        </script>
+    </div>
+</body>
+
+</html>
