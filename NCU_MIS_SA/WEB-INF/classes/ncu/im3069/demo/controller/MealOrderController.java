@@ -7,6 +7,8 @@ import javax.servlet.http.*;
 import org.json.*;
 import ncu.im3069.demo.app.Meal;
 import ncu.im3069.demo.app.MealHelper;
+import ncu.im3069.demo.app.MealOrder;
+import ncu.im3069.demo.app.MealOrderHelper;
 import ncu.im3069.tools.JsonReader;
 
 // TODO: Auto-generated Javadoc
@@ -20,14 +22,14 @@ import ncu.im3069.tools.JsonReader;
  * @version 1.0.0
  * @since 1.0.0
  */
-@WebServlet("/api/meal.do")
-public class MealController extends HttpServlet {
+@WebServlet("/api/mealOrder.do")
+public class MealOrderController extends HttpServlet {
     
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
     
     /** mh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
-    private MealHelper mh =  MealHelper.getHelper();
+    private MealOrderHelper moh =  MealOrderHelper.getHelper();
     
     /**
      * 處理Http Method請求POST方法（新增資料）
@@ -44,44 +46,28 @@ public class MealController extends HttpServlet {
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
-        String name = jso.getString("meal_name");
-        Double price = jso.getDouble("meal_price");
-        File f = new File(jso.getString("meal_image"));
-        String image = f.getName();
-        String describe = jso.getString("meal_content");
-        
+        int ticket_id =jso.getInt("ticket_id");
+        JSONArray meal_id = jso.getJSONArray("meal_id");
+        JSONArray meal_amount = jso.getJSONArray("meal_amount");
+    
         /** 建立一個新的會員物件 */
-        Meal m = new Meal(name, price, image, describe);
         
-        /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-        if(name.isEmpty() /*|| price.isEmpty() */|| image.isEmpty() || describe.isEmpty()) {
-            /** 以字串組出JSON格式之資料 */
-            String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-            /** 透過JsonReader物件回傳到前端（以字串方式） */
-            jsr.response(resp, response);
-        }
-        /** 透過MemberHelper物件的checkDuplicate()檢查該會員電子郵件信箱是否有重複 */
-        else if (!mh.checkDuplicate(m)) {
-            /** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
-            JSONObject data = mh.create(m);
+ //       MealOrder mo = new  MealOrder( Integer.parseInt(meal_id.getString(0)),  ticket_id,quantity);
+        for(int i =0;i < meal_id.length();i++) {
+ //       	mo = new  MealOrder( Integer.parseInt(meal_id.getString(i)),  ticket_id,quantity);
+        	/** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
+            JSONObject data = moh.create(ticket_id,Integer.parseInt(meal_id.getString(i)),meal_amount.getInt(i));
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
-            resp.put("message", "成功! 新增套餐...");
+            resp.put("message", "成功! 新增訂餐...");
             resp.put("response", data);
             
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
             jsr.response(resp, response);
         }
-        else {
-            /** 以字串組出JSON格式之資料 */
-            String resp = "{\"status\": \'400\', \"message\": \'新增帳號失敗，此E-Mail帳號重複！\', \'response\': \'\'}";
-            /** 透過JsonReader物件回傳到前端（以字串方式） */
-            jsr.response(resp, response);
-        }
     }
-
     /**
      * 處理Http Method請求GET方法（取得資料）
      *
@@ -100,7 +86,7 @@ public class MealController extends HttpServlet {
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
         if (id.isEmpty()) {
             /** 透過MemberHelper物件之getAll()方法取回所有套餐之資料，回傳之資料為JSONObject物件 */
-            JSONObject query = mh.getAll();
+            JSONObject query = moh.getAll();
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
@@ -116,9 +102,9 @@ public class MealController extends HttpServlet {
   //      	int i = id.length();
         	JSONObject query = new JSONObject();
         	if(id.length()==1)
-        	{ query = mh.getByID(id);}
+        	{ query = moh.getByID(id);}
         	else {
-            query = mh.getByIdList(id);          
+            query = moh.getByIdList(id);          
         	}
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
@@ -149,7 +135,7 @@ public class MealController extends HttpServlet {
         int id = jso.getInt("id");
         
         /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
-        JSONObject query = mh.deleteByID(id);
+        JSONObject query = moh.deleteByID(id);
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();

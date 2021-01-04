@@ -89,6 +89,7 @@ position: fixed;
 					var imgUpload = new FormData();	
 					if (image) {
   								imgUpload.append("image", image);
+  								imgUpload.append("folder", "meal");
   								console.log("in")
   								$.ajax({
         						url: "api/imgupload",
@@ -99,6 +100,7 @@ position: fixed;
         						dataType: "json",
         						success:function(res){
            							var data_object = {
+           							"meal_id" : id,		
             					    "meal_name": name,
                 					"meal_price": price,
                 					"meal_image" : res.imgSrc,

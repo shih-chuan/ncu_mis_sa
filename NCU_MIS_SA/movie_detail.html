@@ -2,67 +2,84 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=">
-    <title>¹q¼v¸Ô±¡ ¡U NCU MIS SA</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>MISSA | é›»å½±è©³æƒ…</title>
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
-   
-    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
-    <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-<style>
- 	body{ 
- 	background-image: url("statics/img/moviebg.jpg") ;
- 	background-size:1520px 850px;
- 	background-position: 0% 10%;
-   background-repeat:no-repeat;
- 	                 
- 	}
- 	div.txt{
- 	  font-size:120%;
- 	} 
- 	div.icon{
- 	    position:absolute;
- 	     left: 660px;
-        top: 82px;
- 	}
-</style>
+  	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+    <link href="statics/css/all.min.css" rel="stylesheet">
+  	<script src="statics/js/jquery-3.4.1.min.js"></script>
+  	<script src="statics/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-   <div include-html="statics/components/header.html"></div>
-      
-        <div id="content"  > 
-        <div class="icon">
-             <img src="statics/icon/film.png" width="31" height="32" ></div>
-            <h2 style="text-align:center"><b>¹q¼v¸Ô±¡</b></h2>
-            <div id="viewmovie" style="text-align:center" >
-            <a href="viewmovie.html" >¹q¼v¦Cªí</a><br>
-            </div>
-            
-            
-
-            <div id="flashMessage" class="message" style="display: none;"></div>
-
-			  
-      <div id="flashMessage" class="message" style="display: none;"></div>
-
-			 
-    			
-      				<div id="movie_panel" >
+  	<div include-html="statics/components/header.html"></div>
+    <div id="container">
+        <div id="content">
+			  <div class="album pt-5 pb-3 bg-light">
+    			<div class="container">
+      				<div id="movie_panel" class="row">
       				</div>
-    			
-  			
-  			  
-  			 
-    		
-      				<div id="session_panel">
+    			</div>
+  			  </div> 
+  			  <div class="album pb-5 bg-light">
+    			<div class="container">
+    				<h2>å ´æ¬¡è³‡è¨Š</h2>
+      				<div id="session_panel" class="row">
       				</div>
-    			
-    			
-  			  <script src="statics/js/include-html.js"></script> 
-			
+    			</div>
+  			  </div>
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="exampleModalLabel">è¦è¨‚å¹¾å¼µç¥¨?</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>ç¥¨ç¨®</th>
+                                <th>åƒ¹æ ¼</th>
+                                <th>æ•¸é‡</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-toggle="tooltip" title="" data-original-title="">
+                                <td>å…¨ç¥¨</td>
+                                <td>$<span class="realprice">500</span></td>
+                                <td>
+                                    <select id="nTickets" class="form-control form-control-sm" style="width: 50px;">
+                                           <option selected="selected" value="1">1</option>
+                                           <option value="2">2</option>
+                                           <option value="3">3</option>
+                                           <option value="4">4</option>
+                                           <option value="5">5</option>
+                                           <option value="6">6</option>
+                                           <option value="7">7</option>
+                                           <option value="8">8</option>
+                                           <option value="9">9</option>
+                                           <option value="10">10</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">å–æ¶ˆ</button>
+			        <a href="Meal.html" type="button" class="btn btn-primary">ä¸‹ä¸€æ­¥</a>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+  			<script src="statics/js/include-html.js"></script>
             <script type="text/javascript">
-                // ¨ú±oºô§}°Ñ¼Æ
+                // å–å¾—ç¶²å€åƒæ•¸
                 var url_string = window.location.href;
                 var url = new URL(url_string);
                 var mid = url.searchParams.get("id");
@@ -81,8 +98,8 @@
                             if (response.status == 200) {
                           	var movie_panel = '';
                           	
-                          	$.each(response.response.data, function (){		//¦]¬°¬O¤@­Óarray
-                          		movie_panel += addMovie(this);		//§â¨C­ÓªF¦è¶ë¶iproduct_panel
+                          	$.each(response.response.data, function (){		//å› ç‚ºæ˜¯ä¸€å€‹array
+                          		movie_panel += addMovie(this);		//æŠŠæ¯å€‹æ±è¥¿å¡é€²product_panel
                           		
                           	})
                           	
@@ -91,37 +108,44 @@
                           },
 
                         error: function () {
-                            alert("µLªk³s½u¨ì¦øªA¾¹¡I");
+                            alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
                         }
                     });
                 }
                 
                 getMovie();
                 
-                function addMovie(data) {		//¨C§ì¨ì¤@­Ómovie ´Nadd movie
-                	let inner_html = '';
-                	//inner_html += '<div class="col-md-4">';
-               		inner_html += '<div class="container">';
-               		inner_html += '<br>';
-               		inner_html += '<h3 style="font-weight:bold;text-align:center">' + data.name + '</h3>';
-
-             		inner_html += '<div class="pic">';
-             		inner_html += '<img src="statics/img/movie/' + data.cover + '" style="float: left;margin:30px" width="33%" >';
-             		inner_html += '</div>';
-            		
-             		inner_html += '<br>';
-            		inner_html += '<div class="txt">';
-            		inner_html += '<p style="font-weight:bold">¤º®e¤¶²Ğ¡G' + data.content + '</p>';
-            		inner_html += '<p style="font-weight:bold">¼v¤ùªø«×¡G' + data.running_time + '¤ÀÄÁ</p>';
-            		inner_html += '<p style="font-weight:bold">¤À¯Å¡G' + data.genre + '</p>';
-            		inner_html += '<p style="font-weight:bold">¤W¬M¤é´Á¡G' + data.release_date + '</p>';
-            		inner_html += '</div>';
-            		
-            		//inner_html += '<a class="p-2 text-dark" href="movie_detail.html?id=' + data.id+'"><font color="blue">¸Ô²Ó¸ê°T</font></a>';
-            		//inner_html += '<button id="add_cart_' + data.id + '" name="add_cart" type="button" class="btn btn-lg btn-block btn-outline-primary">¥[¤JÁÊª«¨®</button>';
-            		//inner_html += '</div><small class="text-muted">id: ' + data.id + '</small>';
-            		inner_html += '</div>';
-                	
+                function addMovie(data) {		//æ¯æŠ“åˆ°ä¸€å€‹movie å°±add movie
+                	let inner_html = `
+                		<div class="movie-card card mb-3" style="width: 100%;">
+                		  <div class="row no-gutters">
+                		    <div class="col-md-4">
+                		      <img src='statics/img/movie/${data.cover}' class="card-img" alt="...">
+                		    </div>
+                		    <div class="col-md-8">
+                		      <div class="card-body p-5">
+                		        <h1 class="card-title">${data.name}</h1>
+                		        <p class="card-text mb-4">${data.content}</p>
+                		        <ul class="list-group list-group-flush">
+	                		        <li class="list-group-item card-text">
+	                		        	<i class="fas fa-stopwatch"></i>
+	                		        	å½±ç‰‡é•·åº¦ï¼š${data.running_time}åˆ†é˜
+                		        	</li>
+	                		        <li class="list-group-item card-text">
+	                		        	<i class="fas fa-tag"></i>
+	                                	åˆ†ç´šï¼š${data.genre}
+	                                </li>
+	                		        <li class="list-group-item card-text">
+	                		        	<i class="fas fa-calendar-week"></i>
+	                		        	ä¸Šæ˜ æ—¥æœŸï¼š${data.release_date}
+                		        	</li>
+                		        </ul>
+                		      </div>
+                		    </div>
+                		  </div>
+                		</div>
+                	`;
+                	$("title").html("MISSA | é›»å½±è©³æƒ…-" + data.name);
             		return inner_html;
                 }
                 
@@ -139,8 +163,8 @@
                             if (response.status == 200) {
                             	var session_panel = '';
                             	
-                          	$.each(response.response.data, function (){		//¦]¬°¬O¤@­Óarray
-                          		session_panel += addSession(this);		//§â¨C­ÓªF¦è¶ë¶iproduct_panel
+                          	$.each(response.response.data, function (){		//å› ç‚ºæ˜¯ä¸€å€‹array
+                          		session_panel += addSession(this);		//æŠŠæ¯å€‹æ±è¥¿å¡é€²product_panel
                           
                           	})
                           	
@@ -149,28 +173,21 @@
                             }
                           },
                         error: function () {
-                            alert("µLªk³s½u¨ì¦øªA¾¹¡I");
+                            alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
                         }
                     });
                 }
                 
                 getSession();
 				
-                function addSession(data) {		//¨C§ì¨ì¤@­Ómovie ´Nadd movie
-                	
-                	let inner_html = '----------------';
-                	inner_html += '<div class="txt">';
-                    inner_html += '<p style="font-weight:bold">³õ¦¸®É¶¡¡G' + data.session_time + '</p>';
-            		inner_html += '<p style="font-weight:bold">³õ¦¸¤é´Á¡G' + data.session_date + '</p>';
-            		//inner_html += '<div class="d-flex justify-content-between align-items-center">';
-            		//inner_html += '<div class="btn-group">';
-            		//inner_html += '<a class="p-2 text-dark" href="order.html?id=' + mid+'&ssid='+data.session_id+'"><font color="blue">­q²¼¥h¡I</font></a>';
-      				inner_html += '<button id="session_id_' + data.session_id + '" name="session_id" type="button" >­q²¼¥h¡I</button></br>';
-					//ssid = data.session_id;
-            		//inner_html += '</div></div></div></div>';
-            	    inner_html += '</div>'  
-                	return inner_html;
-            			
+                function addSession(data) {		//æ¯æŠ“åˆ°ä¸€å€‹movie å°±add movie
+                	let inner_html = '';
+                	inner_html += '<div class="card col-3 m-2"><div class="card-body">'
+               		inner_html += '<p class="card-text">å ´æ¬¡æ—¥æœŸï¼š' + data.session_date + '</p>';
+            		inner_html += '<p class="card-text">å ´æ¬¡æ™‚é–“ï¼š' + data.session_time + '</p>';
+      				inner_html += '<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="session_id_' + data.session_id + '" name="session_id" type="button" >è¨‚ç¥¨å»ï¼</button></br>';
+                	inner_html += '</div></div>'
+            		return inner_html;
                 }
                 
                 function setButtonFunction() {
@@ -179,21 +196,28 @@
                 		var col = (this.id).split('_')[1];
                 		var ssid = (this.id).split('_')[2];
                 		//addProductToCart(id, 1);
-						
+						updateNTicketsToClent();
                 		var session_id = parseInt(ssid) ;
     					localStorage.setItem("movie_id", JSON.stringify(movie_id));
         				localStorage.setItem("session_id", JSON.stringify(session_id));
-
-                        document.location.href = "order.html";
                 		
                     });
                 }
                 
+                function updateNTicketsToClent() {
+					var selected = $("#nTickets option:selected").val()
+				 	localStorage.setItem("client_ticket_num", selected);
+        		}
                 
+                $(function(){
+					$("#nTickets").change(function(evt){
+						updateNTicketsToClent();
+					})
+                })
                 
             </script>
         </div>
-       
+    </div>
 </body>
 
 </html>

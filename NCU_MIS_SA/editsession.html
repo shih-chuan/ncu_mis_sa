@@ -58,7 +58,7 @@ position: fixed;
     			<input name="session_date" type="date" id="session_date" >
             </div>
 
-       		<div class="submit"><input type="button" value="新增" id="submit"></div>
+       		<div class="submit"><input type="button" value="修改" id="submit"></div>
         </form>
 		<script src="statics/js/include-html.js"></script>
         <script type="text/javascript">
@@ -99,8 +99,8 @@ position: fixed;
                                     $('#flashMessage').html(response.message);
                                     $('#flashMessage').show();
                                     if(response.status == 200){
-                                        updateSQLTable(response.response);
-                                        //getSession();
+                                        //updateSQLTable(response.response);
+                                        getSession();
                                     }
                                 },
                                 error: function () {
@@ -111,7 +111,7 @@ position: fixed;
                 
 
                 // 更新SQL指令歷史表格
-                function updateSQLTable(data) {
+                /*function updateSQLTable(data) {
                     var time = (data.time / 1000000).toFixed(2);
                     var table_html = "";
                     
@@ -128,34 +128,37 @@ position: fixed;
                     $("#sql_log > tbody").append(table_html);
                     $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
                     $("#sql_summary").html("(default) " + data.row );
-                }
-
-//                function getSession() {
-//                    $.ajax({
-//                        type: "GET",
-//                        url: "api/session.do",
-//                        crossDomain: true,
-//                       data: "id=" + id,
-//                       cache: false,
-//                       dataType: 'json',
-//                       timeout: 5000,
-//                       success: function (response) {
-//                         if(response.status == 200){
-//                       		updateSQLTable(response.data);
-                     	
-//                   			document.getElementById('movie_id').value = response['data'][0]['movie_id'];
-//                			document.getElementById('theater_id').value = response['data'][0]['theater_id'];
-//               				document.getElementById('session_date').value = response['data'][0]['session_date'];
-//             				document.getElementById('session_time').value = response['data'][0]['session_time'];
+                }*/
+                function getSession() {
+                    $.ajax({
+                        type: "GET",
+                        url: "api/session.do",
+                        crossDomain: true,
+                       data: "id=" + id,
+                       cache: false,
+                       dataType: 'json',
+                       timeout: 5000,
+                       success: function (res) {
+                    	 console.log(res);
+                         if(res.status == 200){
+                      		//updateSQLTable(res.data);
+                      		document.getElementById('movie_id').value = res.response.movie_info.id;
+                      		document.getElementById('theater_id').value = res.response.theater_info.theater_info.id;
+                      		document.getElementById('session_date').value = res.response.session_info.session_date;
+                      		document.getElementById('session_time').value = res.response.session_info.session_time;
+                   		/*document.getElementById('movie_id').value = response['data'][0]['movie_id'];
+                			document.getElementById('theater_id').value = response['data'][0]['theater_id'];
+               			document.getElementById('session_date').value = response['data'][0]['session_date'];
+             				document.getElementById('session_time').value = response['data'][0]['session_time'];  */
                             	
-//                          }
-//                        console.log(response);
-//                 },
-//                error: function () {
-//                  alert("無法連線到伺服器！");
-//            }
-//      });
-//}
+                          }
+                       
+                 },
+                error: function () {
+                  alert("無法連線到伺服器！");
+            }
+      });
+}
 
                 $('#submit').click(function() {
                     updateMovie(id)
@@ -164,7 +167,7 @@ position: fixed;
                 $(document).ready(function() {
                 	// 發出GET的AJAX請求取得原本該會員的資料
                  	$("#sql_log > tbody").empty();
-                    //getSession();
+                    getSession();
                 });
             </script>
     </div>

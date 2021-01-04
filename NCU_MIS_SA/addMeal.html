@@ -84,6 +84,7 @@ position: fixed;
                         var imgUpload = new FormData();	
                         if (image) {
                           imgUpload.append("image", image);
+						  imgUpload.append("folder", "meal");
                           console.log("in")
                           $.ajax({
 	                            url: "api/imgupload",

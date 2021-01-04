@@ -1,129 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>會員登入</title>
- <!-- Bootstrap core CSS -->
-  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
-  <link href="statics/css/all.min.css" rel="stylesheet">
-  <link href="statics/icon/film.png" type="image/x-icon" rel="icon">
-  <link href="statics/icon/film.png" type="image/x-icon" rel="shortcut icon">
-  <link href="statics/css/bookSeat.css" rel="stylesheet">
-  <link href="statics/css/jquery-confirm.css" rel="stylesheet">
-
-  <script src="statics/js/jquery-3.4.1.min.js"></script>
-  <script src="statics/js/jquery-confirm.js"></script>
-  <script src="statics/js/big.min.js"></script>
-
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<title>訂單列表 ｜ NCU MIS SA</title>
+	
+	<!-- Bootstrap core CSS -->
+	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
+	<link href="statics/css/all.min.css" rel="stylesheet">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="statics/css/masthead.css" rel="stylesheet">
+	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
+	
+	<script src="statics/js/jquery-3.4.1.min.js"></script>
+	<script src="statics/js/jquery-confirm.js"></script>
+	<script src="statics/js/big.min.js"></script>
+	<style>
+		form{
+			background-color: white;
+			border-radius: 5px;
+			color: black;
+			padding: 30px;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+		table{
+  			border-spacing: 5px;
+		}
+		form tr{
+			padding-bottom: 5px;
+		}
+	</style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">老大影廳</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+	<div include-html="statics/components/header.html"></div>
+	<div class="masthead">
+		<form method="post">
+			<h3 class="mb-3">MISSA | 登入</h3>
+			<table class="table table-borderless">
+				<tr class="mb-1">
+					<td>Email	:</td>
+					<td><input id="email" type="text" name="name"></td>
+				</tr>
+				<tr class="mb-1">
+					<td>Password:</td>
+					<td><input id="password" type="password" name="password"></td>
+				</tr>
+			</table> 
+			<input id="submit-btn" class="btn btn-primary btn-xl" type="submit" value="login">
+			<a href="register.html" class="mt-3">註冊</a>  
+		</form>  
     </div>
-    </nav>
-  <img src="statics/img/moviep.PNG" width="1520" height="500">  
-<div id="container" style="text-align:center">
-  <h2>請輸入會員資料</h2>
- <div class="input email required"id=login_form>
-                    <label for="member_email" >*電子郵件:</label><br>
-                    <input name="email" type="email" id="member_email" required="required">
-        
-   <br>
-                    <label for="member_password">*密碼:  </label><br>
-                    <input name="password" maxlength="30" type="password" id="member_password" required="required">
-                <br></div><br>
-                 <div class="submit"><input type="button" value="登入" id="submit"></div>
-    </div>   <section class="indexNews">
-            <h2>最新公告<span>MORE</span></h2>
-            <ul>
-                
-                <li>
-                    <time>2020/12/16</time>《神力女超人1984》片尾公告
-                </li>
-                
-                <li>
-                    <time>2020/11/30</time>秋冬防疫專案啟動！
-                </li>
-                
-                <li>
-                    <time>2020/07/14</time>振興三倍券、藝FUN券使用提醒
-                </li>
-                
-                <li>
-                    <time>2020/07/01</time>HAPPY GO聯名信用卡無法累點公告
-                </li>
-                
-                <li>
-                    <time>2019/06/15</time>信用卡優惠影城現場購票公告
-                </li>
-                
-                <li>
-                    <time>2018/04/30</time>提醒您：影廳內、電影正片（含片尾），均禁止拍照、錄音、錄影
-                </li>
-                
-            </ul>
-        </section>
-      <script type="text/javascript">
-                $(document).ready(function() {
-                    // 處理表單點擊事件
-                    var $form = $('#submit');
-                    $form.click(function() {
-                        submit();
-                    });
-
-                    function submit() {
-                       
-                        var email = $('#member_email').val();
-                        var password = $('#member_password').val();
-
-                       
-                        if (email==""||password=="") {
-                            alert("帳號或密碼必填！");
-                        }
-                      
-                        else {
-                            // 將資料組成JSON格式
-                            var data_object = {
-                                
-                                "email": email,
-                                "password": password
-                            };
-
-                            // 將JSON格式轉換成字串
-                            var data_string = JSON.stringify(data_object);
-
-                            // 發出POST的AJAX請求
-                            $.ajax({
-                                type: "GET",
-                                url: "api/member.do",
-                                data: data_string,
-                                crossDomain: true,
-                                cache: false,
-                                dataType: 'json',
-                                timeout: 5000,
-                                success: function (response) {
-                                    $('#flashMessage').html(response.message);
-                                    $('#flashMessage').show();
-                                    if(response.status == 200){
-                                        updateSQLTable(response.response);
-                                    }
-                                },
-                                error: function () {
-                                    alert("無法連線到伺服器！");
-                                }
-                        });
-                    }
-                }
-                })
-                
-                </script>
-
-        </div>
-        
+	<script src="statics/js/include-html.js"></script>
+	<script>
+		$(function(){
+			$("#submit-btn").click(function(e){
+				  e.preventDefault();
+                  var email = $('#email').val();
+                  var pass = $('#password').val();
+                  var dataObj = {
+                      "email": email,
+                      "password": pass
+                  }
+                  console.log(JSON.stringify(dataObj));
+				  $.ajax({
+	                   type: "POST",
+	                   url: "api/auth.do",
+	                   crossDomain: true,
+	                   cache: false,
+	                   data: JSON.stringify(dataObj),
+	                   dataType: 'json',
+	                   timeout: 5000,
+	                   success: function (response) {
+	                	   console.log(response)
+	                       alert(response.message);
+	                	   if(response.status == "200"){
+							   localStorage.setItem("member_id", response.member_id);
+							   localStorage.setItem("member_name", response.member_name);
+		                       window.location.replace("index.html");
+	                	   }
+	                   },
+	                   error: function () {
+	                       alert("無法連線到伺服器！");
+	                   }
+	              });
+			  })
+		})
+	</script>
 </body>
-</html>

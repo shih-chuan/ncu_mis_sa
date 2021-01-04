@@ -20,7 +20,12 @@
 </head>
 <body>
 <div include-html="statics/components/header.html"></div>
-<div class="content container"> 
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center step-header">
+	<h1>劃位</h1>
+	<p class="lead">已經為您保留以下座位，如需更改請重新選擇</p>
+</div>
+	
+<div class="content"> 
   <table class="seat-table"></table>
   <div class="ticket-info">
     <ul class="list-group">
@@ -33,32 +38,30 @@
       <li class="list-group-item active" aria-current="true">訂票資訊</li>
       <li class="list-group-item">
         <i class="far fa-clock"></i>
-        <span id="session-datetime">2020-12-25 12:00</span>
+        <span id="session-datetime">{{session-time}}</span>
       </li>
       <li class="list-group-item">
         <i class="fas fa-video"></i>
-        <span id="theater-name">第8廳</span>
+        <span id="theater-name">{{theater-name}}</span>
       </li>
       <li class="list-group-item">
         <i class="fas fa-film"></i>
-        <span id="movie-name">Pacific Rim</span>
+        <span id="movie-name">{{movie-name}}</span>
       </li>
     </ul>
 	  <div class="controls">
-   			<a href="/NCU_MIS_SA/theater.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">Cancel</button></a>
-   			<button type="button" id="submit-btn" class="btn btn-primary show-after">Save</button>
+   			<a href="/NCU_MIS_SA/index.html"><button type="button" id="cancel-btn" class="btn btn-danger show-after">取消</button></a>
+   			<button type="button" id="submit-btn" class="btn btn-primary show-after">下一步</button>
 	  </div>
     
   </div>
 </div>
 <script src="statics/js/include-html.js"></script>
 <script>
-//取得網址參數
-var url_string = window.location.href;
-var url = new URL(url_string);
-var session_id = url.searchParams.get("session");
-var member_id = url.searchParams.get("member");
-var amount = url.searchParams.get("amount");
+/*從storage取得前面選擇資訊*/
+var session_id = localStorage.getItem("session_id");
+var member_id = localStorage.getItem("member_id");
+var amount = localStorage.getItem("client_ticket_num");
 
 let data = {
     width: 0,
@@ -71,6 +74,7 @@ let data = {
     confirmed: false
 }
 
+/*取得場次資料*/
 function getSession() {
     $.ajax({
         type: "GET",
@@ -125,6 +129,8 @@ function getSession() {
         }
     });
 }
+
+/*當使用者未完成劃位直接跳轉頁面時，到資料庫刪除保留票*/
 function deleteReservedSeatsOnWindowClosed(){
 	var reservedTicketsNotSelected = [...data.reservedTickets];
 	reservedTicketsNotSelected = reservedTicketsNotSelected.map(function(ticket){
@@ -135,7 +141,6 @@ function deleteReservedSeatsOnWindowClosed(){
 		ids: reservedTicketsNotSelected
 	}
 	var dataString = JSON.stringify(ticketsInfo);
-	console.log(dataString)
 	if(ticketsInfo.ids.length > 0){
 		$.ajax({
 	        type: "DELETE",
@@ -176,6 +181,8 @@ function bookSelectedSeats() {
         timeout: 5000,
         success: function (res) {
         	alert(res.message);
+        	localStorage.setItem("selected-seats", JSON.stringify(data.selectedSeats.map(function(seat){return seat.seatCode})));
+        	window.location.assign("checkout.html");
         },
         error: function () {
             alert("無法連線到伺服器！");
@@ -265,32 +272,6 @@ function reserveSeats() {
         }
     });
 }
-
-function getBookedTicket() {
-    $.ajax({
-        type: "GET",
-        url: "/NCU_MIS_SA/api/ticket.do",
-        crossDomain: true,
-        data: "session=" + session_id,
-        cache: false,
-        dataType: 'json',
-        timeout: 5000,
-        success: function (res) {
-        	console.log(res);
-            if(res.status == 200){
-            	res.response.data.map(function(ticket){
-            		console.log(ticket.seat_info.colNum + ", " + ticket.seat_info.rowNum)
-            		data.seats[parseInt(ticket.seat_info.rowNum)][parseInt(ticket.seat_info.colNum)] = 3;
-            	})
-            }
-            draw();
-        },
-        error: function () {
-            alert("無法連線到伺服器！");
-        }
-    });
-}
-
 
 const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
