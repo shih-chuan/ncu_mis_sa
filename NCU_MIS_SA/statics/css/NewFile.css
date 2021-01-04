@@ -23,10 +23,10 @@
 
 /** General Style Info **/
 body {
-	background:#800080;
-	color: #fff;
+	background:#9b05d3;
+	color: #000000;
 	font-family:'lucida grande',verdana,helvetica,arial,sans-serif;
-	font-size:90%;
+	font-size:100%;
 	margin: 0;
 }
 a {
@@ -79,6 +79,8 @@ p {
 
 #header{
 	padding: 10px 20px;
+	text-align: right;
+	
 }
 #header h1 {
 	line-height:20px;
@@ -92,8 +94,9 @@ p {
 	font-weight: normal;
 	text-decoration: none;
 }
+
 #header h1 a:hover {
-	color: #fff;
+	color: #ffffff;
 	background: #003d4c;
 	text-decoration: underline;
 }
@@ -109,7 +112,7 @@ p {
 	padding: 6px 10px;
 }
 #header a, #footer a {
-	color: #fff;
+	color: #000000;
 }
 #cake-powered {
 	float: right;

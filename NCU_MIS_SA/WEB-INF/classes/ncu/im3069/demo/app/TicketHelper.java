@@ -115,14 +115,14 @@ public class TicketHelper {
                 int member_id = rs.getInt("member_id");
                 String seat_code = rs.getString("seat_code");
                 int theater_id = rs.getInt("theater_id");
-                String str = rs.getString("book_time");
+                Timestamp book_time = rs.getTimestamp("book_time");
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date book_time = null;
-                try {
-                	book_time = format.parse(str);
-                } catch (ParseException e) {
-                 e.printStackTrace();
-                }
+  //              Date book_time = null;
+   //             try {
+   //             	book_time = format.format.parse(str);
+  //              } catch (ParseException e) {
+  //               e.printStackTrace();
+  //              }
                 
                 /** 將每一筆商品資料產生一名新Product物件 */
                 t = new Ticket(ticket_id, session_id, member_id, seat_code, theater_id,book_time);

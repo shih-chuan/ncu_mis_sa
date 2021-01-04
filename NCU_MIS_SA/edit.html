@@ -12,6 +12,26 @@
 	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
 
     <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <style>
+ 	body{ 
+ 	background-image: url("statics/img/manager/people.png");
+ 	 background-color: RGBA(62,62,62,0.8);
+ 	       
+ 	background-repeat:no-repeat;
+ 	background-size: 700px 850px ;
+ 	background-position: 110% 0%;
+ 	       }
+div.content{
+position: fixed;
+  left: 320px;
+  top: 190px;
+  font-size:120%;
+  background-image: url("statics/img/框.png")      ;
+  background-repeat:no-repeat;
+  background-size: 420px 370px   ;
+}	
+
+</style>
 </head>
 
 <body>
@@ -26,24 +46,24 @@
          <form id="form" accept-charset="utf-8">
              <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
              <div class="input text required">
-                 <label for="member_name">姓名</label>
-                 <input name="name" maxlength="30" type="text" id="member_name" required="required">
+                 <label for="member_name">姓名:</label>
+                 <input name="name" maxlength="30" type="text" id="member_name" required="required"><br>
              </div>
              <div class="input email required">
-                 <label for="member_email">電郵</label>
-                 <input name="email" maxlength="50" type="email" id="member_email" required="required" disabled>
+                 <label for="member_email">電郵:</label>
+                 <input name="email" maxlength="50" type="email" id="member_email" required="required" disabled><br>
              </div>
              <div class="input password required">
-                 <label for="member_password">密碼</label>
-                 <input name="password" type="password" id="member_password" required="required">
+                 <label for="member_password">密碼:</label>
+                 <input name="password" type="password" id="member_password" required="required"><br>
              </div>
              <div class="input text">
-                 <label for="member_login_times">更新時間</label>
-                 <input name="login_times" type="text" id="member_login_times" disabled>
+                 <label for="member_login_times">更新時間:</label>
+                 <input name="login_times" type="text" id="member_login_times" disabled><br>
              </div>
              <div class="input text">
-                 <label for="member_status">會員組別</label>
-                 <input name="status" type="text" id="member_status" disabled>
+                 <label for="member_status">會員組別:</label>
+                 <input name="status" type="text" id="member_status" disabled><br>
              </div>
              <div class="submit"><input type="button" value="更新" id="submit"></div>
          </form>
