@@ -2,8 +2,8 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=">
-    <title>MISSA | ¹q¼v¸Ô±¡</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>MISSA | é›»å½±è©³æƒ…</title>
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
   	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
   			  </div> 
   			  <div class="album pb-5 bg-light">
     			<div class="container">
-    				<h2>³õ¦¸¸ê°T</h2>
+    				<h2>å ´æ¬¡è³‡è¨Š</h2>
       				<div id="session_panel" class="row">
       				</div>
     			</div>
@@ -34,7 +34,7 @@
 			  <div class="modal-dialog modal-dialog-centered" role="document">
 			    <div class="modal-content">
 			      <div class="modal-header">
-			        <h5 class="modal-title" id="exampleModalLabel">­n­q´X±i²¼?</h5>
+			        <h5 class="modal-title" id="exampleModalLabel">è¦è¨‚å¹¾å¼µç¥¨?</h5>
 			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			          <span aria-hidden="true">&times;</span>
 			        </button>
@@ -43,14 +43,14 @@
 			        <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th>²¼ºØ</th>
-                                <th>»ù®æ</th>
-                                <th>¼Æ¶q</th>
+                                <th>ç¥¨ç¨®</th>
+                                <th>åƒ¹æ ¼</th>
+                                <th>æ•¸é‡</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr data-toggle="tooltip" title="" data-original-title="">
-                                <td>¥ş²¼</td>
+                                <td>å…¨ç¥¨</td>
                                 <td>$<span class="realprice">500</span></td>
                                 <td>
                                     <select id="nTickets" class="form-control form-control-sm" style="width: 50px;">
@@ -71,15 +71,15 @@
                     </table>
 			      </div>
 			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-dismiss="modal">¨ú®ø</button>
-			        <a href="Meal.html" type="button" class="btn btn-primary">¤U¤@¨B</a>
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">å–æ¶ˆ</button>
+			        <a href="Meal.html" type="button" class="btn btn-primary">ä¸‹ä¸€æ­¥</a>
 			      </div>
 			    </div>
 			  </div>
 			</div>
   			<script src="statics/js/include-html.js"></script>
             <script type="text/javascript">
-                // ¨ú±oºô§}°Ñ¼Æ
+                // å–å¾—ç¶²å€åƒæ•¸
                 var url_string = window.location.href;
                 var url = new URL(url_string);
                 var mid = url.searchParams.get("id");
@@ -98,8 +98,8 @@
                             if (response.status == 200) {
                           	var movie_panel = '';
                           	
-                          	$.each(response.response.data, function (){		//¦]¬°¬O¤@­Óarray
-                          		movie_panel += addMovie(this);		//§â¨C­ÓªF¦è¶ë¶iproduct_panel
+                          	$.each(response.response.data, function (){		//å› ç‚ºæ˜¯ä¸€å€‹array
+                          		movie_panel += addMovie(this);		//æŠŠæ¯å€‹æ±è¥¿å¡é€²product_panel
                           		
                           	})
                           	
@@ -108,14 +108,14 @@
                           },
 
                         error: function () {
-                            alert("µLªk³s½u¨ì¦øªA¾¹¡I");
+                            alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
                         }
                     });
                 }
                 
                 getMovie();
                 
-                function addMovie(data) {		//¨C§ì¨ì¤@­Ómovie ´Nadd movie
+                function addMovie(data) {		//æ¯æŠ“åˆ°ä¸€å€‹movie å°±add movie
                 	let inner_html = `
                 		<div class="movie-card card mb-3" style="width: 100%;">
                 		  <div class="row no-gutters">
@@ -129,15 +129,15 @@
                 		        <ul class="list-group list-group-flush">
 	                		        <li class="list-group-item card-text">
 	                		        	<i class="fas fa-stopwatch"></i>
-	                		        	¼v¤ùªø«×¡G${data.running_time}¤ÀÄÁ
+	                		        	å½±ç‰‡é•·åº¦ï¼š${data.running_time}åˆ†é˜
                 		        	</li>
 	                		        <li class="list-group-item card-text">
 	                		        	<i class="fas fa-tag"></i>
-	                                	¤À¯Å¡G${data.genre}
+	                                	åˆ†ç´šï¼š${data.genre}
 	                                </li>
 	                		        <li class="list-group-item card-text">
 	                		        	<i class="fas fa-calendar-week"></i>
-	                		        	¤W¬M¤é´Á¡G${data.release_date}
+	                		        	ä¸Šæ˜ æ—¥æœŸï¼š${data.release_date}
                 		        	</li>
                 		        </ul>
                 		      </div>
@@ -145,7 +145,7 @@
                 		  </div>
                 		</div>
                 	`;
-                	$("title").html("MISSA | ¹q¼v¸Ô±¡-" + data.name);
+                	$("title").html("MISSA | é›»å½±è©³æƒ…-" + data.name);
             		return inner_html;
                 }
                 
@@ -163,8 +163,8 @@
                             if (response.status == 200) {
                             	var session_panel = '';
                             	
-                          	$.each(response.response.data, function (){		//¦]¬°¬O¤@­Óarray
-                          		session_panel += addSession(this);		//§â¨C­ÓªF¦è¶ë¶iproduct_panel
+                          	$.each(response.response.data, function (){		//å› ç‚ºæ˜¯ä¸€å€‹array
+                          		session_panel += addSession(this);		//æŠŠæ¯å€‹æ±è¥¿å¡é€²product_panel
                           
                           	})
                           	
@@ -173,19 +173,19 @@
                             }
                           },
                         error: function () {
-                            alert("µLªk³s½u¨ì¦øªA¾¹¡I");
+                            alert("ç„¡æ³•é€£ç·šåˆ°ä¼ºæœå™¨ï¼");
                         }
                     });
                 }
                 
                 getSession();
 				
-                function addSession(data) {		//¨C§ì¨ì¤@­Ómovie ´Nadd movie
+                function addSession(data) {		//æ¯æŠ“åˆ°ä¸€å€‹movie å°±add movie
                 	let inner_html = '';
                 	inner_html += '<div class="card col-3 m-2"><div class="card-body">'
-               		inner_html += '<p class="card-text">³õ¦¸¤é´Á¡G' + data.session_date + '</p>';
-            		inner_html += '<p class="card-text">³õ¦¸®É¶¡¡G' + data.session_time + '</p>';
-      				inner_html += '<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="session_id_' + data.session_id + '" name="session_id" type="button" >­q²¼¥h¡I</button></br>';
+               		inner_html += '<p class="card-text">å ´æ¬¡æ—¥æœŸï¼š' + data.session_date + '</p>';
+            		inner_html += '<p class="card-text">å ´æ¬¡æ™‚é–“ï¼š' + data.session_time + '</p>';
+      				inner_html += '<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="session_id_' + data.session_id + '" name="session_id" type="button" >è¨‚ç¥¨å»ï¼</button></br>';
                 	inner_html += '</div></div>'
             		return inner_html;
                 }

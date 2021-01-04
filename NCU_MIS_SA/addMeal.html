@@ -10,12 +10,35 @@
   	<link href="statics/css/layout.css" rel="stylesheet">
 
     <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<style>
+ 	body{ 
+ 	background-image: url("statics/img/food.png"),
+ 	                  url("statics/img/manager/manager.png"),
+ 	                  url("statics/img/food.png") ;
+ 	
+   background-repeat:no-repeat;
+ 	background-size:700px 820px,280px 140px,150px 200px  ;
+ 	background-position: 110% 0%,15% 100%,20% 50%;
+ 	                    
+ 	}
+div.content{
+position: fixed;
+  left: 320px;
+  top: 170px;
+  font-size:120%;
+  background-image: url("statics/img/框.png")      ;
+  background-repeat:no-repeat;
+  background-size: 420px 340px   ;
+}	
+
+</style>
+
 </head>
 
 <body>
 	<div include-html="statics/components/side-bar.html"></div>
     <div class="content">
-            <h2>新增套餐資料</h2>
+            <h2><b>新增套餐資料</b></h2>
             <a href="Meal.html">套餐清單</a>
             <a href="MealCart.html">購物車模組</a>
             
@@ -24,19 +47,19 @@
             <form id="form" accept-charset="utf-8" enctype="multipart/form-data">
                 <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
                 <div class="input text required">
-                    <label for="meal_name">套餐名稱</label>
+                    <label for="meal_name">套餐名稱:</label>
                     <input name="meal_name" maxlength="30" type="text" id="meal_name" required="required">
                 </div>
                 <div class="input price required">
-                    <label for="meal_price">價格</label>
+                    <label for="meal_price">價格:</label>
                     <input name="meal_price" maxlength="50" type="text" id="meal_price" required="required">
                 </div>
                 <div class="input image required">
-                    <label for="meal_image">圖片</label>
+                    <label for="meal_image">圖片:</label>
                     <input type="file" id="meal_image" name="meal_image" accept="image/png, image/jpg, image/jpeg">
                 </div>
                 <div class="input text required">
-                    <label for="meal_content">描述</label>
+                    <label for="meal_content">描述:</label>
                     <input name="meal_content" maxlength="30" type="text" id="meal_content" required="required">
                 </div>
                 <div class="submit"><input type="button" value="新增套餐" id="submit"></div>

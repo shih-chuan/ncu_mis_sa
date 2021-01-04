@@ -11,14 +11,34 @@
 	<link href="statics/css/layout.css" rel="stylesheet">
 	<link href="statics/css/jquery-confirm.css" rel="stylesheet">
  	<script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<style>
+ 	body{ 
+ 	background-image: url("statics/img/movie6.jpg"),
+ 	                  url("statics/img/manager/manager.png")
+ 	 ;
+ 	                 
+   background-repeat:no-repeat;
+ 	background-size:700px 900px,280px 140px ;
+ 	background-position: 110% 0%,15% 100%;
+ 	                    
+ 	}
+div.content{
+position: fixed;
+  left: 320px;
+  top: 160px;
+  font-size:130%;
+  background-image: url("statics/img/框.png")      ;
+  background-repeat:no-repeat;
+  background-size: 470px 400px   ;
+}	
+
+</style>
 </head>
 
 <body>
 	<div include-html="statics/components/side-bar.html"></div>
     <div class="content">
         <h2>修改電影資料</h2>
-        <a href="viewmovie.html">電影列表</a>
-        <a href="product.html">購物車模組</a>
         
 
         <div id="flashMessage" class="message" style="display: none;"></div>
