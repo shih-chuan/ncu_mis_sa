@@ -22,7 +22,7 @@
 	<div include-html="statics/components/side-bar.html"></div>
 	<div class="content">
 		<div class="row justify-content-between">
-			<h1>影廳管理</h1>
+			<h2>影廳管理</h2>
 			<a href="/NCU_MIS_SA/addTheater.html"><button type="button" class="btn btn-primary">新增影廳</button></a>
 		</div>
 		<table id="table" class="table">
@@ -100,7 +100,7 @@
         var i = 1;
         $.each(data, function(index, value) {
         	console.log(value);
-            table_html += '<tr><th scope="row">' + i + '</th>';
+            table_html += '<tr><th scope="row">' + value.theater_info['id'] + '</th>';
             table_html += '<td>' + value.theater_info['name'] + '</td>';
             table_html += '<td>' + countNormalSeats(value.seats_info) + '</td>';
             table_html += '<td>' + countWheelSeats(value.seats_info) + '</td>';

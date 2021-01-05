@@ -99,43 +99,61 @@ position: fixed;
                     var release_date = $('#release_date').val();
                     var movie_cover = $('#movie_cover').val();
                     var running_time = $('#running_time').val(); 
-                    
-                        // 將資料組成JSON格式
-                        var data_object = {
-                            "movie_name": movie_name,
-                            "movie_content": movie_content,
-                            "genre": genre,
-                            "release_date": release_date,
-                            "movie_cover": movie_cover,
-                            "running_time": running_time,
-                            
-                        };
+                    var image = $("#movie_cover")[0].files[0];
+                    var imgUpload = new FormData();	
+                    if (image) {
+                      imgUpload.append("image", image);
+					  imgUpload.append("folder", "movie");
+                      console.log("in")
+                      $.ajax({
+                            url: "api/imgupload",
+                            type: "POST",
+                            data: imgUpload,
+                            processData: false,
+                            contentType: false,
+                            dataType: "json",
+                            success:function(res){
+                                // 將資料組成JSON格式
+	                           	alert(res.imgSrc);
+                                var data_object = {
+                                    "movie_name": movie_name,
+                                    "movie_content": movie_content,
+                                    "genre": genre,
+                                    "release_date": release_date,
+                                    "movie_cover": res.imgSrc,
+                                    "running_time": running_time
+                                };
 
-                        // 將JSON格式轉換成字串
-                        var data_string = JSON.stringify(data_object);
+                                // 將JSON格式轉換成字串
+                                var data_string = JSON.stringify(data_object);
 
-                        // 發出POST的AJAX請求
-                        $.ajax({
-                                type: "POST",
-                                url: "api/movie.do",           //?
-                                data: data_string,
-                                crossDomain: true,
-                                cache: false,
-                                dataType: 'json',
-                                timeout: 5000,
-                                success: function (response) {
-                                    $('#flashMessage').html(response.message);
-                                    $('#flashMessage').show();
-                                    if(response.status == 200){
-                                        updateSQLTable(response.response);
-                                    }
-                                },
-                                error: function () {
-                                    alert("無法連線到伺服器！??");
-                                }
-                        });
+                                // 發出POST的AJAX請求
+                                $.ajax({
+                                        type: "POST",
+                                        url: "api/movie.do",           //?
+                                        data: data_string,
+                                        crossDomain: true,
+                                        cache: false,
+                                        dataType: 'json',
+                                        timeout: 5000,
+                                        success: function (response) {
+                                            $('#flashMessage').html(response.message);
+                                            $('#flashMessage').show();
+                                            if(response.status == 200){
+                                                updateSQLTable(response.response);
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("無法連線到伺服器！??");
+                                        }
+                                });
+                        	},
+                    		error: function(err){
+                    			alert("image upload failed!");
+                    		}
+                      });
                     }
-                
+                }
 
                 function updateSQLTable(data) {
                     $("#sql_log > tbody").empty();

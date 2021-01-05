@@ -31,7 +31,7 @@
     <ul class="list-group">
       <li class="list-group-item active" aria-current="true">
         <i class="far fa-clock"></i>
-        <span id="remain-time">時間剩餘 10:00</span>
+        <span id="remain-time">時間剩餘 <span id="divCountDown"></span></span>
        </li>
     </ul>
     <ul class="list-group">
@@ -397,8 +397,37 @@ let colIsEmpty = (colNum) => {
   }
   return true;
 }
+
+function countdown(element, minutes, seconds) {
+    var el = document.getElementById(element);
+    if (el == undefined || el == null) {
+        return false;
+    }
+    // 設定時間倒數
+    var time = minutes * 60 + seconds;
+    var interval = setInterval(function () {
+        // 時間為0則轉頁面
+        if (time == 0) {
+            clearInterval(interval);
+			deleteReservedSeatsOnWindowClosed();
+			window.location.assign('index.html');
+            return;
+        }
+
+        //分和秒的顯示設定
+        var minutes = Math.floor(time / 60);
+        if (minutes < 10) minutes = "0" + minutes;
+        var seconds = time % 60;
+        if (seconds < 10) seconds = "0" + seconds;
+        var text = minutes + ":" + seconds;
+        el.innerHTML = text;
+        time--;
+    }, 1000);
+}
+
 $(function(){
 	getSession();
+    countdown("divCountDown", 10, 0);
 	$("#submit-btn").click(function(){
 		deleteUnbookedTickets();
 	})

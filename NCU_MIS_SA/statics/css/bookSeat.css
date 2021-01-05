@@ -39,13 +39,15 @@ table{
 .content{
   display: flex;
   flex-wrap: nowrap;
+  justify-content: center;
   overflow-x: auto;
   padding: 24px 0px 60px 0;
-  justify-content: center;
   background-color: #f8f9fa;
 }
 .seat-table{
   margin-right: 20px;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 .ticket-info{
   flex: 270px;
