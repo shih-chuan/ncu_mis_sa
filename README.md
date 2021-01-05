@@ -1,8 +1,6 @@
 # 專案設定檔
 在本地使用專案之前，請先在WEB-INF/classes底下之`conf.properties.example`複製，並更名為`conf.properties`。並將內部之檔案上傳位置設定，更改為自己的專案位置
 ```
-DB_USERNAME=root
-DB_PASSWORD=123456
 PROJECT_PATH=C:/Users/Wisdo/git/ncu_mis_sa/NCU_MIS_SA/
 ```
 

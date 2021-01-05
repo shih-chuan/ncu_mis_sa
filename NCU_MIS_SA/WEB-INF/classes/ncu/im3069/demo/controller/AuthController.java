@@ -43,13 +43,28 @@ public class AuthController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    JsonReader jsr = new JsonReader(request);
 		JSONObject resp = new JSONObject();
-	    
-		//取消Session
-        HttpSession session=request.getSession();  
-        session.invalidate();
+		
+        /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
+        String func = jsr.getParameter("func");
+        HttpSession session=request.getSession(); 
+        switch(func) {
+        	case "logout":
+        		//取消Session 
+                session.invalidate();
 
-	    resp.put("status", "200");
-	    resp.put("message", "登出成功");
+        	    resp.put("status", "200");
+        	    resp.put("message", "登出成功");
+        	    break;
+        	case "check":
+        		if (session.getAttribute("loggedIn") == null || session.getAttribute("loggedIn").equals("")) {
+            	    resp.put("status", "200");
+            	    resp.put("message", "false");
+        		}else {
+            	    resp.put("status", "200");
+            	    resp.put("message", "true");
+        		}
+        		break;
+        }
 	    
         jsr.response(resp, response);
 	}

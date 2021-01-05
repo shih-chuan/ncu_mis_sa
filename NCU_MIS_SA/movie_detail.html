@@ -30,7 +30,7 @@
     			</div>
   			  </div>
 			<!-- Modal -->
-			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="need-login modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			  <div class="modal-dialog modal-dialog-centered" role="document">
 			    <div class="modal-content">
 			      <div class="modal-header">
@@ -185,7 +185,7 @@
                 	inner_html += '<div class="card col-3 m-2"><div class="card-body">'
                		inner_html += '<p class="card-text">場次日期：' + data.session_date + '</p>';
             		inner_html += '<p class="card-text">場次時間：' + data.session_time + '</p>';
-      				inner_html += '<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="session_id_' + data.session_id + '" name="session_id" type="button" >訂票去！</button></br>';
+      				inner_html += '<button class="need-login btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="session_id_' + data.session_id + '" name="session_id" type="button" >訂票去！</button></br>';
                 	inner_html += '</div></div>'
             		return inner_html;
                 }
