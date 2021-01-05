@@ -67,11 +67,11 @@ let data = {
     width: 0,
     height: 0,
     theaterId: 0,
-    seats: [],
-    seatsData: [],
-    reservedTickets:[],
-    selectedSeats:[],
-    confirmed: false
+    seats: [], //影廳平面圖資料(0:走道、1:一般座位、2:輪椅座位、3:已訂走、4:選擇的)
+    seatsData: [], //座位資料
+    reservedTickets:[], //原本幫會員保留的座位
+    selectedSeats:[], //會員後來選擇的座位
+    confirmed: false //確認離開畫面前是否有按"下一步"，決定是否要刪除保留票
 }
 
 /*取得場次資料*/
@@ -87,14 +87,23 @@ function getSession() {
         success: function (res) {
         	console.log(res);
             if(res.status == 200){
+            	//更新場次資訊
+                $("#movie-name").html(res.response.movie_info.name);
+                $("#theater-name").html(res.response.theater_info.theater_info.name);
+                $("#session-datetime").html(res.response.session_info.session_date + " " + res.response.session_info.session_time);
+                
+                //取得要用來更新影廳平面圖的資料
             	data.theaterId = res.response.theater_info.theater_info.id;
             	data.width = res.response.theater_info.theater_info.width;
             	data.height = res.response.theater_info.theater_info.height;
             	data.seatsData = [...res.response.theater_info.seats_info];
-            	console.log(data.seatsData);
+            	
+            	//依照行列順序排序好座位資料
             	data.seatsData.sort((a,b) => {
             		return a.rowNum - b.rowNum || a.colNum - b.colNum;
             	})
+
+            	//將座位資料轉成影廳平面圖資料(seats)
             	var seatsRow = new Array();
             	var currentSeat = 0;
             	for(var i = 0; i < data.height; i++){
@@ -116,12 +125,10 @@ function getSession() {
             		}
             		data.seats.push(seatsRow);
             	}
-            }
-            $("#movie-name").html(res.response.movie_info.name);
-            $("#theater-name").html(res.response.theater_info.theater_info.name);
-            $("#session-datetime").html(res.response.session_info.session_date + " " + res.response.session_info.session_time);
+            } 
+            //繪製影廳平面圖
             draw();
-            console.log(data.seats)
+            //保留預設座位
         	reserveSeats();
         },
         error: function () {
@@ -130,37 +137,95 @@ function getSession() {
     });
 }
 
-/*當使用者未完成劃位直接跳轉頁面時，到資料庫刪除保留票*/
-function deleteReservedSeatsOnWindowClosed(){
+//保留預設座位到資料庫中
+function reserveSeats() {
+	var params = {
+			by: "session",
+        	memberId: member_id,
+        	sessionId: session_id,
+        	amount: amount
+    }
+	var dataString = JSON.stringify(params);
+    $.ajax({
+        type: "POST",
+        url: "/NCU_MIS_SA/api/ticket.do",
+        crossDomain: true,
+        data: dataString,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (res) {
+        	console.log(res);
+        	data.reservedSeats=[];
+        	data.selectedSeats=[];
+            if(res.status == 200){
+            	if(res.response.bookedSeats){
+            		//取得已被訂走的座位資訊，並更新平面圖資訊
+                	res.response.bookedSeats.map(function(ticket){
+                		data.seats[ticket.seat_info.rowNum][ticket.seat_info.colNum] = 3;
+                	})	
+                	//取得為他保留的座位保留票的資訊，並更新平面圖資訊
+                	res.response.reservedSeats.map(function(ticket){
+                		data.seats[ticket.seat_info.rowNum][ticket.seat_info.colNum] = 4;
+                		data.reservedTickets.push(ticket);
+                		data.selectedSeats.push(ticket.seat_info);
+                	})
+            	}else{
+            		alert("no more seats");
+            	}
+            }
+            draw();
+        },
+        error: function () {
+            alert("無法連線到伺服器！");
+        }
+    });
+}
+
+//刪除他不要的保留座位票
+function deleteUnbookedTickets() {
+	
+	//取得替他保留但他最後不要的座位
 	var reservedTicketsNotSelected = [...data.reservedTickets];
+	data.reservedTickets.map(function(ticket, tid){
+		data.selectedSeats.map(function(seat, sid){
+			if(ticket.seat_info.seatCode == seat.seatCode){
+				reservedTicketsNotSelected = reservedTicketsNotSelected.filter(function( obj ) {
+				    return obj.seat_info.seatCode !== seat.seatCode;
+				});
+			}	
+		})
+	})
+	
+	//將資料縮減成只剩id
 	reservedTicketsNotSelected = reservedTicketsNotSelected.map(function(ticket){
 		return ticket.ticket_info.id;
 	})
+	
+	//刪除這些座位
 	var ticketsInfo = {
 		by: "ids",
 		ids: reservedTicketsNotSelected
 	}
 	var dataString = JSON.stringify(ticketsInfo);
-	if(ticketsInfo.ids.length > 0){
-		$.ajax({
-	        type: "DELETE",
-	        url: "/NCU_MIS_SA/api/ticket.do",
-	        crossDomain: true,
-	        data: dataString,
-	        cache: false,
-	        dataType: 'json',
-	        timeout: 5000,
-	        success: function (res) {
-	            if(res.status == 200){
-	            	alert("success");
-	            }
-	        },
-	        error: function () {
-	            alert("無法連線到伺服器！");
-	        }
-	    });
-	}
+	$.ajax({
+        type: "DELETE",
+        url: "/NCU_MIS_SA/api/ticket.do",
+        crossDomain: true,
+        data: dataString,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (res){
+        	bookSelectedSeats();
+        },
+        error: function () {
+            alert("無法連線到伺服器！");
+        }
+    });
 }
+
+//新增他後來要的座位保留票
 function bookSelectedSeats() {
 	var params = {
 			by: "seats",
@@ -189,23 +254,12 @@ function bookSelectedSeats() {
         }
     });
 }
-function deleteUnbookedTickets() {
-	data.confirmed = true;
+
+/*當使用者未完成劃位直接跳轉頁面時，到資料庫刪除保留票*/
+function deleteReservedSeatsOnWindowClosed(){
+	//取得為他保留的座位資訊
 	var reservedTicketsNotSelected = [...data.reservedTickets];
-	console.log(reservedTicketsNotSelected)
-	data.reservedTickets.map(function(ticket, tid){
-		console.log(tid + ':' + ticket.seat_info.seatCode);
-		data.selectedSeats.map(function(seat, sid){
-			console.log(sid + ": " + seat.seatCode);
-			console.log(ticket.seat_info.seatCode + " ? " + seat.seatCode);
-			if(ticket.seat_info.seatCode == seat.seatCode){
-				console.log(ticket.seat_info.seatCode + " true " + seat.seatCode);
-				reservedTicketsNotSelected = reservedTicketsNotSelected.filter(function( obj ) {
-				    return obj.seat_info.seatCode !== seat.seatCode;
-				});
-			}	
-		})
-	})
+	//將座位資訊縮減成只剩id
 	reservedTicketsNotSelected = reservedTicketsNotSelected.map(function(ticket){
 		return ticket.ticket_info.id;
 	})
@@ -214,73 +268,61 @@ function deleteUnbookedTickets() {
 		ids: reservedTicketsNotSelected
 	}
 	var dataString = JSON.stringify(ticketsInfo);
-	$.ajax({
-        type: "DELETE",
-        url: "/NCU_MIS_SA/api/ticket.do",
-        crossDomain: true,
-        data: dataString,
-        cache: false,
-        dataType: 'json',
-        timeout: 5000,
-        success: function (res){
-        	bookSelectedSeats();
-        },
-        error: function () {
-            alert("無法連線到伺服器！");
-        }
-    });
+	if(ticketsInfo.ids.length > 0){
+		$.ajax({
+	        type: "DELETE",
+	        url: "/NCU_MIS_SA/api/ticket.do",
+	        crossDomain: true,
+	        data: dataString,
+	        cache: false,
+	        dataType: 'json',
+	        timeout: 5000,
+	        success: function (res) {
+	            if(res.status == 200){
+	            	alert("success");
+	            }
+	        },
+	        error: function () {
+	            alert("無法連線到伺服器！");
+	        }
+	    });
+	}
 }
 
-function reserveSeats() {
-	var params = {
-			by: "session",
-        	memberId: member_id,
-        	sessionId: session_id,
-        	amount: amount
-    }
-	var dataString = JSON.stringify(params);
-    $.ajax({
-        type: "POST",
-        url: "/NCU_MIS_SA/api/ticket.do",
-        crossDomain: true,
-        data: dataString,
-        cache: false,
-        dataType: 'json',
-        timeout: 5000,
-        success: function (res) {
-        	console.log(res);
-        	data.reservedSeats=[];
-        	data.selectedSeats=[];
-            if(res.status == 200){
-            	if(res.response.bookedSeats){
-                	res.response.bookedSeats.map(function(ticket){
-                		data.seats[ticket.seat_info.rowNum][ticket.seat_info.colNum] = 3;
-                	})
-                	res.response.reservedSeats.map(function(ticket){
-                		data.seats[ticket.seat_info.rowNum][ticket.seat_info.colNum] = 4;
-                		data.reservedTickets.push(ticket);
-                		data.selectedSeats.push(ticket.seat_info);
-                	})
-            	}else{
-            		alert("no more seats");
-            	}
-            }
-            draw();
-        },
-        error: function () {
-            alert("無法連線到伺服器！");
-        }
-    });
+//會員選擇其他座位時要更新平面圖與資料
+function addChangeSelectSeatListener(){
+	$("td.seat").click(function(){
+		console.log("clicked");
+		var sId = parseInt($(this).attr("id"));
+		
+		//將平面圖資料從(1:一般座位)轉成(4:選擇的座位)
+		var unSelected = data.selectedSeats[0]
+	    data.seats[unSelected.rowNum][unSelected.colNum] = 1;
+	    data.seats[data.seatsData[sId].rowNum][data.seatsData[sId].colNum] = 4;
+	    
+	    //更新選擇的座位資料
+	    data.selectedSeats.shift();//刪掉第一個
+	    data.selectedSeats.push(data.seatsData[sId]);
+
+	    console.log(data.selectedSeats)
+	    
+	    //更新介面
+	    draw();
+	})
 }
 
 const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
+//繪製平面圖的函數
 let draw = () => {
-    var graph = `<tr><th class="col-head"></th>`
     var rowCount = 0, colCount = 0;
     var seat_id = 0;
     data.seatsData = [];
+    
+	//先於圖的最上方列印行號
+    var graph = `<tr><th class="col-head"></th>`
     for(var col = 0; col < data.width; col++){
+    	//該行有座位才給行號、沒有的話就跳過
         if(!colIsEmpty(col)){
           graph += `<th class="col-head" col=${col}>
                       ${colCount+1}
@@ -291,6 +333,7 @@ let draw = () => {
         }
     }
     graph += `</tr>`
+   	//接著依照data.seats資料使用雙迴圈畫出座位
     for(var row = 0; row < data.seats.length; row++){
       colCount = 0;
       graph += `<tr>`
@@ -302,6 +345,7 @@ let draw = () => {
       }else{
           graph += `<th class="row-head"></th>`
       }
+      //印出該列的座位資料(0:走道、1:一般座位、2:輪椅座位、3:已訂走、4:選擇的)，並將資料更新於seatsData
       for(var col = 0; col < data.seats[row].length; col++){
         if(!colIsEmpty(col))
             colCount++
@@ -363,21 +407,7 @@ let draw = () => {
       graph += `</tr>`
     }
     $(".seat-table").html(graph)
-    
-	$("td.seat").click(function(){
-		console.log("clicked");
-		var sId = parseInt($(this).attr("id"));
-		
-		var unSelected = data.selectedSeats[0]
-	    data.seats[unSelected.rowNum][unSelected.colNum] = 1;
-	    data.selectedSeats.shift();//刪掉第一個
-
-	    data.seats[data.seatsData[sId].rowNum][data.seatsData[sId].colNum] = 4;
-	    data.selectedSeats.push(data.seatsData[sId]);
-	    
-	    console.log(data.selectedSeats)
-	    draw();
-	})
+    addChangeSelectSeatListener()
 }
 
 let rowIsEmpty = (rowNum) => {
@@ -398,6 +428,7 @@ let colIsEmpty = (colNum) => {
   return true;
 }
 
+//倒數函數，若到0秒跳到首頁
 function countdown(element, minutes, seconds) {
     var el = document.getElementById(element);
     if (el == undefined || el == null) {
@@ -426,11 +457,19 @@ function countdown(element, minutes, seconds) {
 }
 
 $(function(){
+	//取得場次資訊
 	getSession();
+	
+	//開始倒數
     countdown("divCountDown", 10, 0);
+    
+	//按下一步時先去刪掉他不要的保留票，觸發一連串劃位流程
 	$("#submit-btn").click(function(){
+		data.confirmed = true;
 		deleteUnbookedTickets();
 	})
+	
+	//當離開視窗取消保留票
 	$(window).on("beforeunload", function() { 
 		if(!data.confirmed){
 			deleteReservedSeatsOnWindowClosed();
