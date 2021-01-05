@@ -174,4 +174,13 @@ public class MealOrder {
         
         return jso;
     }
+	public JSONObject getMealOrderDataByticket() {
+        /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
+        JSONObject jso = new JSONObject();
+        jso.put("meal_order_info", getData());
+        jso.put("meal_info", getMealData());
+        //jso.put("ticket_info", getTicketData());
+        
+        return jso;
+    }
 }

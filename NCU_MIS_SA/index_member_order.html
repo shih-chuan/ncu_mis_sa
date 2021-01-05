@@ -39,7 +39,7 @@
 </head>
 
 <body>
-	
+ 
   <div include-html="statics/components/header.html"></div>
 
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
@@ -58,7 +58,7 @@
             <tbody>
             </tbody>
         </table></div>
-  		<script src="statics/js/include-html.js"></script>
+    <script src="statics/js/include-html.js"></script>
         <script type="text/javascript">
             // 全域變數紀錄SQL指令下的次數
             var sql_num = 0;
@@ -111,23 +111,23 @@
                         timeout: 5000,
                         success: function (response) {
                             if(response.status == 200){
-                            	var data = response.response.data;
-                            	var nTicket = 0;
-                            	data.map(function(ticket){
-                            		var index = booktimes.indexOf(ticket.ticket_info.book_time);
-                            		if(index == -1){
-                            			nTicket=1;
-                            			nTickets.push(nTicket);
-                            			mealTicketIds.push(ticket.ticket_info.id)
-                                		booktimes.push(ticket.ticket_info.book_time)
-                            		}else{
-                            			nTicket++;
-                            			nTickets[index] = nTicket;
-                            		}
-                            	})
-                            	console.log(booktimes)
-                            	console.log(nTickets)
-                            	console.log(mealTicketIds)
+                             var data = response.response.data;
+                             var nTicket = 0;
+                             data.map(function(ticket){
+                              var index = booktimes.indexOf(ticket.ticket_info.book_time);
+                              if(index == -1){
+                               nTicket=1;
+                               nTickets.push(nTicket);
+                               mealTicketIds.push(ticket.ticket_info.id)
+                                  booktimes.push(ticket.ticket_info.book_time)
+                              }else{
+                               nTicket++;
+                               nTickets[index] = nTicket;
+                              }
+                             })
+                             console.log(booktimes)
+                             console.log(nTickets)
+                             console.log(mealTicketIds)
                                 updateTable(booktimes);
                                 //updateTable(response.response.data);
                                 //updateSQLTable(response.response);
@@ -145,21 +145,21 @@
                 $("#table > tbody").empty();
                 var table_html = '';
                 for(var i=0; i<booktimes.length; i++){
-                	table_html += '<tr>';
-                	table_html += '<td>'+ nTickets[i] +'</td>';
-                	table_html += '<td>'+ booktimes[i] +'</td>';
-                	table_html += '<td><a href="member_order_detail.html?ticketId='+ mealTicketIds[i] +'booktime='+ booktimes[i] +'">查看下訂</a></td></tr>';
-                	table_html += '<tr>';
+                 table_html += '<tr>';
+                 table_html += '<td>'+ nTickets[i] +'</td>';
+                 table_html += '<td>'+ booktimes[i] +'</td>';
+                 table_html += '<td><a href="new_order_detail.html?ticketId='+ mealTicketIds[i] +'&booktime='+ booktimes[i] +'">查看下訂</a></td></tr>';
+                 table_html += '<tr>';
                 }
                 //res.map(function(booktime){
-                	//console.log(booktime)
-                	//table_html += '<tr>';
-                	//table_html += '<td><a href="member_order_detail.html?id='+ booktime +'">'+ booktime +'</a></td></tr>';
-                	//table_html += '<td><a href="member_order_detail.html?id='+ booktime +'">'+ booktime +'</a></td></tr>';
+                 //console.log(booktime)
+                 //table_html += '<tr>';
+                 //table_html += '<td><a href="member_order_detail.html?id='+ booktime +'">'+ booktime +'</a></td></tr>';
+                 //table_html += '<td><a href="member_order_detail.html?id='+ booktime +'">'+ booktime +'</a></td></tr>';
                 //})
                 //$.each(res, function(index, value) {
-                	//table_html += '<tr><td scope="row">' +  value['member_info']['id']  + '</td>';
-                	//table_html += '<tr>';
+                 //table_html += '<tr><td scope="row">' +  value['member_info']['id']  + '</td>';
+                 //table_html += '<tr>';
                     //table_html += '<td>' + value['session_info']['session_info']['session_id'] + '</td>';
                     //table_html += '<td>' + value+ '</td>';
                     //table_html += '<td>' + value['session_info']['session_info']['session_date'] + '</td>';

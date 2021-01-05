@@ -22,7 +22,7 @@ public class Ticket {
     
     /** login_times，更新時間的分鐘數 */
     private Seat seat;
-    
+    private String seat_code;
     /** list，座位列表 */
     private Date bookTime;
     
@@ -82,6 +82,7 @@ public class Ticket {
       //  getSeatFromDB(theater_id, seat_code);
 	}
     
+    
     public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id, Date book_time) {
 		this.id = id;
 		this.bookTime = book_time;
@@ -89,7 +90,15 @@ public class Ticket {
         getSessionFromDB(session_id);
         getSeatFromDB(theater_id, seat_code);
 	}
-
+    //訂票詳細清單
+    public Ticket(int id, int session_id, String seat_code, int theater_id, Date book_time) {
+		this.id = id;
+		this.bookTime = book_time;
+		//getMemberFromDB(member_id);
+        getSessionFromDB(session_id);
+        //getSeatFromDB(theater_id, seat_code);
+        this.seat_code = seat_code;
+	}
     
     public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id) {
         getSessionFromDB(session_id);
@@ -214,6 +223,11 @@ public class Ticket {
         return result;
     }
     
+    public String getSeatCode() {
+	    
+        return this.seat_code;
+    }
+    
     /**
      * 取得訂單所有資訊
      *
@@ -228,12 +242,23 @@ public class Ticket {
         return jso;
     }
     
+    
     public JSONObject getTicketByMemberInfo() {
         JSONObject jso = new JSONObject();
         jso.put("ticket_info", getData());
         jso.put("member_info", getMemberData());
        // jso.put("seat_info", getSeatData());
        // jso.put("session_info", getSessionData());
+        return jso;
+    }
+    
+    public JSONObject getTicketByBooktimeANDMember() {
+        JSONObject jso = new JSONObject();
+        jso.put("ticket_info", getData());
+        //jso.put("member_info", getMemberData());
+        //jso.put("seat_info", getSeatData());
+        jso.put("seat_info", getSeatCode());
+        jso.put("session_info", getSessionData());
         return jso;
     }
     
