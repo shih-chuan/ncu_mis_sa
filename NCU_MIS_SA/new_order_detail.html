@@ -78,7 +78,7 @@
           type: "GET",
           url: "api/ticket.do",
           crossDomain: true,
-          data:JSON.stringify(data),
+          data:"member="+member_id+"&book_time="+book_time,
           cache: false,
           dataType: 'json',
           timeout: 5000,

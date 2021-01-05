@@ -778,14 +778,16 @@ public class TicketHelper {
 
         return response;
     }
-    public JSONObject getByBookTimeMemberId(String mid, String booktime) {
+    public JSONObject getByBookTimeMemberId(String mid, String book) {
         /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
     	Ticket t = null;
         /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
         JSONArray jsa = new JSONArray();
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
+        String[] aa = book.split("\\.");
         
+
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
         ResultSet rs = null;
         
@@ -795,9 +797,10 @@ public class TicketHelper {
             /** SQL指令 */
             String sql = "SELECT * FROM `missa`.`ticket` WHERE `ticket`.`book_time` = ? AND `ticket`.`member_id` = ? ";
             //String sql = "SELECT * FROM `missa`.`ticket` WHERE `book_time` = ? ";
+            //String sql = "SELECT * FROM `missa`.`ticket` WHERE `ticket`.`member_id` = ? ";
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
-            pres.setString(1, booktime);
+            pres.setString(1, aa[0]);
             pres.setString(2, mid);
 
             /** 執行查詢之SQL指令並記錄其回傳之資料 */
@@ -812,7 +815,7 @@ public class TicketHelper {
                 /** 將 ResultSet 之資料取出 */
                 int ticket_id = rs.getInt("ticket_id");
                 int session_id = rs.getInt("session_id");
-                //int member_id = rs.getInt("member_id");
+                int member_id = rs.getInt("member_id");
                 String seat_code = rs.getString("seat_code");
                 int theater_id = rs.getInt("theater_id");
                 String str = rs.getString("book_time");
@@ -823,9 +826,9 @@ public class TicketHelper {
                 } catch (ParseException e) {
                  e.printStackTrace();
                 }
-                
+                System.out.print("rs");
                 /** 將每一筆商品資料產生一名新Product物件 */
-                t = new Ticket(ticket_id, session_id, seat_code, theater_id,book_time);
+                t = new Ticket(ticket_id, session_id, member_id, seat_code, theater_id,book_time);
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
                 jsa.put(t.getTicketByBooktimeANDMember());
             }

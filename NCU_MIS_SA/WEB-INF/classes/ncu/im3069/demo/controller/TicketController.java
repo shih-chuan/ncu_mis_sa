@@ -43,13 +43,8 @@ public class TicketController extends HttpServlet {
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         String session = jsr.getParameter("session");
         String memberId = jsr.getParameter("member");
-        //String book_time = jsr.getParameter("book_time");
+        String book_time = jsr.getParameter("book_time");
         
-        JSONObject jso = jsr.getObject();
-        
-        /** 取出經解析到JSONObject之Request參數 */
-        String mid = jso.getString("member");
-        String book_time = jso.getString("book_time");
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
         if (session.isEmpty()) {
         	if(memberId.isEmpty()) {
@@ -79,7 +74,7 @@ public class TicketController extends HttpServlet {
         			jsr.response(resp, response);
         		}
         		else {
-        			JSONObject query = th.getByBookTimeMemberId(mid,book_time);
+        			JSONObject query = th.getByBookTimeMemberId(memberId,book_time);
                     
         			/** 新建一個JSONObject用於將回傳之資料進行封裝 */
         			JSONObject resp = new JSONObject();
