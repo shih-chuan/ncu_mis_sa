@@ -153,9 +153,9 @@
                 function getSession() {
                     $.ajax({
                         type: "GET",
-                        url: "api/moviesession.do",
+                        url: "api/session.do",
                         crossDomain: true,
-                        data: "id=" + mid,
+                        data: "id=" + mid +"&by=movie",
                         cache: false,
                         dataType: 'json',
                         timeout: 5000,
