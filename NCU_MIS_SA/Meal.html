@@ -118,7 +118,7 @@
 		function addProductToCart(id, amount) {
 		 	if (!(client_meal_obj.includes(id))) {
 		 		client_meal_obj.push(id);
-		 		client_meal_amount.push(amount);
+		 		client_meal_amount.push(parseInt(amount));
 		 		updateCartDataToClent();
 		 	}
 		}

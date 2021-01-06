@@ -149,7 +149,7 @@
                 "meal_id" : meal_id,
                 "meal_amount" : meal_amount
             };
-       
+
             // 將JSON格式轉換成字串
             var data_string = JSON.stringify(data_object);
             $.ajax({
@@ -163,8 +163,9 @@
                     alert("訂購成功");
                     window.location.assign("index.html");
                 },
-                error: function () {
+                error: function (err) {
                 	console.log("failed");
+                	console.log(err);
                 }
             });
     	}

@@ -19,8 +19,6 @@
         <h2>電影清單</h2>
         <a href="addmovie.html">新增電影</a>
         <a href="viewmovie.html">瀏覽電影</a>
-        <a href="addsession.html">新增場次</a>
-        <a href="index_session.html">檢視場次清單</a>
 
         <div id="flashMessage" class="message" style="display: none;"></div>
 
@@ -29,7 +27,6 @@
                 <tr>
                     <th>編號</th>
                     <th>名稱</th>
-                    <th>內容</th>
                     <th>片長</th>
                     <th>分級</th>
                     <th>上映日期</th>
@@ -106,7 +103,6 @@
             $.each(data, function(index, value) {
                 table_html += '<tr><td scope="row">' + value['id'] + '</td>';
                 table_html += '<td>' + value['name'] + '</td>';
-                table_html += '<td>' + value['content'] + '</td>';
                 table_html += '<td>' + value['running_time'] + '</td>';
                 table_html += '<td>' + value['genre'] + '</td>';
                 table_html += '<td>' + value['release_date'] + '</td>';

@@ -44,6 +44,8 @@ public class MealOrderController extends HttpServlet {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         JSONObject jso = jsr.getObject();
+        JSONObject resp = new JSONObject();
+        JSONObject data = new JSONObject();
         
         /** 取出經解析到JSONObject之Request參數 */
         int ticket_id =jso.getInt("ticket_id");
@@ -51,22 +53,17 @@ public class MealOrderController extends HttpServlet {
         JSONArray meal_amount = jso.getJSONArray("meal_amount");
     
         /** 建立一個新的會員物件 */
-        
- //       MealOrder mo = new  MealOrder( Integer.parseInt(meal_id.getString(0)),  ticket_id,quantity);
         for(int i =0;i < meal_id.length();i++) {
- //       	mo = new  MealOrder( Integer.parseInt(meal_id.getString(i)),  ticket_id,quantity);
         	/** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
-            JSONObject data = moh.create(ticket_id,Integer.parseInt(meal_id.getString(i)),meal_amount.getInt(i));
-            
-            /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-            JSONObject resp = new JSONObject();
-            resp.put("status", "200");
-            resp.put("message", "成功! 新增訂餐...");
-            resp.put("response", data);
-            
-            /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            jsr.response(resp, response);
+            data = moh.create(ticket_id,meal_id.getString(i),meal_amount.getInt(i));
         }
+
+        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+        resp.put("status", "200");
+        resp.put("message", "成功! 新增訂餐...");
+        resp.put("response", data);
+        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+        jsr.response(resp, response);
     }
     /**
      * 處理Http Method請求GET方法（取得資料）
