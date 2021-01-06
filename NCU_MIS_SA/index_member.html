@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>MISSA | Members</title>
+	<title>會員清單 ｜ MISSA影廳</title>
 	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
 	<link href="statics/css/all.min.css" rel="stylesheet">
 	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
@@ -16,9 +16,10 @@
 <body>
 	<div include-html="statics/components/side-bar.html"></div>
     <div class="content">
-        <h2>會員清單</h2>
-        <a href="register.html">新增會員</a>
-
+        <div class="row justify-content-between">
+			<h2>會員清單</h2>
+			<a href="/NCU_MIS_SA/register.html"><button type="button" class="btn btn-primary">會員註冊</button></a>
+		</div>
         <div id="flashMessage" class="message" style="display: none;"></div>
 
         <table id="table" class="table">

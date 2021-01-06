@@ -5,7 +5,7 @@
   <meta charset="utf-8">
  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
  
- <title>訂單列表 ｜ NCU MIS SA</title>
+ <title>會員修改資訊 ｜ MISSA影廳</title>
  
  <!-- Bootstrap core CSS -->
  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
@@ -120,6 +120,7 @@ div.content{
                             if(response.status == 200){
                                 updateSQLTable(response.response);
                                 getMember();
+                                window.location.replace("index.html");
                             }
                         },
                         error: function () {

@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>MISSA | Edit Meal</title>
+	<title>更新套餐資料 | MISSA影廳</title>
 	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
 	<link href="statics/css/all.min.css" rel="stylesheet">
 	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
@@ -39,8 +39,6 @@ position: fixed;
 	<div include-html="statics/components/side-bar.html"></div>
     <div class="content">
         <h2>更新套餐資料</h2>
-        <a href="Meal.html">套餐清單</a>
-        <a href="MealCart.html">購物車模組</a>
 
         <div id="flashMessage" class="message" style="display: none;"></div>
 
@@ -126,6 +124,7 @@ position: fixed;
                                     if(response.status == 200){
                                         updateSQLTable(response.response);
                                         getMeal();
+                                        window.location.replace("index_meal.html");
                                     }
                                 },
                                 error: function () {

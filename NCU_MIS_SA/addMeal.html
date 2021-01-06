@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>CakePHP: the rapid development php framework: Members</title>
+    <title>新增套餐資料 ｜ MISSA影廳</title>
   	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
     <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
@@ -109,7 +109,8 @@ position: fixed;
 	                                    timeout: 5000,
 		                                success: function (res) {
 			                                console.log("success");
-			                                alert("新增成功");
+			                              //alert("新增成功");
+			                                window.location.replace("index_meal.html");
 		                                },
 		                                error: function () {
 		                                	console.log("failed");

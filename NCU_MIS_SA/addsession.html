@@ -3,7 +3,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>MISSA | Sessions</title>
+	<title>新增場次 ｜ MISSA影廳</title>
 	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
 	<link href="statics/css/all.min.css" rel="stylesheet">
 	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
@@ -37,7 +37,6 @@ position: fixed;
 	<div include-html="statics/components/side-bar.html"></div>
     <div class="content">
         <h2>新增場次</h2>
-        <a href="viewmovie.html">瀏覽電影</a>
         
         
          <div id="flashMessage" class="message" style="display: none;"></div>
@@ -102,6 +101,7 @@ position: fixed;
                                     $('#flashMessage').show();
                                     if(response.status == 200){
                                         updateSQLTable(response.response);
+                                        window.location.replace("index_session.html");
                                     }
                                 },
                                 error: function () {
