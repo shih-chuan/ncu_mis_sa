@@ -27,8 +27,7 @@ public class MealHelper {
     public JSONObject deleteByID(int id) {
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
-        /** 紀錄程式開始執行時間 */
-        long start_time = System.nanoTime();
+ 
         /** 紀錄SQL總行數 */
         int row = 0;
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
@@ -62,16 +61,13 @@ public class MealHelper {
             DBMgr.close(rs, pres, conn);
         }
 
-        /** 紀錄程式結束執行時間 */
-        long end_time = System.nanoTime();
-        /** 紀錄程式執行時間 */
-        long duration = (end_time - start_time);
+       
         
         /** 將SQL指令、花費時間與影響行數，封裝成JSONObject回傳 */
         JSONObject response = new JSONObject();
         response.put("sql", exexcute_sql);
         response.put("row", row);
-        response.put("time", duration);
+     
 
         return response;
     }
