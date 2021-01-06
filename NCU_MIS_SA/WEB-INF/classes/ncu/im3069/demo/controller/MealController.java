@@ -74,12 +74,12 @@ public class MealController extends HttpServlet {
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
             jsr.response(resp, response);
         }
-        else {
+   //     else {
             /** 以字串組出JSON格式之資料 */
-            String resp = "{\"status\": \'400\', \"message\": \'新增帳號失敗，此E-Mail帳號重複！\', \'response\': \'\'}";
+   //         String resp = "{\"status\": \'400\', \"message\": \'新增帳號失敗，此E-Mail帳號重複！\', \'response\': \'\'}";
             /** 透過JsonReader物件回傳到前端（以字串方式） */
-            jsr.response(resp, response);
-        }
+   //         jsr.response(resp, response);
+   //     }
     }
 
     /**
