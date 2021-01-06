@@ -289,19 +289,18 @@ public class TicketHelper {
             while(rs.next()) {
                 /** 將 ResultSet 之資料取出 */
                 int ticket_id = rs.getInt("ticket_id");
-             //   int session_id = rs.getInt("session_id");
+                int session_id = rs.getInt("session_id");
                 int member_id = rs.getInt("member_id");
-             //   int theater_id = rs.getInt("theater_id");
-             //   String seat_code = rs.getString("seat_code");
+                int theater_id = rs.getInt("theater_id");
+                String seat_code = rs.getString("seat_code");
                 Timestamp book_time = rs.getTimestamp("book_time");
-              //int price = rs.getInt("price");
                 
                 /** 將每一筆商品資料產生一名新Product物件 */
-                t = new Ticket(member_id, book_time);
+                t = new Ticket(ticket_id, session_id, member_id, seat_code, theater_id,book_time);
                 t.setId(ticket_id);
                 
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
-                jsa.put(t.getTicketByMemberInfo());
+                jsa.put(t.getTicketAllInfo());
             }
 
         } catch (SQLException e) {

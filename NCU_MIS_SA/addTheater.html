@@ -64,23 +64,27 @@
 	<script>
 		let data = {
 		    width: 0,
-		    height: 0,
-		    name: null,
-		    seats: [],
-		    seatsData: []
+		    height: 0, 
+		    name: null, //影廳名稱
+		    seats: [], //影廳的二維座位資料(0:走道、1:一般座位、2:輪椅座位)
+		    seatsData: [] //座位的資料(包行列座標、行座標與座位代碼)
 		}
 	
 		const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 	
+		//繪製影廳平面圖的函數
 		let draw = () => {
-		    var graph = `<tr><th class="col-head"></th>`
 		    var rowCount = 0, colCount = 0;
 		    data.seatsData = [];
+		    
+		    //先於圖的最上方列印行號
+		    var graph = `<tr><th class="col-head"></th>`	
 		    for(var col = 0; col < data.width; col++){
+		    	//該行有座位才給行號、沒有的話就跳過
 		        if(!colIsEmpty(col)){
 		          graph += `<th class="col-head" col=${col}>
 		                      ${colCount+1}
-		                      <div class="seat-controls">
+		                      <div class="seat-controls">//加上控制選單
 		                        <div class="del-col">清除整行</div>
 		                      </div>
 		                    </th>`
@@ -90,9 +94,12 @@
 		        }
 		    }
 		    graph += `</tr>`
+		    
+		    //接著依照data.seats資料使用雙迴圈畫出座位
 		    for(var row = 0; row < data.seats.length; row++){
 		      colCount = 0;
 		      graph += `<tr>`
+		      //先於每一列最一開始印出列號(該列有座位才給列號、沒有的話就跳過)
 	          if(!rowIsEmpty(row)){
 	              graph += `<th class="row-head" row=${row}>
 	                          ${alphabet[rowCount]}
@@ -104,83 +111,65 @@
 	          }else{
 	              graph += `<th class="row-head"></th>`
 	          }
+		      
+		      ///印出該列的座位資料(0:走道、1:一般座位、2:輪椅座位)，並將資料更新於seatData
 		      for(var col = 0; col < data.seats[row].length; col++){
-		        if(!colIsEmpty(col))
-		            colCount++
-		        switch(data.seats[row][col]){
-		          case 0:
-		            graph += `<td row=${row} col=${col}>
-		                        <div class="seat-controls">
-		                          <div class="fill">填入座位</div>
-		                        </div>
-		                      </td>`
-		            break;
-		          case 1:
-		            graph += `<td class="seat" row=${row} col=${col}>
-		                        ${alphabet[rowCount-1]}${colCount}
-		                        <div class="seat-controls">
-		                          <div class="del">清除座位</div>
-		                          <div class="toWheel">無障礙座位</div>
-		                        </div>
-		                      </td>`
-                    data.seatsData.push({
-	                     seatCode: `${alphabet[rowCount-1]}${colCount}`,
-	                     rowNum: row,
-	                     colNum: col,
-	                     type: 1
-                    })
-		            break;
-		          case 2:
-		            graph += `<td class="wheel" row=${row} col=${col}>
-		                        <i class="fas fa-wheelchair"></i>
-		                        <div class="seat-controls">
-		                          <div class="del">清除座位</div>
-		                          <div class="fill">一般座位</div>
-		                        </div>
-		                      </td>`
-                    data.seatsData.push({
-	                      seatCode: `${alphabet[rowCount-1]}${colCount}`,
-	                      rowNum: row,
-	                      colNum: col,
-	                      type: 2
-                    })
-		            break;
-		        }
+				if(!colIsEmpty(col))
+				    colCount++
+				switch(data.seats[row][col]){
+				  case 0:
+				    graph += `<td row=${row} col=${col}>
+				                <div class="seat-controls">
+				                  <div class="fill">填入座位</div>
+				                </div>
+				              </td>`
+				    break;
+				  case 1:
+				    graph += `<td class="seat" row=${row} col=${col}>
+				                ${alphabet[rowCount-1]}${colCount}
+				                <div class="seat-controls">
+				                  <div class="del">清除座位</div>
+				                  <div class="toWheel">無障礙座位</div>
+				                </div>
+				              </td>`
+				          data.seatsData.push({
+				            seatCode: `${alphabet[rowCount-1]}${colCount}`,
+				            rowNum: row,
+				            colNum: col,
+				            type: 1
+				          })
+				    break;
+				  case 2:
+				    graph += `<td class="wheel" row=${row} col=${col}>
+				                <i class="fas fa-wheelchair"></i>
+				                <div class="seat-controls">
+				                  <div class="del">清除座位</div>
+				                  <div class="fill">一般座位</div>
+				                </div>
+				              </td>`
+				          data.seatsData.push({
+				             seatCode: `${alphabet[rowCount-1]}${colCount}`,
+				             rowNum: row,
+				             colNum: col,
+				             type: 2
+				          })
+				    break;
+				}
 		      }
 		      graph += `</tr>`
 		    }
+		    //更新座位統計個數
 		    $("#wheelSeatCount").html(countWheelSeats(data.seatsData));
 		    $("#normalSeatCount").html(countNormalSeats(data.seatsData));
+		    
+		    //將圖更新到畫面上
 		    $(".seat-table").html(graph)
-		    $("td, th").click(function(event){
-		        var row = parseInt($(this).attr("row"))
-		        var col = parseInt($(this).attr("col"))
-		        var ctrlClicked = event.target.className
-		        switch(ctrlClicked){
-		            case "del":
-			            data.seats[row][col] = 0;
-			            break;
-		            case "del-row":
-			            for(var col = 0; col < data.width; col++){
-			              data.seats[row][col] = 0;
-			            }
-			            break;
-		            case "del-col":
-			            for(var row = 0; row < data.height; row++){
-			              data.seats[row][col] = 0;
-			            }
-			            break;
-		            case "fill":
-			            data.seats[row][col] = 1;
-			            break;
-		            case "toWheel":
-			            data.seats[row][col] = 2;
-			            break;
-		        }
-		        draw();
-		    })
+		    
+		    //為所有控制選單加上功能
+		    addSeatsCtrlListener()
 		}
 	
+		//檢查該列是否有座位的函數
 		let rowIsEmpty = (rowNum) => {
 		  for(var col = 0; col < data.width; col++){
 		    if(data.seats[rowNum][col] != 0){
@@ -190,6 +179,7 @@
 		  return true;
 		}
 	
+		//檢查該行是否有座位的函數
 		let colIsEmpty = (colNum) => {
 		  for(var row = 0; row < data.height; row++){
 		    if(data.seats[row][colNum] != 0){
@@ -198,17 +188,47 @@
 		  }
 		  return true;
 		}
-	
-		let deleteSeat = (x, y) => {
-		  data.seats[x][y] = 0;
+		
+		//為所有控制選單加上功能的函數
+		function addSeatsCtrlListener(){
+		    $("td, th").click(function(event){
+		        var row = parseInt($(this).attr("row"))
+		        var col = parseInt($(this).attr("col"))
+		        var ctrlClicked = event.target.className
+		        switch(ctrlClicked){
+		            case "del": //刪除單一座位
+			            data.seats[row][col] = 0;
+			            break;
+		            case "del-row": //刪除整列座位
+			            for(var col = 0; col < data.width; col++){
+			              data.seats[row][col] = 0;
+			            }
+			            break;
+		            case "del-col": //刪除整行座位
+			            for(var row = 0; row < data.height; row++){
+			              data.seats[row][col] = 0;
+			            }
+			            break;
+		            case "fill": //填入座位
+			            data.seats[row][col] = 1;
+			            break;
+		            case "toWheel": //換成輪椅座位
+			            data.seats[row][col] = 2;
+			            break;
+		        }
+		        draw();
+		    })	
 		}
 		
+		//計算一般座位個數
 		function countNormalSeats(seatsInfo) {
 			var regular = seatsInfo.filter((seat) => {
 				return seat.type == 1;
 			});
 			return regular.length;
 		}
+		
+		//計算輪椅座位個數
 		function countWheelSeats(seatsInfo) {
 			var regular = seatsInfo.filter((seat) => {
 				return seat.type == 2;
@@ -216,65 +236,75 @@
 			return regular.length;
 		}
 	
-		$(function(){
-		  $(".show-after").hide()
-		  $("input#name").on("change", function(){
-		    data.name = $("input#name").val()
-		  })
-		  $("#graph-btn").click(function(){
-			var seats = []; 
-			var row = [];
-			
-			/*將欄位轉換為數字*/
-			var width = Number($("input#width").val());
-			var height = Number($("input#height").val());
-			
-			/*檢查數字是否為整數且>=1*/
-			if(Number.isInteger(width) && Number.isInteger(height) && width >= 1 && height >= 1){
-			    data.height = height;
-			    data.width = width;
-				for(var i = 0; i < data.height; i++){
-				  row = [];
-				  for(var j = 0; j < data.width; j++){
-				    row.push(1);
-				  }
-				  seats.push(row);
+		//初始平面圖確認按鈕觸發，檢查填入資料是否符合驗證
+		function addGraphBtnListener(){
+			 $("#graph-btn").click(function(){
+				var seats = []; 
+				var row = [];
+				/*將欄位轉換為數字*/
+				var width = Number($("input#width").val());
+				var height = Number($("input#height").val());
+				/*檢查數字是否為整數且>=1*/
+				if(Number.isInteger(width) && Number.isInteger(height) && width >= 1 && height >= 1){
+				    data.height = height;
+				    data.width = width;  
+				    //預設所有影廳空間都是座位(seats填滿1)
+					for(var i = 0; i < data.height; i++){
+					  row = [];
+					  for(var j = 0; j < data.width; j++){
+					    row.push(1);
+					  }
+					  seats.push(row);
+					}
+					data.seats = seats;
+					//將控制按鈕與平面圖取消隱藏
+				    $(".show-after").show()
+				    //繪製平面圖
+					draw();
+				}else{
+					alert("請輸入大於1的整數")
 				}
-				data.seats = seats;
-			    $(".show-after").show()
-				draw();
-			}else{
-				alert("請輸入大於1的整數")
-			}
-		  })
-		  
-		  $("#submit-btn").click(function(){
-              if (!data.name || !data.width || !data.height) {
-                  alert("請填寫所有欄位");
-              }
-              else if(!(Number.isInteger(data.width) && Number.isInteger(data.height) && data.width >= 1 && data.height >= 1)) {
-                  alert("請輸入大於1的整數！");
-              }
-              else {
-				  $.ajax({
-	                   type: "POST",
-	                   url: "api/theater.do",
-	                   crossDomain: true,
-	                   cache: false,
-	                   data: JSON.stringify(data),
-	                   dataType: 'json',
-	                   timeout: 5000,
-	                   success: function (response) {
-	                       console.log(response);
-	                       alert("新增成功!!");
-	                       window.location = "index_theater.html";
-	                   },
-	                   error: function () {
-	                       alert("無法連線到伺服器！");
-	                   }
-	              });
-             }
-		  })
+			 })
+		}
+		
+		//驗證並送出欲新增影廳之資料
+		function addSubmitBtnListener(){
+			$("#submit-btn").click(function(){
+	              if (!data.name || !data.width || !data.height) {
+	                  alert("請填寫所有欄位");
+	              }
+	              else if(!(Number.isInteger(data.width) && Number.isInteger(data.height) && data.width >= 1 && data.height >= 1)) {
+	                  alert("請輸入大於1的整數！");
+	              }
+	              else {
+					  $.ajax({
+		                   type: "POST",
+		                   url: "api/theater.do",
+		                   crossDomain: true,
+		                   cache: false,
+		                   data: JSON.stringify(data),
+		                   dataType: 'json',
+		                   timeout: 5000,
+		                   success: function (response) {
+		                       console.log(response);
+		                       alert("新增成功!!");
+		                       window.location = "index_theater.html";
+		                   },
+		                   error: function () {
+		                       alert("無法連線到伺服器！");
+		                   }
+		              });
+	             }
+			  })
+		}
+		
+		$(function(){
+			$(".show-after").hide()
+			$("input#name").on("change", function(){
+			  data.name = $("input#name").val()
+			})
+			addGraphBtnListener();
+			addSubmitBtnListener();
 		})
 	</script>
 </body>

@@ -143,9 +143,8 @@
 	    }
 	    
 	    function createMealOrder() {
-//	    getUnbookedTickets();
-	   	ticket_id = unbookedTickets[0].ticket_id;
-	    var data_object = {
+		   	ticket_id = unbookedTickets[0].ticket_id;
+		    var data_object = {
                 "ticket_id": ticket_id,
                 "meal_id" : meal_id,
                 "meal_amount" : meal_amount
@@ -161,7 +160,8 @@
                 timeout: 5000,
                 success: function (res) {
                     console.log("success");
-                    alert("新增成功");
+                    alert("訂購成功");
+                    window.location.assign("index.html");
                 },
                 error: function () {
                 	console.log("failed");
@@ -178,13 +178,6 @@
 	    		var subtotal = calcSubTotal(price, amount);
 	    		$('#subtotal_' + id).html(subtotal);
 	    	}
-	    }
-
-	    function isNumberKey(evt){
-		    var charCode = (evt.which) ? evt.which : evt.keyCode
-		    if (charCode > 31 && (charCode < 48 || charCode > 57))
-		        return false;
-		    return true;
 	    }
 
 	    function calcSubTotal(price, quantity) {
@@ -315,33 +308,11 @@
 	            success: function (res) {
 	            	console.log(res);
 	                if(res.status == 200){
-	                	alert("訂票成功")
-	                }
-	            },
-	            error: function () {
-	                alert("無法連線到伺服器！");
-	            }
-	        });
-	    }
-	    
-	    function orderMeals(){
-	    	var data = {
-    			meals: client_meal_obj,
-    			amount: client_meal_amount
-	    	}
-	        $.ajax({
-	            type: "POST",
-	            url: "api/mealOrder.do",
-	            crossDomain: true,
-	            data: JSON.stringify(data),
-	            cache: false,
-	            dataType: 'json',
-	            timeout: 5000,
-	            success: function (res) {
-	            	console.log(res);
-	                if(res.status == 200){
-	                	alert("訂票成功")
-	                	window.location.replace("index.html")
+	                	console.log("success");
+	                	if(meal_id.length <= 0){
+	                		alert("訂票成功");
+	                		window.location.assign("index.html");
+	                	}
 	                }
 	            },
 	            error: function () {
@@ -424,10 +395,11 @@
 			getUnbookedTickets();
             countdown("divCountDown", 10, 0);
 			$("#submit-btn").click(function(){
-				//orderMeals();
 				confirmed = true;
 				bookTickets();
-				createMealOrder();
+				if(meal_id.length > 0){
+					createMealOrder();
+				}
 			})
 			$(window).on("beforeunload", function() { 
 				if(!confirmed){

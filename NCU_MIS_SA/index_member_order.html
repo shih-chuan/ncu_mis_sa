@@ -32,8 +32,6 @@
       }
     }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="statics/css/product.css" rel="stylesheet">
 
   <script src="statics/js/jquery-3.4.1.min.js"></script>
 </head>
@@ -50,6 +48,7 @@
         <table id="table" class="table">
             <thead>
                 <tr>
+                    <th>電影</th>
                     <th>訂購票數</th>      
                     <th>訂購時間</th>    
                     <th>操作</th>
@@ -94,7 +93,7 @@
                 }
             }**/
             let id = JSON.parse(localStorage.getItem("member_id"));
-            
+            let movies = []
             let booktimes = []
             let nTickets = []
             let mealTicketIds = []
@@ -114,16 +113,18 @@
                              var data = response.response.data;
                              var nTicket = 0;
                              data.map(function(ticket){
-                              var index = booktimes.indexOf(ticket.ticket_info.book_time);
-                              if(index == -1){
-                               nTicket=1;
-                               nTickets.push(nTicket);
-                               mealTicketIds.push(ticket.ticket_info.id)
-                                  booktimes.push(ticket.ticket_info.book_time)
-                              }else{
-                               nTicket++;
-                               nTickets[index] = nTicket;
-                              }
+                            	 console.log(ticket.session_info.movie_info.name)
+			                     var index = booktimes.indexOf(ticket.ticket_info.book_time);
+			                     if(index == -1){
+									nTicket=1;
+	                            	movies.push(ticket.session_info.movie_info.name);
+									nTickets.push(nTicket);
+									mealTicketIds.push(ticket.ticket_info.id)
+			                        booktimes.push(ticket.ticket_info.book_time)
+			                     }else{
+			                        nTicket++;
+			                        nTickets[index] = nTicket;
+			                     }
                              })
                              console.log(booktimes)
                              console.log(nTickets)
@@ -146,6 +147,7 @@
                 var table_html = '';
                 for(var i=0; i<booktimes.length; i++){
                  table_html += '<tr>';
+                 table_html += '<td>'+ movies[i] +'</td>';
                  table_html += '<td>'+ nTickets[i] +'</td>';
                  table_html += '<td>'+ booktimes[i] +'</td>';
                  table_html += '<td><a href="new_order_detail.html?ticketId='+ mealTicketIds[i] +'&booktime='+ booktimes[i] +'">查看下訂</a></td></tr>';
