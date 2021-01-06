@@ -114,11 +114,11 @@ public class MealOrderHelper {
                 
                 /** 將 ResultSet 之資料取出 */
                 int meal_order_id = rs.getInt("meal_order_id");
-                //int ticket_id = rs.getInt("ticket_id");
+                int ticket_id = rs.getInt("ticket_id");
                 int meal_id = rs.getInt("meal_id");
                 int quantity = rs.getInt("quantity");
                 /** 將每一筆商品資料產生一名新Meal物件 */
-                m = new MealOrder(meal_order_id, meal_id, quantity);
+                m = new MealOrder(meal_order_id, ticket_id, meal_id, quantity);
                 
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
                 jsa.put(m.getMealOrderDataByticket());

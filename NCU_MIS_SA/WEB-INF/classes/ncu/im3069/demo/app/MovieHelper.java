@@ -295,10 +295,8 @@ public class MovieHelper {
                 /** 將 ResultSet 之資料取出 */
             	int movie_id = rs.getInt("movie_id");
                 String movie_name = rs.getString("movie_name");
-                System.out.print(movie_name);
                 String cover = rs.getString("movie_cover");
                 String content = rs.getString("movie_content");
-                System.out.print(content);
 
                 int running_time = rs.getInt("running_time");
                 String genre = rs.getString("genre");

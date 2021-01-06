@@ -83,7 +83,7 @@ public class MealOrderController extends HttpServlet {
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         String id = jsr.getParameter("id");
         String ticket_id = jsr.getParameter("ticket_id");
-        int ticketid = Integer.parseInt(ticket_id);
+        
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
         if (id.isEmpty()) {
         	if(ticket_id.isEmpty()) {
@@ -99,6 +99,7 @@ public class MealOrderController extends HttpServlet {
                 jsr.response(resp, response);
         	}
         	else {
+        	int ticketid = Integer.parseInt(ticket_id);
             /** 透過MemberHelper物件之getAll()方法取回所有套餐之資料，回傳之資料為JSONObject物件 */
             JSONObject query = moh.getByTicketId(ticketid);
             
@@ -141,26 +142,26 @@ public class MealOrderController extends HttpServlet {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doDelete(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
-        JSONObject jso = jsr.getObject();
-        
-        /** 取出經解析到JSONObject之Request參數 */
-        int id = jso.getInt("id");
-        
-        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
-        JSONObject query = moh.deleteByID(id);
-        
-        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-        JSONObject resp = new JSONObject();
-        resp.put("status", "200");
-        resp.put("message", "套餐移除成功！");
-        resp.put("response", query);
+	        throws ServletException, IOException {
+	        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
+	        JsonReader jsr = new JsonReader(request);
+	        JSONObject jso = jsr.getObject();
+	        
+	        /** 取出經解析到JSONObject之Request參數 */
+	        int id = jso.getInt("id");
+	        
+	        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
+	        JSONObject query = moh.deleteByID(id);
+	        
+	        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+	        JSONObject resp = new JSONObject();
+	        resp.put("status", "200");
+	        resp.put("message", "電影移除成功！");
+	        resp.put("response", query);
 
-        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-        jsr.response(resp, response);
-    }
+	        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+	        jsr.response(resp, response);
+	    }
 
     /**
      * 處理Http Method請求PUT方法（更新）

@@ -96,8 +96,8 @@ public class Ticket {
 		this.bookTime = book_time;
 		//getMemberFromDB(member_id);
         getSessionFromDB(session_id);
-        getSeatFromDB(theater_id, seat_code);
-        //this.seat_code = seat_code;
+        //getSeatFromDB(theater_id, seat_code);
+        this.seat_code = seat_code;
 	}
     
     public Ticket(int id, int session_id, int member_id, String seat_code, int theater_id) {
@@ -255,9 +255,9 @@ public class Ticket {
     public JSONObject getTicketByBooktimeANDMember() {
         JSONObject jso = new JSONObject();
         jso.put("ticket_info", getData());
-        jso.put("member_info", getMemberData());
-        jso.put("seat_info", getSeatData());
-        //jso.put("seat_info", getSeatCode());
+        //jso.put("member_info", getMemberData());
+        //jso.put("seat_info", getSeatData());
+        jso.put("seat_info", getSeatCode());
         jso.put("session_info", getSessionData());
         return jso;
     }
