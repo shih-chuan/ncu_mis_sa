@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>MISSA | Sessions</title>
+	<title>場次列表 ｜ MISSA影廳</title>
 	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
 	<link href="statics/css/all.min.css" rel="stylesheet">
 	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
@@ -16,9 +16,10 @@
 <body>
 	<div include-html="statics/components/side-bar.html"></div>
     <div class="content">
-        <h2>場次清單</h2>
-        <a href="viewmovie.html">瀏覽電影</a>
-        <a href="addsession.html">新增場次</a>
+        <div class="row justify-content-between">
+			<h2>場次管理</h2>
+			<a href="/NCU_MIS_SA/addsession.html"><button type="button" class="btn btn-primary">新增場次</button></a>
+		</div>
 
         <div id="flashMessage" class="message" style="display: none;"></div>
 

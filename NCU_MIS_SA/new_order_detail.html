@@ -8,7 +8,7 @@
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Jekyll v3.8.5">
 
-  <title>會員訂單 ｜ NCU MIS SA</title>
+  <title>訂單明細 ｜ MISSA影廳</title>
   
   <!-- Bootstrap core CSS -->
   <link href="statics/css/bootstrap.min.css" rel="stylesheet">
@@ -227,14 +227,16 @@
 
   function deletemealOrder(id) {
       var check = window.confirm("確認刪除訂餐？"+id);
-  
+      var request = {
+    		  by: "id",
+  			  id: id };  
       if (check == true) {
           console.log("You pressed OK!");
           $.ajax({
               type: "DELETE",
               url: "api/mealOrder.do",
               crossDomain: true,
-              data: "id="+id,
+              data: "{id:"+id+"}",
               cache: false,
               dataType: 'json',
               timeout: 5000,

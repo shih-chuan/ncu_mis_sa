@@ -3,7 +3,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>MISSA | Sessions</title>
+	<title>新增電影 ｜ MISSA影廳</title>
 	<link href="statics/css/bootstrap.min.css" rel="stylesheet">
 	<link href="statics/css/all.min.css" rel="stylesheet">
 	<link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
@@ -53,6 +53,7 @@ position: fixed;
                  
                 <label for="running_time">電影片長:</label>
                 <input type="text" id="running_time" name="running_time" required="required" >
+                <label for="min">分鐘</label>
             </div>
     <div class="select movielevel required">
     <label for="genre">電影分級:</label>
@@ -141,6 +142,7 @@ position: fixed;
                                             $('#flashMessage').show();
                                             if(response.status == 200){
                                                 updateSQLTable(response.response);
+                                                window.location.replace("index_movie.html");
                                             }
                                         },
                                         error: function () {
