@@ -41,7 +41,7 @@
 	</div>
   	<script src="statics/js/include-html.js"></script>
 	<script>
-    function deleteMember(id) {
+    function deleteTheater(id) {
         var check = window.confirm("確認刪除影廳？");
         if (check == true) {
             console.log("You pressed OK!");
@@ -59,7 +59,7 @@
                     if(response.status == 200){
                         $("#flashMessage").html("成功! 已經成功刪除會員...");
                         $("#flashMessage").show();
-                        getAllMember();
+                        getAllTheater();
                     }
                     console.log(response);
                 },
@@ -72,7 +72,7 @@
             console.log("You pressed Cancel!");
         }
     }
-	function getAllMember() {
+	function getAllTheater() {
         // 發出POST的GET請求取得所有會員列表
         $.ajax({
                 type: "GET",
@@ -105,7 +105,7 @@
             table_html += '<td>' + countNormalSeats(value.seats_info) + '</td>';
             table_html += '<td>' + countWheelSeats(value.seats_info) + '</td>';
             table_html += '<td>' + '<a href="/NCU_MIS_SA/editTheater.html?id=' + value.theater_info['id'] + '">編輯</a> | ';
-            table_html += '<a href="javascript: deleteMember(' + value.theater_info['id'] + ');">刪除</a></td></tr>';
+            table_html += '<a href="javascript: deleteTheater(' + value.theater_info['id'] + ');">刪除</a></td></tr>';
             i++;
         })
 
@@ -124,7 +124,7 @@
 		return regular.length;
 	}
 	$(function(){
-		getAllMember();
+		getAllTheater();
 	})
 	</script>
 </body>

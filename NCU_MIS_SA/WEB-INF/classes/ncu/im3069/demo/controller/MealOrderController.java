@@ -5,9 +5,6 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import org.json.*;
-import ncu.im3069.demo.app.Meal;
-import ncu.im3069.demo.app.MealHelper;
-import ncu.im3069.demo.app.MealOrder;
 import ncu.im3069.demo.app.MealOrderHelper;
 import ncu.im3069.tools.JsonReader;
 
@@ -159,42 +156,5 @@ public class MealOrderController extends HttpServlet {
 	        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
 	        jsr.response(resp, response);
 	    }
-
-    /**
-     * 處理Http Method請求PUT方法（更新）
-     *
-     * @param request Servlet請求之HttpServletRequest之Request物件（前端到後端）
-     * @param response Servlet回傳之HttpServletResponse之Response物件（後端到前端）
-     * @throws ServletException the servlet exception
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public void doPut(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
-        JSONObject jso = jsr.getObject();
-        
-        /** 取出經解析到JSONObject之Request參數 */
-        int id = jso.getInt("meal_id");
-        String name = jso.getString("meal_name");
-        Double price = jso.getDouble("meal_price");
-        String image = jso.getString("meal_image");
-        String describe = jso.getString("meal_content");
-        
-        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
-        Meal m = new Meal(id,name, price, image, describe);
-        
-        /** 透過Meal物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
-        JSONObject data = m.update();
-        
-        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-        JSONObject resp = new JSONObject();
-        resp.put("status", "200");
-        resp.put("message", "成功! 更新套餐資料...");
-        resp.put("response", data);
-        
-        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-        jsr.response(resp, response);
-   }
 
 }

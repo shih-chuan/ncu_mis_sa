@@ -1,13 +1,6 @@
 package ncu.im3069.demo.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.nio.file.Paths;
-import java.util.Properties;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
@@ -16,7 +9,6 @@ import javax.servlet.http.*;
 import org.json.JSONObject;
 
 import ncu.im3069.demo.app.MemberHelper;
-import ncu.im3069.demo.app.SeatHelper;
 import ncu.im3069.tools.JsonReader;
 
 
@@ -37,7 +29,7 @@ public class AuthController extends HttpServlet {
     }
 
 	/**
-	 * 登出功能
+	 * 登出與檢查功能
 	 * 處理Http Method請求GET方法
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

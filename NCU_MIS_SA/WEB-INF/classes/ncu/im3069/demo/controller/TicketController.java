@@ -1,18 +1,12 @@
 package ncu.im3069.demo.controller;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
 
-import ncu.im3069.demo.app.Member;
-import ncu.im3069.demo.app.Theater;
-import ncu.im3069.demo.app.TheaterHelper;
 import ncu.im3069.demo.app.Ticket;
 import ncu.im3069.demo.app.TicketHelper;
 import ncu.im3069.tools.JsonReader;

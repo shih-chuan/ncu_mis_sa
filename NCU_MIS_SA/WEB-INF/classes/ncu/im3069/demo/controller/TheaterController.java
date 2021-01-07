@@ -6,7 +6,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
 
-import ncu.im3069.demo.app.Member;
 import ncu.im3069.demo.app.SeatHelper;
 import ncu.im3069.demo.app.Theater;
 import ncu.im3069.demo.app.TheaterHelper;

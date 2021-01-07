@@ -1,7 +1,6 @@
 package ncu.im3069.demo.app;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import org.json.*;
@@ -90,7 +89,6 @@ public class TheaterHelper {
     public JSONObject update(Theater t) {
         /** 紀錄回傳之資料 */
         JSONArray jsa = new JSONArray();
-        JSONArray seatsArray = new JSONArray();
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
@@ -123,7 +121,7 @@ public class TheaterHelper {
             System.out.println(exexcute_sql);
             
             ArrayList<Seat> sd = t.getSeats();
-            seatsArray = sh.createByList(id, sd);
+            sh.createByList(id, sd);
 
         } catch (SQLException e) {
             /** 印出JDBC SQL指令錯誤 **/

@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.json.JSONArray;
@@ -98,8 +97,6 @@ public class SessionHelper {
         /** 新建一個 Session 物件之 s 變數，用於紀錄每一位查詢回之商品資料 */
     	Session s = null;
     	
-        JSONArray jsa = new JSONArray();
-
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
@@ -157,8 +154,6 @@ public class SessionHelper {
         /** 新建一個 Session 物件之 s 變數，用於紀錄每一位查詢回之商品資料 */
     	Session s = null;
     	
-        JSONArray jsa = new JSONArray();
-
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
@@ -339,10 +334,12 @@ public class SessionHelper {
             		+ "`session_date` = ? , `session_time` = ? WHERE `session_id` = ?";
             /** 取得所需之參數 */
             int session_id = s.getId();
-            int movie_id = s.getMovie_id();
-            int theater_id = s.getTheater_id();
+            int movie_id = s.getMovie().getID();
+            int theater_id = s.getTheater().getId();
             String session_date = s.getSession_date();
             String session_time = s.getSession_time();
+            
+            System.out.println("TheaterId: " + theater_id);
             
             
             /** 將參數回填至SQL指令當中 */
@@ -424,11 +421,10 @@ public class SessionHelper {
                 int theater_id = rs.getInt("theater_id");
                 String session_date = rs.getString("session_date");
                 String session_time = rs.getString("session_time");
-                String p = "p";
-                /** 將每一筆商品資料產生一名新Session物件 */		//跟老大用不同的session
-                s = new Session(session_id, movie_id, theater_id,session_date, session_time,p);	
+                /** 將每一筆商品資料產生一名新Session物件 */		
+                s = new Session(session_id, movie_id, theater_id,session_date, session_time);	
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
-                jsa.put(s.getData());
+                jsa.put(s.getSessionAllInfo());
             }
             
             
@@ -511,7 +507,6 @@ public class SessionHelper {
     
 
     public JSONObject getByMovieId(String mid) {
-            JSONObject data = new JSONObject();
             /** 新建一個 Session 物件之 s 變數，用於紀錄每一位查詢回之商品資料 */
         	Session s = null;
         	
@@ -544,9 +539,7 @@ public class SessionHelper {
                 
                 /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
                 while(rs.next()) {
-                    /** 將 ResultSet 之資料取出 */
-                	String p ="test";
-                	int session_id = rs.getInt("session_id");
+                    int session_id = rs.getInt("session_id");
                     int movie_id = Integer.parseInt(mid);
                     int theater_id = rs.getInt("theater_id");
                     String session_date = rs.getString("session_date");
@@ -555,7 +548,7 @@ public class SessionHelper {
                     
                     
                     /** 將每一筆商品資料產生一名新Product物件 */
-                    s = new Session(session_id, movie_id, theater_id,session_time, session_date,p);
+                    s = new Session(session_id, movie_id, theater_id,session_time, session_date);
                     /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
                     //data = s.getSessionAllInfo();
                     jsa.put(s.getData());

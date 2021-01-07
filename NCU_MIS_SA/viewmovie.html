@@ -55,7 +55,6 @@
   </div>
   <script src="statics/js/include-html.js"></script>
   <script type="text/javascript">   
-    var [client_cart_obj, client_cart_amount]  = getCartDataFromClient();
     
     var sql_num = 0;
     function deleteMovie(id) {
@@ -107,8 +106,7 @@
         	})
         	
         	$("#movie_panel").append(movie_panel);
-        	setButtonFunction();
-        	checkIfExistInCart();
+        	
           }
         },
         error: function () {
@@ -136,8 +134,7 @@
           	})
           	
           	$("#movie_panel").append(movie_panel);
-          	setButtonFunction();
-          	checkIfExistInCart();
+         
             }
           },
           error: function () {
@@ -170,78 +167,8 @@
 		return inner_html;
     }
     
-    
-    function setButtonFunction() {
-    	$('button[name="add_cart"]').click(function () {	//按鈕和function連在一起
-    		var action = (this.id).split('_')[0];
-    		var destination = (this.id).split('_')[1];
-    		var id = (this.id).split('_')[2];
-    		addProductToCart(id, 1);
-        });
-    }
-    
-    function getCartDataFromClient() {
-    	let cart = JSON.parse(localStorage.getItem("client_cart_obj"));
-    	let amount = JSON.parse(localStorage.getItem("client_cart_amount"));
-    	cart = !cart ? new Array() : cart;
-    	amount = !amount ? new Array() : amount;
-    	return [cart, amount];
-    }
-    
-    function addProductToCart(id, amount) {
-    	if (!(client_cart_obj.includes(id))) {
-    		client_cart_obj.push(id);
-    		client_cart_amount.push(amount);
-    		updateCartDataToClent();
-    	}
-    	
-    	checkIfExistInCart();
-    }
-    
-    function updateCartDataToClent() {
-    	localStorage.setItem("client_cart_obj", JSON.stringify(client_cart_obj));
-    	localStorage.setItem("client_cart_amount", JSON.stringify(client_cart_amount));
-    }
-    
-    function checkIfExistInCart() {
-    	$('button[name="add_cart"]').each(function (){
-    		var action = (this.id).split('_')[0];
-    		var destination = (this.id).split('_')[1];
-    		var id = (this.id).split('_')[2];
-    		if (client_cart_obj.includes(id)) {
-    			setButtonState(this.id, false);
-    		}
-    		else {
-    			setButtonState(this.id, true);
-    		}
-    		
-        });
-    }
-    
-    function setButtonState(id, action) {
-    	if (!action) {
-    	    $('#' + id).prop('disabled', true);
-    	    $('#' + id).addClass('disabled');
-    	    $('#' + id).html('已加入');
-    	}
-    	else {
-    		$('#' + id).prop('disabled', false);
-    	    $('#' + id).removeClass('disabled');
-    	    $('#' + id).html('加入購物車');
-    	}
-    }
   </script>
 
-  <footer class="text-muted">
-    <div class="container">
-      <p class="float-right">
-        <a href="#">Back to top</a>
-      </p>
-      <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-      <p>New to Bootstrap? <a href="https://getbootstrap.com/">Visit the homepage</a> or read our <a
-          href="/docs/4.3/getting-started/introduction/">getting started guide</a>.</p>
-    </div>
-  </footer>
 </body>
 
 </html>

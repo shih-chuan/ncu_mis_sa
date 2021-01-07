@@ -28,7 +28,9 @@
                 <tr>
                     <th>場次編號</th>
                     <th>電影編號</th>
+                    <th>電影名稱</th>
                     <th>影廳編號</th>
+                    <th>影廳名稱</th>
                     <th>場次日期</th>
                     <th>場次時間</th>
                     <th>操作</th>
@@ -101,14 +103,16 @@
            $("#table > tbody").empty();
            var table_html = '';
            $.each(data, function(index, value) {
-               table_html += '<tr><td scope="row">' + value['session_id'] + '</td>';
-               table_html += '<td>' + value['movie_id'] + '</td>';
-               table_html += '<td>' + value['theater_id'] + '</td>';
-               table_html += '<td>' + value['session_time'] + '</td>';
-               table_html += '<td>' + value['session_date'] + '</td>';
+               table_html += '<tr><td scope="row">' + value['session_info']['session_id'] + '</td>';
+               table_html += '<td>' + value['movie_info']['id'] + '</td>';
+               table_html += '<td>' + value['movie_info']['name'] + '</td>';
+               table_html += '<td>' + value['theater_info']['theater_info']['id'] + '</td>';
+               table_html += '<td>' + value['theater_info']['theater_info']['name'] + '</td>';
+               table_html += '<td>' + value['session_info']['session_time'] + '</td>';
+               table_html += '<td>' + value['session_info']['session_date'] + '</td>';
                
-               table_html += '<td>' + '<a href="editsession.html?id=' + value['session_id'] + '">編輯</a> | ';
-               table_html += '<a href="javascript: deleteSession(' + value['session_id'] + ');">刪除</a></td></tr>';
+               table_html += '<td>' + '<a href="editsession.html?id=' + value['session_info']['session_id'] + '">編輯</a> | ';
+               table_html += '<a href="javascript: deleteSession(' + value['session_info']['session_id'] + ');">刪除</a></td></tr>';
            })
 
            $("#table > tbody").append(table_html);

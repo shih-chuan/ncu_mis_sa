@@ -1,9 +1,6 @@
 package ncu.im3069.demo.controller;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.*;
@@ -11,7 +8,6 @@ import javax.servlet.http.*;
 import org.json.*;
 
 import ncu.im3069.demo.app.SessionHelper;
-import ncu.im3069.demo.app.Movie;
 import ncu.im3069.demo.app.Session;
 import ncu.im3069.tools.JsonReader;
 
@@ -148,9 +144,8 @@ public class SessionController extends HttpServlet {
 	        String session_time = jso.getString("session_time");
 	        String session_date = jso.getString("session_date");
         
-	        String p = "p";
-	        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */		//跟老大用不同的session
-	        Session s = new Session(session_id,movie_id, theater_id, session_time, session_date, p);	        
+	        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */		
+	        Session s = new Session(session_id,movie_id, theater_id, session_date, session_time);	        
 	        /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
 	        JSONObject data = s.update();
 	        
