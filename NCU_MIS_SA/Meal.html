@@ -65,6 +65,7 @@
 				dataType: 'json',
 				timeout: 5000,
 				success: function (response) {
+					console.log(response);
 					if (response.status == 200) {
 						var product_panel = '';
 						$.each(response.response.data, function (){

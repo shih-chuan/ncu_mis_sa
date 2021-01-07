@@ -491,8 +491,9 @@ public class MealHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `missa`.`meal` SET `meal_price` = ? ,`meal_image` = ? ,`meal_content` = ?  WHERE `meal_name` = ? ";
+            String sql = "Update `missa`.`meal` SET `meal_name` = ? ,`meal_price` = ? ,`meal_image` = ? ,`meal_content` = ?   WHERE `meal_id` = ?";
             /** 取得所需之參數 */
+            int meal_id = m.getID();
             String name = m.getName();
             Double price = m.getPrice();
             String image = m.getImage();
@@ -500,10 +501,11 @@ public class MealHelper {
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
-            pres.setDouble(1, price);
-            pres.setString(2, image);
-            pres.setString(3, describe);
-            pres.setString(4, name);
+            pres.setString(1, name);
+            pres.setDouble(2, price);
+            pres.setString(3, image);
+            pres.setString(4, describe);
+            pres.setInt(5, meal_id);
             /** 執行更新之SQL指令並記錄影響之行數 */
             row = pres.executeUpdate();
 
