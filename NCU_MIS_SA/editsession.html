@@ -66,7 +66,7 @@ position: fixed;
                 var id = url.searchParams.get("id");
                 var sql_num = 0;
 
-                function updateMovie(id) {
+                function updateSession(id) {
                 	var theater_id = $('#theater_id').val();
                     var movie_id= $('#movie_id').val();
                     var session_time = $('#session_time').val();
@@ -108,26 +108,6 @@ position: fixed;
                         });
                     }
                 
-
-                // 更新SQL指令歷史表格
-                /*function updateSQLTable(data) {
-                    var time = (data.time / 1000000).toFixed(2);
-                    var table_html = "";
-                    
-                    sql_num += 1
-
-                    table_html += '<tr>';
-                    table_html += '<td>' + sql_num + '</td>';
-                    table_html += '<td>' + data.sql + '</td>';
-                    table_html += '<td style="text-align: right">' + '0' + '</td>';
-                    table_html += '<td style="text-align: right">' + data.row + '</td>';
-                    table_html += '<td style="text-align: right">' + data.row + '</td>';
-                    table_html += '<td style="text-align: right">' + time + '</td>';
-                    table_html += '</tr>';
-                    $("#sql_log > tbody").append(table_html);
-                    $("#sql_summary").html("(default) " + data.row + " queries took " + time + " ms");
-                    $("#sql_summary").html("(default) " + data.row );
-                }*/
                 function getSession() {
                     $.ajax({
                         type: "GET",
@@ -140,16 +120,11 @@ position: fixed;
                        success: function (res) {
                     	 console.log(res);
                          if(res.status == 200){
-                      		//updateSQLTable(res.data);
                       		document.getElementById('movie_id').value = res.response.movie_info.id;
                       		document.getElementById('theater_id').value = res.response.theater_info.theater_info.id;
                       		document.getElementById('session_date').value = res.response.session_info.session_date;
                       		document.getElementById('session_time').value = res.response.session_info.session_time;
-                   		/*document.getElementById('movie_id').value = response['data'][0]['movie_id'];
-                			document.getElementById('theater_id').value = response['data'][0]['theater_id'];
-               			document.getElementById('session_date').value = response['data'][0]['session_date'];
-             				document.getElementById('session_time').value = response['data'][0]['session_time'];  */
-                            	
+                   		  	
                           }
                        
                  },
@@ -160,7 +135,7 @@ position: fixed;
 }
 
                 $('#submit').click(function() {
-                    updateMovie(id)
+                    updateSession(id)
                 });
                 
                 $(document).ready(function() {

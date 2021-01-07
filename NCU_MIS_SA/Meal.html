@@ -56,7 +56,7 @@
 		var [client_meal_obj, client_meal_amount]  = getCartDataFromClient();
 		
 		   
-		function getAllProduct() {
+		function getAllMeal() {
 			$.ajax({
 				type: "GET",
 				url: "api/meal.do",
@@ -69,7 +69,7 @@
 					if (response.status == 200) {
 						var product_panel = '';
 						$.each(response.response.data, function (){
-							product_panel += addProduct(this);
+							product_panel += addMeal(this);
 						})
 						$("#product_panel").append(product_panel);
 						addQuantityListener();
@@ -81,16 +81,16 @@
 			});
 		}
 		
-		getAllProduct();
+		getAllMeal();
 		cleanAllData();
 		
 		function cleanAllData() {
 	    	client_meal_obj = [];
 	      	client_meal_amount = [];
-			updateCartDataToClent();
+			updateCartDataToClient();
 	    }
 		
-		function addProduct(data) {
+		function addMeal(data) {
 			let inner_html = '';
 			inner_html += '<div class="col-md-3">';
 			inner_html += '<div class="card-header">';
@@ -116,36 +116,36 @@
 			return [cart, amount];
 		}
 	 
-		function addProductToCart(id, amount) {
+		function addMealToCart(id, amount) {
 		 	if (!(client_meal_obj.includes(id))) {
 		 		client_meal_obj.push(id);
 		 		client_meal_amount.push(parseInt(amount));
-		 		updateCartDataToClent();
+		 		updateCartDataToClient();
 		 	}
 		}
 	 
-		function updateClentCartData(id, quantity) {
+		function updateClientCartData(id, quantity) {
 			console.log("success")
 			var i = client_meal_obj.indexOf(id);
 			client_meal_amount[i] = (quantity === "") ? 0 : parseInt(quantity);
 	 		if(quantity <= 0){
-	 			removeProductFromCart(id)
+	 			removeMealFromCart(id)
 	 		}else{
-	 			addProductToCart(id, quantity)
+	 			addMealToCart(id, quantity)
 	 		}
-			updateCartDataToClent();
+			updateCartDataToClient();
 		 }
 		
-		function removeProductFromCart(id){
+		function removeMealFromCart(id){
 			var i = client_meal_obj.indexOf(id);
 			if (i > -1) {
 	    		client_meal_obj.splice(i, 1);
 	    		client_meal_amount.splice(i, 1);
 			}
-    		updateCartDataToClent();
+    		updateCartDataToClient();
 		}
 	 
-		function updateCartDataToClent() {
+		function updateCartDataToClient() {
 		 	localStorage.setItem("client_meal_obj", JSON.stringify(client_meal_obj));
 		 	localStorage.setItem("client_meal_amount", JSON.stringify(client_meal_amount));
 		}
@@ -173,7 +173,7 @@
 					var id = select.split('_')[1];
 					var price = $('#price_' + id).html();
 					var quantity =  $(this).val();
-					updateClentCartData(id, quantity);
+					updateClientCartData(id, quantity);
 				}
 			);
 		}

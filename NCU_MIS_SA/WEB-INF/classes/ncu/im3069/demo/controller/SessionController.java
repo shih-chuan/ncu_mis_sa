@@ -149,7 +149,7 @@ public class SessionController extends HttpServlet {
 	        String session_date = jso.getString("session_date");
         
 	        String p = "p";
-	        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */		//跟老大用不同的session
+	        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */		
 	        Session s = new Session(session_id,movie_id, theater_id, session_time, session_date, p);	        
 	        /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
 	        JSONObject data = s.update();
