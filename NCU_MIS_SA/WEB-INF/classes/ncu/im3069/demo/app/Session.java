@@ -1,6 +1,5 @@
 package ncu.im3069.demo.app;
 import org.json.*;
-import java.util.*;
 
 public class Session{
 
@@ -68,16 +67,7 @@ public class Session{
 		this.session_time = session_time;
 		this.session_date = session_date;
 	}
-    
-	public Session(int session_id, int movie_id, int theater_id, String session_time, String session_date, String p) {
-		this.id = session_id;
-		//getTheaterFromDB(theater_id);
-		this.theater_id = theater_id;
-		//getMovieFromDB(movie_id);
-		this.movie_id = movie_id;
-		this.session_time = session_time;
-		this.session_date = session_date;
-	}
+ 
     /**
      * 取得場次編號
      *
@@ -126,6 +116,7 @@ public class Session{
      */
     private void getTheaterFromDB(int theater_id) {
         String tid = String.valueOf(theater_id);
+        System.out.println("getTheaterFromDB" + tid);
         this.theater = th.getTheaterById(tid);
     }
     /**
@@ -135,9 +126,7 @@ public class Session{
     */
    public JSONObject getTheaterData() {
 	   JSONObject result = new JSONObject();
-
        result = this.theater.getTheaterAllInfo();
-
        return result;
    }
 	/**
@@ -156,9 +145,7 @@ public class Session{
     */
    public JSONObject getMovieData() {
 	   JSONObject result = new JSONObject();
-
        result = this.movie.getData();
-
        return result;
    }
         

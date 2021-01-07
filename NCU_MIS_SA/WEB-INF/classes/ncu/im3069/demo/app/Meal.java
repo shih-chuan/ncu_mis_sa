@@ -1,7 +1,5 @@
 package ncu.im3069.demo.app;
 
-import java.util.Calendar;
-
 import org.json.*;
 
 public class Meal {

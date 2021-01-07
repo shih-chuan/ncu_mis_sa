@@ -1,15 +1,10 @@
 package ncu.im3069.demo.app;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import org.json.*;
-
 import ncu.im3069.demo.util.DBMgr;
-import ncu.im3069.demo.app.Movie;
 
 public class MovieHelper {
     private MovieHelper() {

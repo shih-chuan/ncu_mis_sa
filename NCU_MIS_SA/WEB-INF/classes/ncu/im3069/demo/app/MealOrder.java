@@ -1,10 +1,5 @@
 package ncu.im3069.demo.app;
 
-import java.util.Calendar;
-import ncu.im3069.demo.app.Meal;
-import ncu.im3069.demo.app.MealHelper;
-import ncu.im3069.demo.app.MealOrderHelper;
-
 import org.json.*;
 
 public class MealOrder {
@@ -21,10 +16,7 @@ public class MealOrder {
     /** id，會員編號 */
     private int quantity;
 
-
-	
 	/** mh，MealHelper之物件與Member相關之資料庫方法（Sigleton） */
-    private MealOrderHelper moh =  MealOrderHelper.getHelper();
     private TicketHelper th =  TicketHelper.getHelper();
     private MealHelper mh =  MealHelper.getHelper();
 
@@ -130,26 +122,6 @@ public class MealOrder {
 		String id = String.valueOf(meal_id);
 	     this.meal = mh.getMealById(id);
 	}
-	/**
-     * 更新套餐資料
-     *
-     * @return the JSON object 回傳SQL更新之結果與相關封裝之資料
-     */
- //   public JSONObject update() {
-        /** 新建一個JSONObject用以儲存更新後之資料 */
- //       JSONObject data = new JSONObject();
-        
-        
-        /** 檢查該名會員是否已經在資料庫 */
- //       if(this.id != 0) {
-            /** 若有則將目前更新後之資料更新至資料庫中 */
-            
-            /** 透過MemberHelper物件，更新目前之會員資料置資料庫中 */
-//            data = moh.update(this);
-  //      }
-        
- //       return data;
-  //  }
 
     /**
      * 取得產品資訊

@@ -59,7 +59,7 @@
                     if(response.status == 200){
                         $("#flashMessage").html("成功! 已經成功刪除會員...");
                         $("#flashMessage").show();
-                        getAllMember();
+                        getAllTheater();
                     }
                     console.log(response);
                 },
@@ -105,7 +105,7 @@
             table_html += '<td>' + countNormalSeats(value.seats_info) + '</td>';
             table_html += '<td>' + countWheelSeats(value.seats_info) + '</td>';
             table_html += '<td>' + '<a href="/NCU_MIS_SA/editTheater.html?id=' + value.theater_info['id'] + '">編輯</a> | ';
-            table_html += '<a href="javascript: deleteMember(' + value.theater_info['id'] + ');">刪除</a></td></tr>';
+            table_html += '<a href="javascript: deleteTheater(' + value.theater_info['id'] + ');">刪除</a></td></tr>';
             i++;
         })
 
