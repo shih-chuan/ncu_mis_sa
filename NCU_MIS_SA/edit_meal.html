@@ -46,7 +46,7 @@ position: fixed;
             <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
             <div class="input text required">
                 <label for="meal_name">套餐名稱</label>
-                <input name="meal_name" maxlength="30" type="text" id="meal_name" required="required" disabled>
+                <input name="meal_name" maxlength="30" type="text" id="meal_name" required="required" >
             </div>
             <div class="input price required">
                 <label for="meal_price">價格</label>
@@ -173,7 +173,7 @@ position: fixed;
                             	updateSQLTable(response.response);
                             	document.getElementById('meal_name').value = response['response']['data'][0]['meal_name'];
                             	document.getElementById('meal_price').value = response['response']['data'][0]['meal_price'];
-                            	document.getElementById('meal_image').value = response['response']['data'][0]['meal_image'];
+                            //	document.getElementById('meal_image').value = response['response']['data'][0]['meal_image'];
                             	document.getElementById('meal_content').value = response['response']['data'][0]['meal_content'];
                             }
                             console.log(response);
