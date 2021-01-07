@@ -425,10 +425,10 @@ public class SessionHelper {
                 String session_date = rs.getString("session_date");
                 String session_time = rs.getString("session_time");
                 String p = "p";
-                /** 將每一筆商品資料產生一名新Session物件 */		//跟老大用不同的session
-                s = new Session(session_id, movie_id, theater_id,session_date, session_time,p);	
+                /** 將每一筆商品資料產生一名新Session物件 */		
+                s = new Session(session_id, movie_id, theater_id,session_date, session_time);	
                 /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
-                jsa.put(s.getData());
+                jsa.put(s.getSessionAllInfo());
             }
             
             
@@ -555,7 +555,7 @@ public class SessionHelper {
                     
                     
                     /** 將每一筆商品資料產生一名新Product物件 */
-                    s = new Session(session_id, movie_id, theater_id,session_time, session_date,p);
+                    s = new Session(session_id, movie_id, theater_id,session_time, session_date);
                     /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
                     //data = s.getSessionAllInfo();
                     jsa.put(s.getData());
